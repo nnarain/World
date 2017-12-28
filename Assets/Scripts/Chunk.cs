@@ -11,14 +11,22 @@ public class Chunk : MonoBehaviour
         MarchingCubes
     }
 
+    public enum FieldGeneratorType
+    {
+        Sine,
+        PerlinHeight
+    }
+
     public int chunkSizeX;
     public int chunkSizeY;
     public int chunkSizeZ;
 
     public MeshExtractorType extractorType = MeshExtractorType.Block;
+    public FieldGeneratorType fieldType = FieldGeneratorType.Sine;
 
     private Mesh mesh;
     private MeshExtractor mesher;
+    private FieldGenerator fieldGenerator;
 
     private Field field;
 
@@ -30,17 +38,7 @@ public class Chunk : MonoBehaviour
         mesher = CreateMeshExtractor(extractorType);
 
         field = new Field(chunkSizeX, chunkSizeY, chunkSizeZ);
-
-        for (int x = 0; x < field.X; ++x)
-        {
-            for (int y = 0; y < field.Y; ++y)
-            {
-                for (int z = 0; z < field.Z; ++z)
-                {
-                    field.Set(x, y, z, 1);
-                }
-            }
-        }
+        fieldGenerator = CreateFieldGenerator(fieldType);
     }
 
     private void Start()
@@ -53,6 +51,7 @@ public class Chunk : MonoBehaviour
     /// </summary>
     public void Build()
     {
+        fieldGenerator.Generate(field, transform);
         mesher.Extract(mesh, field);
     }
 
@@ -64,6 +63,17 @@ public class Chunk : MonoBehaviour
                 return new BlockMeshExtractor();
             case MeshExtractorType.MarchingCubes:
                 return null;
+            default:
+                return null;
+        }
+    }
+
+    private FieldGenerator CreateFieldGenerator(FieldGeneratorType type)
+    {
+        switch(type)
+        {
+            case FieldGeneratorType.Sine:
+                return new SineFieldGenerator();
             default:
                 return null;
         }

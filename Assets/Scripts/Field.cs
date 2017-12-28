@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 
 /// <summary>
-/// Represent a 3D field.
-/// This grid will represent the blocks that should be created.
+/// Represents a 3D scalar field
 /// </summary>
 public class Field
 {
@@ -39,6 +38,32 @@ public class Field
         }
 
         return field[GetIndex(x, y, z)];
+    }
+
+    public void ForEach(Action<int, int, int, float> action)
+    {
+        for (int x = 0; x < this.x; ++x)
+        {
+            for (int y = 0; y < this.y; ++y)
+            {
+                for (int z = 0; z < this.z; ++z)
+                {
+                    float v = Get(x, y, z);
+                    action(x, y, z, v);
+                }
+            }
+        }
+    }
+
+    public void ForEachXZ(Action<int, int> action)
+    {
+        for (int x = 0; x < this.x; ++x)
+        {
+            for (int z = 0; z < this.z; ++z)
+            {
+                action(x, z);
+            }
+        }
     }
 
     private int GetIndex(int x, int y, int z)

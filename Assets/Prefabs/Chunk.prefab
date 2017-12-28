@@ -94,7 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b79e66ee4b33dd4458055da743b8569b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkSizeX: 16
-  chunkSizeY: 16
-  chunkSizeZ: 16
+  chunkSizeX: 32
+  chunkSizeY: 32
+  chunkSizeZ: 32
   extractorType: 0
+  fieldType: 0
