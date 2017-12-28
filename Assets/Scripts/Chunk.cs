@@ -31,6 +31,8 @@ public class Chunk : MonoBehaviour
     private Field field;
     public Field Field { get { return field; } }
 
+    private Chunk[] neighbors;
+
     private void Awake()
     {
         mesh = new Mesh();
@@ -40,6 +42,8 @@ public class Chunk : MonoBehaviour
 
         field = new Field(chunkSizeX, chunkSizeY, chunkSizeZ);
         fieldGenerator = CreateFieldGenerator(fieldType);
+
+        neighbors = new Chunk[6];
     }
 
     private void Start()
@@ -54,6 +58,16 @@ public class Chunk : MonoBehaviour
     {
         fieldGenerator.Generate(field, transform);
         mesher.Extract(mesh, field);
+    }
+
+    public void SetNeighbor(Chunk chunk, Direction direction)
+    {
+        neighbors[direction.ToInt()] = chunk;
+    }
+
+    public Chunk GetNeighbor(Direction direction)
+    {
+        return neighbors[direction.ToInt()];
     }
 
     private MeshExtractor CreateMeshExtractor(MeshExtractorType type)
