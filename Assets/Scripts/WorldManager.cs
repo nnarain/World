@@ -9,8 +9,13 @@ public class WorldManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        int s = 10;
+        int s = 15;
+        float r = 5f;
+        
+
         Grid grid = new Grid(s, s, s);
+
+        Vector3 center = new Vector3((float)s / 2f, (float)s / 2f, (float)s / 2f);
 
         for (int x = 0; x < s; ++x)
         {
@@ -18,7 +23,11 @@ public class WorldManager : MonoBehaviour
             {
                 for (int z = 0; z < s; ++z)
                 {
-                    grid.Set(x, y, z, 1);
+                    Vector3 p = new Vector3(x, y, z);
+                    if ((p - center).magnitude <= r)
+                    {
+                        grid.Set(x, y, z, 1);
+                    }
                 }
             }
         }
