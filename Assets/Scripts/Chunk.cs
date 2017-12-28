@@ -11,6 +11,10 @@ public class Chunk : MonoBehaviour
         MarchingCubes
     }
 
+    public int chunkSizeX;
+    public int chunkSizeY;
+    public int chunkSizeZ;
+
     public MeshExtractorType extractorType = MeshExtractorType.Block;
 
     private Mesh mesh;
@@ -25,7 +29,7 @@ public class Chunk : MonoBehaviour
 
         mesher = CreateMeshExtractor(extractorType);
 
-        field = new Field(10, 10, 10);
+        field = new Field(chunkSizeX, chunkSizeY, chunkSizeZ);
 
         for (int x = 0; x < field.X; ++x)
         {
@@ -63,5 +67,12 @@ public class Chunk : MonoBehaviour
             default:
                 return null;
         }
+    }
+
+    private void OnValidate()
+    {
+        if (chunkSizeX == 0) chunkSizeX = 1;
+        if (chunkSizeY == 0) chunkSizeY = 1;
+        if (chunkSizeZ == 0) chunkSizeZ = 1;
     }
 }
