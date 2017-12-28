@@ -29,6 +29,7 @@ public class Chunk : MonoBehaviour
     private FieldGenerator fieldGenerator;
 
     private Field field;
+    public Field Field { get { return field; } }
 
     private void Awake()
     {
