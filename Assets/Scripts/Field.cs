@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 
 /// <summary>
-/// Represent a 3D grid.
+/// Represent a 3D field.
 /// This grid will represent the blocks that should be created.
 /// </summary>
-public class Grid
+public class Field
 {
     int x, y, z;
 
@@ -15,30 +15,30 @@ public class Grid
     public int Y { get { return y; } }
     public int Z { get { return z; } }
 
-    private int[] grid = null;
+    private float[] field = null;
 
-    public Grid(int x, int y, int z)
+    public Field(int x, int y, int z)
     {
         this.x = x;
         this.y = y;
         this.z = z;
 
-        grid = new int[x * y * z];
+        field = new float[x * y * z];
     }
 
-    public void Set(int x, int y, int z, int v)
+    public void Set(int x, int y, int z, float v)
     {
-        grid[GetIndex(x, y, z)] = v;
+        field[GetIndex(x, y, z)] = v;
     }
 
-    public int Get(int x, int y, int z)
+    public float Get(int x, int y, int z)
     {
         if (x >= this.x || x < 0 || y >= this.y || y < 0 || z >= this.z || z < 0)
         {
-            return -1;
+            return -1.0f;
         }
 
-        return grid[GetIndex(x, y, z)];
+        return field[GetIndex(x, y, z)];
     }
 
     private int GetIndex(int x, int y, int z)
