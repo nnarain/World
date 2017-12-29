@@ -89,6 +89,8 @@ public class Chunk : MonoBehaviour
         {
             case FieldGeneratorType.Sine:
                 return new SineFieldGenerator();
+            case FieldGeneratorType.PerlinHeight:
+                return new PerlinHeightMapGenerator();
             default:
                 return null;
         }
