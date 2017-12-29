@@ -23,6 +23,7 @@ public class Chunk : MonoBehaviour
 
     public MeshExtractorType extractorType = MeshExtractorType.Block;
     public FieldGeneratorType fieldType = FieldGeneratorType.Sine;
+    public PerlinHeightMapGenerator.Config perlinConfig;
 
     private Mesh mesh;
     private MeshExtractor mesher;
@@ -90,7 +91,7 @@ public class Chunk : MonoBehaviour
             case FieldGeneratorType.Sine:
                 return new SineFieldGenerator();
             case FieldGeneratorType.PerlinHeight:
-                return new PerlinHeightMapGenerator();
+                return new PerlinHeightMapGenerator(perlinConfig);
             default:
                 return null;
         }

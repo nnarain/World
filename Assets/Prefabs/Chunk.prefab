@@ -99,3 +99,8 @@ MonoBehaviour:
   chunkSizeZ: 16
   extractorType: 0
   fieldType: 1
+  perlinConfig:
+    scale: 2.34
+    octaves: 4
+    persistance: 2.32
+    lacunarity: 1.03
