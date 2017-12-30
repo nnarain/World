@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+[ExecuteInEditMode]
 public class Chunk : MonoBehaviour
 {
     public enum MeshExtractorType
@@ -11,16 +12,28 @@ public class Chunk : MonoBehaviour
         MarchingCubes
     }
 
+    public enum FieldGeneratorType
+    {
+        Sine,
+        PerlinHeight
+    }
+
     public int chunkSizeX;
     public int chunkSizeY;
     public int chunkSizeZ;
 
     public MeshExtractorType extractorType = MeshExtractorType.Block;
+    public FieldGeneratorType fieldType = FieldGeneratorType.Sine;
+    public PerlinHeightMapGenerator.Config perlinConfig;
 
     private Mesh mesh;
     private MeshExtractor mesher;
+    private FieldGenerator fieldGenerator;
 
     private Field field;
+    public Field Field { get { return field; } }
+
+    private Chunk[] neighbors;
 
     private void Awake()
     {
@@ -30,17 +43,9 @@ public class Chunk : MonoBehaviour
         mesher = CreateMeshExtractor(extractorType);
 
         field = new Field(chunkSizeX, chunkSizeY, chunkSizeZ);
+        fieldGenerator = CreateFieldGenerator(fieldType);
 
-        for (int x = 0; x < field.X; ++x)
-        {
-            for (int y = 0; y < field.Y; ++y)
-            {
-                for (int z = 0; z < field.Z; ++z)
-                {
-                    field.Set(x, y, z, 1);
-                }
-            }
-        }
+        neighbors = new Chunk[6];
     }
 
     private void Start()
@@ -53,7 +58,18 @@ public class Chunk : MonoBehaviour
     /// </summary>
     public void Build()
     {
+        fieldGenerator.Generate(field, transform);
         mesher.Extract(mesh, field);
+    }
+
+    public void SetNeighbor(Chunk chunk, Direction direction)
+    {
+        neighbors[direction.ToInt()] = chunk;
+    }
+
+    public Chunk GetNeighbor(Direction direction)
+    {
+        return neighbors[direction.ToInt()];
     }
 
     private MeshExtractor CreateMeshExtractor(MeshExtractorType type)
@@ -64,6 +80,19 @@ public class Chunk : MonoBehaviour
                 return new BlockMeshExtractor();
             case MeshExtractorType.MarchingCubes:
                 return null;
+            default:
+                return null;
+        }
+    }
+
+    private FieldGenerator CreateFieldGenerator(FieldGeneratorType type)
+    {
+        switch(type)
+        {
+            case FieldGeneratorType.Sine:
+                return new SineFieldGenerator();
+            case FieldGeneratorType.PerlinHeight:
+                return new PerlinHeightMapGenerator(perlinConfig);
             default:
                 return null;
         }

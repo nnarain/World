@@ -6,8 +6,8 @@ public class CubeMetrics
 {
     private Mesh mesh;
 
-    private const float CUBE_SIZE = 1f;
-    private const float HALF_CUBE_SIZE = CUBE_SIZE / 2f;
+    public const float CUBE_SIZE = 1f;
+    public const float HALF_CUBE_SIZE = CUBE_SIZE / 2f;
 
     // l - left
     // r - right
