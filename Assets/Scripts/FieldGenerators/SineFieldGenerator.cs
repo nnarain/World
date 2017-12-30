@@ -4,8 +4,11 @@ using UnityEngine;
 
 class SineFieldGenerator : FieldGenerator
 {
-    void FieldGenerator.Generate(Field field, Transform transform)
+    void FieldGenerator.Generate(Chunk chunk)
     {
+        var transform = chunk.transform;
+        var field = chunk.Field;
+
         // chunk world position
         Vector3 p = transform.position;
 

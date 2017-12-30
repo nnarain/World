@@ -27,6 +27,8 @@ public class Chunk : MonoBehaviour
     public PerlinHeightMapGenerator.Config perlinConfig;
 
     private Mesh mesh;
+    public Mesh Mesh { get { return mesh; } }
+
     private MeshExtractor mesher;
     private FieldGenerator fieldGenerator;
 
@@ -58,7 +60,7 @@ public class Chunk : MonoBehaviour
     /// </summary>
     public void Build()
     {
-        fieldGenerator.Generate(field, transform);
+        fieldGenerator.Generate(this);
         mesher.Extract(mesh, field);
     }
 

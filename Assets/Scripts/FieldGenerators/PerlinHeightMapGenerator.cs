@@ -31,8 +31,11 @@ public class PerlinHeightMapGenerator : FieldGenerator
         lacunarity = config.lacunarity;
     }
 
-    void FieldGenerator.Generate(Field field, Transform transform)
+    void FieldGenerator.Generate(Chunk chunk)
     {
+        var field = chunk.Field;
+        var transform = chunk.transform;
+
         Vector2 samplePosition = new Vector2(transform.position.x, transform.position.z);
         float[,] heightMap = PerlinNoise.Generate(field.X, field.Z, seed, scale, octaves, persistance, lacunarity, samplePosition);
 
