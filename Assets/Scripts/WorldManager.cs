@@ -11,8 +11,14 @@ public class WorldManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Generate();
+    }
+
+    public void Generate()
+    {
+        DestroyChunks();
+
         int chunkSizeX = chunkPrefab.chunkSizeX;
-        int chunkSizeY = chunkPrefab.chunkSizeY;
         int chunkSizeZ = chunkPrefab.chunkSizeZ;
 
         for (int x = -numChunks; x < numChunks; ++x)
@@ -26,12 +32,22 @@ public class WorldManager : MonoBehaviour
                 chunk.Build();
             }
         }
+    }
 
+    public void DestroyChunks()
+    {
+        while (transform.childCount > 0)
+        {
+            foreach (Transform child in transform)
+            {
+                DestroyImmediate(child.gameObject);
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 }

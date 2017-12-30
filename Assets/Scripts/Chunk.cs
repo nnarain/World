@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+[ExecuteInEditMode]
 public class Chunk : MonoBehaviour
 {
     public enum MeshExtractorType
