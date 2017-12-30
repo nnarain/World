@@ -2,12 +2,9 @@
 using UnityEngine;
 using System.Collections;
 
-public static class Perlin
+public static class PerlinNoise
 {
-
-    public enum NormalizeMode { Local, Global };
-
-    public static float[,] Generate(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, NormalizeMode normalizeMode)
+    public static float[,] Generate(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset)
     {
         float[,] noiseMap = new float[mapWidth, mapHeight];
 
@@ -40,7 +37,6 @@ public static class Perlin
         {
             for (int x = 0; x < mapWidth; x++)
             {
-
                 amplitude = 1;
                 frequency = 1;
                 float noiseHeight = 0;
@@ -65,7 +61,7 @@ public static class Perlin
         {
             for (int x = 0; x < mapWidth; x++)
             {
-                float normalizedHeight = (noiseMap[x, y]) / (maxPossibleHeight / 1.0f);
+                float normalizedHeight = (noiseMap[x, y]) / (maxPossibleHeight);
                 noiseMap[x, y] = Mathf.Clamp(normalizedHeight, 0, int.MaxValue);
             }
         }
