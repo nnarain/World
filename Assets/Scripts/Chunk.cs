@@ -8,8 +8,7 @@ public class Chunk : MonoBehaviour
 {
     public enum MeshExtractorType
     {
-        Block,
-        MarchingCubes
+        Block
     }
 
     public enum FieldGeneratorType
@@ -80,8 +79,6 @@ public class Chunk : MonoBehaviour
         {
             case MeshExtractorType.Block:
                 return new BlockMeshExtractor();
-            case MeshExtractorType.MarchingCubes:
-                return null;
             default:
                 return null;
         }
