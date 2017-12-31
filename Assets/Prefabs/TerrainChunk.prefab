@@ -94,14 +94,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b79e66ee4b33dd4458055da743b8569b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkSizeX: 32
+  chunkSizeX: 16
   chunkSizeY: 16
-  chunkSizeZ: 32
+  chunkSizeZ: 16
   extractorType: 0
-  fieldType: 0
+  fieldType: 1
   perlinConfig:
     seed: -222
-    scale: 115.4
+    scale: 112.71
     octaves: 4
-    persistance: 0.935
-    lacunarity: 1.948
+    persistance: 0.919
+    lacunarity: 1.886

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed;
+    public float movementSpeed = 1f;
+    public float rotationSpeed = 1f;
 
     // Use this for initialization
     private void Start()
@@ -15,6 +16,8 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         HandleMovement();
+        HandleRotation();
+        HandleElevation();
     }
 
     private void HandleMovement()
@@ -30,9 +33,33 @@ public class PlayerController : MonoBehaviour
 
     private void AdjustPosition(float xDelta, float zDelta)
     {
-        Vector3 position = transform.position;
-        position += new Vector3(xDelta, 0, zDelta) * Time.deltaTime * speed;
+        float xSpeed = xDelta * movementSpeed * Time.deltaTime;
+        float zSpeed = zDelta * movementSpeed * Time.deltaTime;
 
-        transform.position = position;
+        transform.Translate(xDelta, 0, zDelta);
+    }
+
+    private void HandleRotation()
+    {
+        float xDelta = Input.GetAxis("Rotation");
+
+        if (xDelta != 0f)
+        {
+            transform.Rotate(0, xDelta * rotationSpeed * Time.deltaTime, 0);
+        }
+    }
+
+    private void HandleElevation()
+    {
+        float yDelta = Input.GetAxis("Elevation");
+
+        if (yDelta != 0f)
+        {
+            transform.Translate(0, yDelta * movementSpeed * Time.deltaTime, 0);
+        }
+    }
+
+    private void OnValidate()
+    {
     }
 }
