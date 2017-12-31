@@ -7,5 +7,5 @@ using UnityEngine;
 /// </summary>
 public interface FieldGenerator
 {
-    void Generate(Chunk chunk);
+    void Generate(Field field, Vector3 position);
 }

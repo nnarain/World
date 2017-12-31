@@ -98,7 +98,7 @@ MonoBehaviour:
   chunkSizeY: 16
   chunkSizeZ: 32
   extractorType: 0
-  fieldType: 1
+  fieldType: 0
   perlinConfig:
     seed: -222
     scale: 115.4

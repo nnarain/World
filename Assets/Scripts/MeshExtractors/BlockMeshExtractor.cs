@@ -16,7 +16,7 @@ public class BlockMeshExtractor : MeshExtractor
         triangles = new List<int>();
     }
 
-    void MeshExtractor.Extract(Mesh mesh, Field field)
+    void MeshExtractor.Extract(Field field, Action<MeshData> callback)
     {
         vertices.Clear();
         triangles.Clear();
@@ -45,10 +45,8 @@ public class BlockMeshExtractor : MeshExtractor
             }
         }
 
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-
-        mesh.RecalculateNormals();
+        MeshData data = new MeshData(vertices, triangles);
+        callback(data);
     }
 
     private void CreateCubeMesh(int x, int y, int z, bool l, bool r, bool t, bool b, bool n, bool f)
