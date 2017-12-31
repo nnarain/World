@@ -77,21 +77,38 @@ public class ChunkManager : MonoBehaviour
 
     private void RemoveFarChunks(Vector3 playerPosition)
     {
+        List<Vector3Int> toRemove = new List<Vector3Int>();
+
+        // iterate over chunks in the dictionary
         foreach (var pair in chunkList)
         {
             var chunk = pair.Value;
             var chunkPosition = chunk.transform.position;
 
+            // calculate distance between player and chunk
             var distanceToChunk = (playerPosition - chunkPosition).magnitude;
 
+            // if the distance is greater than the distance to which the chunk should be inactive, but not removed
             if (distanceToChunk >= distanceToInactive)
             {
+                // set the chunk to inactive
                 chunk.gameObject.SetActive(false);
             }
-            else if (distanceToChunk >= distanceToDestroy)
+
+            // if the distance is grater tan the distance to which the chunk shoould be destroyed
+            if (distanceToChunk >= distanceToDestroy)
             {
-                DestroyObject(chunk);
+                // set the chunk for removal from the list
+                toRemove.Add(pair.Key);
+                // and destroy the gamebobject
+                Destroy(chunk.gameObject);
             }
+        }
+
+        // remove destroyed chunks from the list
+        foreach (var key in toRemove)
+        {
+            chunkList.Remove(key);
         }
     }
 

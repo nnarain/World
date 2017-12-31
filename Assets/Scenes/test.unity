@@ -171,8 +171,8 @@ MonoBehaviour:
     type: 2}
   numChunks: 3
   moveThreshold: 8
-  distanceToInactive: 320
-  distanceToDestroy: 640
+  distanceToInactive: 250
+  distanceToDestroy: 500
 --- !u!1 &1561890006
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 10
-  rotationSpeed: 20
+  rotationSpeed: 30
 --- !u!1 &1908616990
 GameObject:
   m_ObjectHideFlags: 0
