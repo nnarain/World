@@ -10,6 +10,7 @@ public class ChunkManager : MonoBehaviour
     public Chunk chunkPrefab;
     public int numChunks;
 
+    [Range(0, 1)]
     public float renderDistance;
     public float moveThreshold;
     public float distanceToInactive;
@@ -79,6 +80,11 @@ public class ChunkManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void FillViewFrustum()
+    {
+
     }
 
     private void RemoveFarChunks(Vector3 playerPosition)
