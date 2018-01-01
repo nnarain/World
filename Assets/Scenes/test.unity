@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 788152805}
   - component: {fileID: 788152804}
   - component: {fileID: 788152806}
+  - component: {fileID: 788152807}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -166,13 +167,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5bdef5927c5a654a8f0146d8071ff8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1561890007}
+  player: {fileID: 1561890006}
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
   numChunks: 3
+  renderDistance: 300
   moveThreshold: 8
   distanceToInactive: 250
   distanceToDestroy: 500
+--- !u!114 &788152807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 788152803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6d6ef63f70cac940ae34603d48ae098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxThreads: 10
 --- !u!1 &1561890006
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ChunkLoader))]
 public class ChunkManager : MonoBehaviour
 {
-    public Transform player;
+    public GameObject player;
 
     public Chunk chunkPrefab;
     public int numChunks;
 
+    public float renderDistance;
     public float moveThreshold;
     public float distanceToInactive;
     public float distanceToDestroy;
@@ -16,11 +18,15 @@ public class ChunkManager : MonoBehaviour
     private Vector3 lastPlayerPosition;
 
     private Dictionary<Vector3Int, Chunk> chunkList;
+    private Camera camera;
+    private ChunkLoader chunkLoader;
 
     // Use this for initialization
     private void Start()
     {
+        chunkLoader = GetComponent<ChunkLoader>();
         chunkList = new Dictionary<Vector3Int, Chunk>();
+        camera = player.GetComponentInChildren<Camera>();
     }
 
     public void UpdatePlayerPosition(Vector3 playerPosition)
@@ -37,8 +43,8 @@ public class ChunkManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        UpdatePlayerPosition(player.position);
-        RemoveFarChunks(player.position);
+        UpdatePlayerPosition(player.transform.position);
+        RemoveFarChunks(player.transform.position);
     }
 
     private void UpdateVisibleChunks(Vector3 playerPosition)
@@ -69,7 +75,7 @@ public class ChunkManager : MonoBehaviour
 
                     chunkList.Add(chunkPosition, chunk);
 
-                    chunk.Build();
+                    chunkLoader.Enqueue(chunk);
                 }
             }
         }
@@ -121,6 +127,14 @@ public class ChunkManager : MonoBehaviour
         chunkPosition.z = (int)position.z / chunkPrefab.chunkSizeZ;
 
         return chunkPosition;
+    }
+
+    private Vector3[] GetCameraFrustumCorners(Camera camera)
+    {
+        Vector3[] corners = new Vector3[4];
+
+
+        return corners;
     }
 
     private void OnValidate()

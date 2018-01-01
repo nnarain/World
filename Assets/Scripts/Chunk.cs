@@ -36,6 +36,9 @@ public class Chunk : MonoBehaviour
     private Field field;
     public Field Field { get { return field; } }
 
+    private bool isLoaded = false;
+    public bool IsLoaded { get { return isLoaded; } }
+
     private Chunk[] neighbors;
 
     // mesh data recieves from a builder thread
@@ -86,6 +89,8 @@ public class Chunk : MonoBehaviour
         mesh.vertices = data.vertices.ToArray();
         mesh.triangles = data.triangles.ToArray();
         mesh.RecalculateNormals();
+
+        isLoaded = true;
     }
 
     /// <summary>
@@ -93,6 +98,8 @@ public class Chunk : MonoBehaviour
     /// </summary>
     public void Build()
     {
+        isLoaded = false;
+
         chunkPosition = transform.position;
 
         Thread builderThread = new Thread(() => {
