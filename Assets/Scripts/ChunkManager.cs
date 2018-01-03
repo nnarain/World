@@ -211,14 +211,6 @@ public class ChunkManager : MonoBehaviour
         return chunkPosition;
     }
 
-    private Vector3[] GetCameraFrustumCorners(Camera camera)
-    {
-        Vector3[] corners = new Vector3[4];
-
-
-        return corners;
-    }
-
     private void OnDrawGizmosSelected()
     {
         if (drawDebug)
