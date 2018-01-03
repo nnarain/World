@@ -18,12 +18,12 @@ public class CameraFrustum
         this.farPlaneCorners = f;
     }
 
-    Vector3 GetNearCorner(Corner c)
+    public Vector3 GetNearCorner(Corner c)
     {
         return nearPlaneCorners[c.ToInt()];
     }
 
-    Vector3 GetFarCorner(Corner c)
+    public Vector3 GetFarCorner(Corner c)
     {
         return farPlaneCorners[c.ToInt()];
     }

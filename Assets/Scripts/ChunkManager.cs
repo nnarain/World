@@ -13,13 +13,18 @@ public class ChunkManager : MonoBehaviour
     [Range(0, 1)]
     public float renderDistance;
     public float moveThreshold;
+    [Range(0, 360)]
+    public float rotationThreshold;
     public float distanceToInactive;
     public float distanceToDestroy;
 
+    public bool drawDebug;
+
     private Vector3 lastPlayerPosition;
+    private float lastPlayerRotation;
 
     private Dictionary<Vector3Int, Chunk> chunkList;
-    private Camera camera;
+    private Camera playerCamera;
     private ChunkLoader chunkLoader;
 
     // Use this for initialization
@@ -27,10 +32,17 @@ public class ChunkManager : MonoBehaviour
     {
         chunkLoader = GetComponent<ChunkLoader>();
         chunkList = new Dictionary<Vector3Int, Chunk>();
-        camera = player.GetComponentInChildren<Camera>();
+        playerCamera = player.GetComponentInChildren<Camera>();
     }
 
-    public void UpdatePlayerPosition(Vector3 playerPosition)
+    // Update is called once per frame
+    private void Update()
+    {
+        UpdatePlayerPosition(player.transform.position);
+        UpdatePlayerRotation();
+    }
+
+    private void UpdatePlayerPosition(Vector3 playerPosition)
     {
         // check if the player has moved the threshold distance.
         if ((playerPosition - lastPlayerPosition).magnitude > moveThreshold)
@@ -38,14 +50,23 @@ public class ChunkManager : MonoBehaviour
             lastPlayerPosition = playerPosition;
 
             UpdateVisibleChunks(playerPosition);
+            //    FillViewFrustum();
+            RemoveFarChunks(player.transform.position);
         }
     }
 
-    // Update is called once per frame
-    private void Update()
+    public void UpdatePlayerRotation()
     {
-        UpdatePlayerPosition(player.transform.position);
-        RemoveFarChunks(player.transform.position);
+        float playerRotation = player.transform.localRotation.eulerAngles.y;
+
+        float rotateDiff = Mathf.Abs(playerRotation - lastPlayerRotation);
+
+        if (rotateDiff >= rotationThreshold)
+        {
+            lastPlayerRotation = playerRotation;
+
+        //    FillViewFrustum();
+        }
     }
 
     private void UpdateVisibleChunks(Vector3 playerPosition)
@@ -70,9 +91,7 @@ public class ChunkManager : MonoBehaviour
                 else
                 {
                     // if the chunk does not exist yet, create it.
-                    var chunk = Instantiate(chunkPrefab);
-                    chunk.transform.position = new Vector3(x * chunkPrefab.chunkSizeX, 0, z * chunkPrefab.chunkSizeZ);
-                    chunk.transform.SetParent(transform, false);
+                    var chunk = CreateChunk(x, z);
 
                     chunkList.Add(chunkPosition, chunk);
 
@@ -84,6 +103,53 @@ public class ChunkManager : MonoBehaviour
 
     private void FillViewFrustum()
     {
+        CameraFrustum frustum = playerCamera.GetFrustum();
+
+        // the opposite near and far plane corners
+        Vector3 corner1 = frustum.GetNearCorner(CameraFrustum.Corner.RB);
+        Vector3 corner2 = frustum.GetFarCorner(CameraFrustum.Corner.LB);
+
+        // calculate a point somewhere between the corners
+        Vector3 mid = (corner2 - corner1) * renderDistance;
+
+        // XZ plane vectors
+        Vector3 corner1XZ = new Vector3(corner1.x, 0, corner1.z);
+        Vector3 corner2XZ = new Vector3(mid.x, 0, mid.z);
+
+        Vector3Int chunkPosition1 = GetChunkPosition(corner1XZ);
+        Vector3Int chunkPosition2 = GetChunkPosition(corner2XZ);
+
+        int minX = System.Math.Min(chunkPosition1.x, chunkPosition2.x);
+        int maxX = System.Math.Max(chunkPosition1.x, chunkPosition2.x);
+        int minZ = System.Math.Min(chunkPosition1.z, chunkPosition2.z);
+        int maxZ = System.Math.Max(chunkPosition1.z, chunkPosition2.z);
+
+        Debug.Log(string.Format("X: ({0}, {1}), Z: ({2}, {3})", minX, maxX, minZ, maxZ));
+
+        for (int x = minX; x <= maxX; ++x)
+        {
+            for (int z = minZ; z <= maxZ; ++z)
+            {
+                Vector3Int chunkPosition = new Vector3Int(x, 0, z);
+
+                // check if the chunk already exists in the dictionary
+                if (chunkList.ContainsKey(chunkPosition))
+                {
+                    // if it does, ensure that it is enabled
+                    var chunk = chunkList[chunkPosition];
+                    chunk.gameObject.SetActive(true);
+                }
+                else
+                {
+                    // if the chunk does not exist yet, create it.
+                    var chunk = CreateChunk(x, z);
+
+                    chunkList.Add(chunkPosition, chunk);
+
+                    chunkLoader.Enqueue(chunk);
+                }
+            }
+        }
 
     }
 
@@ -113,7 +179,7 @@ public class ChunkManager : MonoBehaviour
                 // set the chunk for removal from the list
                 toRemove.Add(pair.Key);
                 // and destroy the gamebobject
-                Destroy(chunk.gameObject);
+                Destroy(chunk);
             }
         }
 
@@ -122,6 +188,16 @@ public class ChunkManager : MonoBehaviour
         {
             chunkList.Remove(key);
         }
+    }
+
+    private Chunk CreateChunk(int x, int z)
+    {
+        // if the chunk does not exist yet, create it.
+        var chunk = Instantiate(chunkPrefab);
+        chunk.transform.position = new Vector3(x * chunkPrefab.chunkSizeX, 0, z * chunkPrefab.chunkSizeZ);
+        chunk.transform.SetParent(transform, false);
+
+        return chunk;
     }
 
     private Vector3Int GetChunkPosition(Vector3 position)
@@ -141,6 +217,14 @@ public class ChunkManager : MonoBehaviour
 
 
         return corners;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (drawDebug)
+        {
+        
+        }
     }
 
     private void OnValidate()

@@ -31,6 +31,8 @@ public class ChunkLoader : MonoBehaviour
                 // dequeue and start building the chunk
                 Chunk chunk = buildQueue.Dequeue();
                 chunk.Build();
+                //Debug.Log(string.Format("Building the chunk ({0},{1})", chunk.transform.position.x, chunk.transform.position.z));
+
 
                 // add the chunk to the active list
                 currentlyBuildingChunks.Add(chunk);
@@ -46,6 +48,7 @@ public class ChunkLoader : MonoBehaviour
 
                 if (chunk.IsLoaded)
                 {
+                //    Debug.Log(string.Format("The chunk ({0},{1}) is done building", chunk.transform.position.x, chunk.transform.position.z));
                     currentlyBuildingChunks.RemoveAt(i);
                 }
             }
