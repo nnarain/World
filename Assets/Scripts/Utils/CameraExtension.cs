@@ -26,4 +26,11 @@ public static class CameraExtension
 
         return new CameraFrustum(nearCorners, farCorners);
     }
+
+    public static bool IsPointInFrustum(this Camera camera, Vector3 point)
+    {
+        Vector3 viewportPoint = camera.WorldToViewportPoint(point);
+
+        return viewportPoint.x >= 0 && viewportPoint.x <= 1 && viewportPoint.y >= 0 && viewportPoint.y <= 1 && viewportPoint.z > 0;
+    }
 }

@@ -10,13 +10,15 @@ public class ChunkManager : MonoBehaviour
     public Chunk chunkPrefab;
     public int numChunks;
 
-    public float renderDistance;
+    public float forwardRenderDistance;
+    public float generalRenderDistance;
     public float moveThreshold;
     [Range(0, 360)]
     public float rotationThreshold;
     public float distanceToInactive;
     public float distanceToDestroy;
 
+    [Tooltip("Draw chunk debug info")]
     public bool drawDebug;
 
     private Vector3 lastPlayerPosition;
@@ -94,6 +96,8 @@ public class ChunkManager : MonoBehaviour
             // grab first position
             Vector3Int p = queue.Dequeue();
 
+            if (explored.Contains(p)) continue;
+
             // explore neighbors
             Vector3Int[] neighbors = GetChunkNeighbors(p);
 
@@ -103,17 +107,29 @@ public class ChunkManager : MonoBehaviour
                 if (!chunkList.ContainsKey(neighbor))
                 {
                     // get the world position of the chunk
-                    Vector3 chunkPosition = GetWorldPositionFromChunkPosition(neighbor);
+                    Vector3 chunkPosition = GetChunkWorldCenter(neighbor);
 
                     // check the chunk is in the render distance of the player
                     var distanceFromPlayer = (playerPosition - chunkPosition).magnitude;
 
-                    if (distanceFromPlayer <= renderDistance)
+                    if (distanceFromPlayer <= generalRenderDistance)
                     {
                         queue.Enqueue(neighbor);
                     }
+                    else if (playerCamera.IsPointInFrustum(chunkPosition))
+                    {
+                        // check if the chunk is in the camera's view frustum
+
+                        // check if the chunk is in the forward render distance
+                        if (distanceFromPlayer <= forwardRenderDistance)
+                        {
+                            queue.Enqueue(neighbor);
+                        }
+                    }
                 }
             }
+
+            explored.Add(p);
 
             // check if the current chunk is in the chunk list
             if (chunkList.ContainsKey(p))
@@ -255,6 +271,21 @@ public class ChunkManager : MonoBehaviour
         return chunkPosition;
     }
 
+    private Vector3 GetChunkWorldCenter(Vector3Int p)
+    {
+        Vector3 world = GetWorldPositionFromChunkPosition(p);
+        world.x += chunkPrefab.chunkSizeX / 2;
+        world.y += chunkPrefab.chunkSizeY / 2;
+        world.z += chunkPrefab.chunkSizeZ / 2;
+
+        return world;
+    }
+
+    /// <summary>
+    /// Get the world space position of the chunk
+    /// </summary>
+    /// <param name="chunkPosition"></param>
+    /// <returns></returns>
     private Vector3 GetWorldPositionFromChunkPosition(Vector3Int chunkPosition)
     {
         Vector3 worldPosition = new Vector3();
