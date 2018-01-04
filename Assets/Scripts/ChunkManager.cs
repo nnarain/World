@@ -10,7 +10,6 @@ public class ChunkManager : MonoBehaviour
     public Chunk chunkPrefab;
     public int numChunks;
 
-    [Range(0, 1)]
     public float renderDistance;
     public float moveThreshold;
     [Range(0, 360)]
@@ -50,7 +49,6 @@ public class ChunkManager : MonoBehaviour
             lastPlayerPosition = playerPosition;
 
             UpdateVisibleChunks(playerPosition);
-            //    FillViewFrustum();
             RemoveFarChunks(player.transform.position);
         }
     }
@@ -64,8 +62,6 @@ public class ChunkManager : MonoBehaviour
         if (rotateDiff >= rotationThreshold)
         {
             lastPlayerRotation = playerRotation;
-
-        //    FillViewFrustum();
         }
     }
 
@@ -105,52 +101,18 @@ public class ChunkManager : MonoBehaviour
     {
         CameraFrustum frustum = playerCamera.GetFrustum();
 
-        // the opposite near and far plane corners
-        Vector3 corner1 = frustum.GetNearCorner(CameraFrustum.Corner.RB);
-        Vector3 corner2 = frustum.GetFarCorner(CameraFrustum.Corner.LB);
+        Vector3 corner1 = frustum.GetNearCorner(CameraFrustum.Corner.LB);
+        Vector3 corner2 = frustum.GetNearCorner(CameraFrustum.Corner.RB);
 
-        // calculate a point somewhere between the corners
-        Vector3 mid = (corner2 - corner1) * renderDistance;
-
-        // XZ plane vectors
         Vector3 corner1XZ = new Vector3(corner1.x, 0, corner1.z);
-        Vector3 corner2XZ = new Vector3(mid.x, 0, mid.z);
+        Vector3 corner2XZ = new Vector3(corner2.x, 0, corner2.z);
 
         Vector3Int chunkPosition1 = GetChunkPosition(corner1XZ);
         Vector3Int chunkPosition2 = GetChunkPosition(corner2XZ);
 
-        int minX = System.Math.Min(chunkPosition1.x, chunkPosition2.x);
-        int maxX = System.Math.Max(chunkPosition1.x, chunkPosition2.x);
-        int minZ = System.Math.Min(chunkPosition1.z, chunkPosition2.z);
-        int maxZ = System.Math.Max(chunkPosition1.z, chunkPosition2.z);
 
-        Debug.Log(string.Format("X: ({0}, {1}), Z: ({2}, {3})", minX, maxX, minZ, maxZ));
 
-        for (int x = minX; x <= maxX; ++x)
-        {
-            for (int z = minZ; z <= maxZ; ++z)
-            {
-                Vector3Int chunkPosition = new Vector3Int(x, 0, z);
-
-                // check if the chunk already exists in the dictionary
-                if (chunkList.ContainsKey(chunkPosition))
-                {
-                    // if it does, ensure that it is enabled
-                    var chunk = chunkList[chunkPosition];
-                    chunk.gameObject.SetActive(true);
-                }
-                else
-                {
-                    // if the chunk does not exist yet, create it.
-                    var chunk = CreateChunk(x, z);
-
-                    chunkList.Add(chunkPosition, chunk);
-
-                    chunkLoader.Enqueue(chunk);
-                }
-            }
-        }
-
+        // search chunk neighbors and load the ones that lie within the camera frustum and are within a certain distance
     }
 
     private void RemoveFarChunks(Vector3 playerPosition)
@@ -196,6 +158,8 @@ public class ChunkManager : MonoBehaviour
         var chunk = Instantiate(chunkPrefab);
         chunk.transform.position = new Vector3(x * chunkPrefab.chunkSizeX, 0, z * chunkPrefab.chunkSizeZ);
         chunk.transform.SetParent(transform, false);
+
+        // TODO: Set chunk neighbors
 
         return chunk;
     }

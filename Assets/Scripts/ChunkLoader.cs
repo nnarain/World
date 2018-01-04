@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 /// <summary>
@@ -7,56 +8,47 @@ using UnityEngine;
 /// </summary>
 public class ChunkLoader : MonoBehaviour
 {
-    public int maxThreads = 10;
+    public int maxWorkersPerFrame;
 
-    private Queue<Chunk> buildQueue;
-    private List<Chunk> currentlyBuildingChunks;
+    private Queue<Chunk> loadQueue;
 
     // Use this for initialization
     void Start()
     {
-        buildQueue = new Queue<Chunk>();
-        currentlyBuildingChunks = new List<Chunk>();
+        loadQueue = new Queue<Chunk>();
     }
 
     // Update is called once per frame
     void Update()
     {
         // check if there are items in the queue
-        if (buildQueue.Count > 0)
+        if (loadQueue.Count > 0)
         {
-            // check if the number of currently building chunks is less than the max
-            if (currentlyBuildingChunks.Count < maxThreads)
-            {
-                // dequeue and start building the chunk
-                Chunk chunk = buildQueue.Dequeue();
-                chunk.Build();
-                //Debug.Log(string.Format("Building the chunk ({0},{1})", chunk.transform.position.x, chunk.transform.position.z));
-
-
-                // add the chunk to the active list
-                currentlyBuildingChunks.Add(chunk);
-            }
+            // dequeue and start loading the chunk
+            Chunk chunk = loadQueue.Dequeue();
+            ThreadPool.QueueUserWorkItem(new WaitCallback(LoadChunk), chunk);
         }
+    }
 
-        // check each chunk to see if it is finished loading
-        if (currentlyBuildingChunks.Count > 0)
-        {
-            for (int i = 0; i < currentlyBuildingChunks.Count; ++i)
-            {
-                var chunk = currentlyBuildingChunks[i];
+    static void LoadChunk(object data)
+    {
+        // Load the chunk
+        Chunk chunk = (Chunk)data;
+        chunk.Load();
+    }
 
-                if (chunk.IsLoaded)
-                {
-                //    Debug.Log(string.Format("The chunk ({0},{1}) is done building", chunk.transform.position.x, chunk.transform.position.z));
-                    currentlyBuildingChunks.RemoveAt(i);
-                }
-            }
-        }
+    static void BuildChunk(object data)
+    {
+        // build the chunk
+        Chunk chunk = (Chunk)data;
+        chunk.Build();
     }
 
     public void Enqueue(Chunk chunk)
     {
-        buildQueue.Enqueue(chunk);
+        // flag the chunk is pending to be loading
+        chunk.MarkLoadPending();
+        // queue the chunk
+        loadQueue.Enqueue(chunk);
     }
 }
