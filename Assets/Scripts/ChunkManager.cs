@@ -153,25 +153,29 @@ public class ChunkManager : MonoBehaviour
         foreach (var pair in chunkList)
         {
             var chunk = pair.Value;
-            var chunkPosition = chunk.transform.position;
+            var chunkPosition = GetWorldPositionFromChunkPosition(pair.Key);
 
             // calculate distance between player and chunk
             var distanceToChunk = (playerPosition - chunkPosition).magnitude;
 
-            // if the distance is greater than the distance to which the chunk should be inactive, but not removed
-            if (distanceToChunk >= distanceToInactive)
+            // check if the chunk is not in the view frustum
+            if (!IsChunkInFrustum(chunkPosition))
             {
-                // set the chunk to inactive
-                chunk.gameObject.SetActive(false);
-            }
+                // if the distance is greater than the distance to which the chunk should be inactive, but not removed
+                if (distanceToChunk >= distanceToInactive)
+                {
+                    // set the chunk to inactive
+                    chunk.gameObject.SetActive(false);
+                }
 
-            // if the distance is grater tan the distance to which the chunk shoould be destroyed
-            if (distanceToChunk >= distanceToDestroy)
-            {
-                // set the chunk for removal from the list
-                toRemove.Add(pair.Key);
-                // and destroy the gamebobject
-                Destroy(chunk);
+                // if the distance is grater tan the distance to which the chunk shoould be destroyed
+                if (distanceToChunk >= distanceToDestroy)
+                {
+                    // set the chunk for removal from the list
+                    toRemove.Add(pair.Key);
+                    // and destroy the gamebobject
+                    Destroy(chunk);
+                }
             }
         }
 
