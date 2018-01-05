@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
         float xSpeed = xDelta * movementSpeed * Time.deltaTime;
         float zSpeed = zDelta * movementSpeed * Time.deltaTime;
 
-        transform.Translate(xDelta, 0, zDelta);
+        transform.Translate(xSpeed, 0, zSpeed);
     }
 
     private void HandleRotation()

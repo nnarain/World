@@ -6,11 +6,8 @@ public class WorldManager : MonoBehaviour
 {
     public Transform player;
 
-    private ChunkManager chunkManager;
-
     private void Awake()
     {
-        chunkManager = GetComponent<ChunkManager>();
     }
 
     // Use this for initialization
@@ -21,6 +18,5 @@ public class WorldManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    //    chunkManager.UpdatePlayerPosition(player.position);
     }
 }

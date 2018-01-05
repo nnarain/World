@@ -100,8 +100,8 @@ MonoBehaviour:
   extractorType: 0
   fieldType: 1
   perlinConfig:
-    seed: -222
-    scale: 112.71
+    seed: 17
+    scale: 75.05
     octaves: 4
-    persistance: 0.919
-    lacunarity: 1.886
+    persistance: 0.968
+    lacunarity: 1.535

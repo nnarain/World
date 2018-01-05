@@ -19,6 +19,16 @@ public class Chunk : MonoBehaviour
         PerlinHeight
     }
 
+    public enum ChunkState
+    {
+        Unloaded,
+        LoadPending,
+        Loading,
+        Loaded,
+        Building,
+        Built
+    }
+
     public int chunkSizeX;
     public int chunkSizeY;
     public int chunkSizeZ;
@@ -35,6 +45,11 @@ public class Chunk : MonoBehaviour
 
     private Field field;
     public Field Field { get { return field; } }
+
+    private ChunkState state = ChunkState.Unloaded;
+    public ChunkState State { get { return state; } }
+
+    public bool IsLoaded { get { return state == ChunkState.Loaded; } }
 
     private Chunk[] neighbors;
 
@@ -60,7 +75,7 @@ public class Chunk : MonoBehaviour
 
     private void Start()
     {
-
+        chunkPosition = transform.position;
     }
 
     private void Update()
@@ -69,6 +84,28 @@ public class Chunk : MonoBehaviour
         {
             UpdateMesh(meshData);
         }
+    }
+
+    /// <summary>
+    /// Load field data for this chunk
+    /// </summary>
+    public void Load()
+    {
+        state = ChunkState.Loading;
+        fieldGenerator.Generate(field, chunkPosition);
+        state = ChunkState.Loaded;
+
+        // TODO: Seperate Thread
+        Build();
+    }
+
+    /// <summary>
+    /// Build a mesh from the 3D grid.
+    /// </summary>
+    public void Build()
+    {
+        state = ChunkState.Building;
+        mesher.Extract(field, OnMeshDataRecieve);
     }
 
     private void OnMeshDataRecieve(MeshData data)
@@ -86,25 +123,8 @@ public class Chunk : MonoBehaviour
         mesh.vertices = data.vertices.ToArray();
         mesh.triangles = data.triangles.ToArray();
         mesh.RecalculateNormals();
-    }
 
-    /// <summary>
-    /// Build a mesh from the 3D grid.
-    /// </summary>
-    public void Build()
-    {
-        chunkPosition = transform.position;
-
-        Thread builderThread = new Thread(() => {
-            BuildMeshThread(OnMeshDataRecieve);
-        });
-        builderThread.Start();
-    }
-
-    private void BuildMeshThread(Action<MeshData> callback)
-    {
-        fieldGenerator.Generate(field, chunkPosition);
-        mesher.Extract(field, callback);
+        state = ChunkState.Built;
     }
 
     /// <summary>
@@ -115,6 +135,7 @@ public class Chunk : MonoBehaviour
     public void SetNeighbor(Chunk chunk, Direction direction)
     {
         neighbors[direction.ToInt()] = chunk;
+        // TODO set opposite neighbor
     }
 
     /// <summary>
@@ -158,6 +179,19 @@ public class Chunk : MonoBehaviour
                 return new PerlinHeightMapGenerator(perlinConfig);
             default:
                 return null;
+        }
+    }
+
+    public void MarkLoadPending()
+    {
+        // Can only go from unloaded to loading pending
+        if (state == ChunkState.Unloaded)
+        {
+            state = ChunkState.LoadPending;
+        }
+        else
+        {
+            // throw exception?
         }
     }
 
