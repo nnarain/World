@@ -102,28 +102,24 @@ public class ChunkManager : MonoBehaviour
 
             foreach (var neighbor in neighbors)
             {
-                // check that is doesn't already exist
-                if (!chunkList.ContainsKey(neighbor))
+                // get the world position of the chunk
+                Vector3 chunkPosition = GetChunkWorldCenter(neighbor);
+
+                // check the chunk is in the render distance of the player
+                var distanceFromPlayer = (playerPosition - chunkPosition).magnitude;
+
+                if (distanceFromPlayer <= generalRenderDistance)
                 {
-                    // get the world position of the chunk
-                    Vector3 chunkPosition = GetChunkWorldCenter(neighbor);
+                    queue.Enqueue(neighbor);
+                }
+                else if (playerCamera.IsPointInFrustum(chunkPosition))
+                {
+                    // check if the chunk is in the camera's view frustum
 
-                    // check the chunk is in the render distance of the player
-                    var distanceFromPlayer = (playerPosition - chunkPosition).magnitude;
-
-                    if (distanceFromPlayer <= generalRenderDistance)
+                    // check if the chunk is in the forward render distance
+                    if (distanceFromPlayer <= forwardRenderDistance)
                     {
                         queue.Enqueue(neighbor);
-                    }
-                    else if (playerCamera.IsPointInFrustum(chunkPosition))
-                    {
-                        // check if the chunk is in the camera's view frustum
-
-                        // check if the chunk is in the forward render distance
-                        if (distanceFromPlayer <= forwardRenderDistance)
-                        {
-                            queue.Enqueue(neighbor);
-                        }
                     }
                 }
             }
