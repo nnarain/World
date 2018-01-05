@@ -127,6 +127,12 @@ public class Chunk : MonoBehaviour
         state = ChunkState.Built;
     }
 
+    public void SetPosition(Vector3 position)
+    {
+        chunkPosition = position;
+        transform.position = position;
+    }
+
     /// <summary>
     /// Set the chunk neighbor in the given direction
     /// </summary>

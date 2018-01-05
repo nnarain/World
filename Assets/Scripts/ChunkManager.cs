@@ -186,7 +186,7 @@ public class ChunkManager : MonoBehaviour
     {
         // if the chunk does not exist yet, create it.
         var chunk = Instantiate(chunkPrefab);
-        chunk.transform.position = new Vector3(x * chunkPrefab.chunkSizeX, 0, z * chunkPrefab.chunkSizeZ);
+        chunk.SetPosition(new Vector3(x * chunkPrefab.chunkSizeX, 0, z * chunkPrefab.chunkSizeZ));
         chunk.transform.SetParent(transform, false);
 
         // TODO: Set chunk neighbors
