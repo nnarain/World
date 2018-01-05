@@ -112,7 +112,7 @@ public class ChunkManager : MonoBehaviour
                 {
                     queue.Enqueue(neighbor);
                 }
-                else if (playerCamera.IsPointInFrustum(chunkPosition))
+                else if (IsChunkInFrustum(chunkPosition))
                 {
                     // check if the chunk is in the camera's view frustum
 
@@ -194,6 +194,31 @@ public class ChunkManager : MonoBehaviour
         return chunk;
     }
 
+    private bool IsChunkInFrustum(Vector3 chunkCenter)
+    {
+        float offsetX = (float)chunkPrefab.chunkSizeX / 2.0f;
+        float offsetY = (float)chunkPrefab.chunkSizeY / 2.0f;
+        float offsetZ = (float)chunkPrefab.chunkSizeZ / 2.0f;
+
+        Vector3[] corners =
+        {
+            new Vector3(chunkCenter.x - offsetX, chunkCenter.y + offsetY, chunkCenter.z + offsetZ),
+            new Vector3(chunkCenter.x + offsetX, chunkCenter.y + offsetY, chunkCenter.z + offsetZ),
+            new Vector3(chunkCenter.x - offsetX, chunkCenter.y + offsetY, chunkCenter.z - offsetZ),
+            new Vector3(chunkCenter.x + offsetX, chunkCenter.y + offsetY, chunkCenter.z - offsetZ)
+        };
+
+        foreach (var corner in corners)
+        {
+            if (playerCamera.IsPointInFrustum(corner))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private Vector3Int[] GetChunkNeighbors(Vector3Int p)
     {
         return new Vector3Int[]
@@ -246,7 +271,7 @@ public class ChunkManager : MonoBehaviour
     {
         if (drawDebug)
         {
-        
+
         }
     }
 
