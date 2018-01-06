@@ -173,7 +173,7 @@ MonoBehaviour:
   forwardRenderDistance: 225
   generalRenderDistance: 35
   moveThreshold: 8
-  rotationThreshold: 7.5
+  rotationThreshold: 5
   distanceToInactive: 75
   distanceToDestroy: 300
   drawDebug: 0
