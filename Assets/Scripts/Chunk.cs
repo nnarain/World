@@ -60,6 +60,9 @@ public class Chunk : MonoBehaviour
     // temporary object to store the chunks position since the transform cannot be used in a thread
     private Vector3 chunkPosition;
 
+    private Action<Chunk> onLoadCallback = null;
+    private Action<Chunk> onBuildCallback = null;
+
     private void Awake()
     {
         mesh = new Mesh();
@@ -95,8 +98,8 @@ public class Chunk : MonoBehaviour
         fieldGenerator.Generate(field, chunkPosition);
         state = ChunkState.Loaded;
 
-        // TODO: Seperate Thread
-        Build();
+        if (onLoadCallback != null)
+            onLoadCallback(this);
     }
 
     /// <summary>
@@ -106,6 +109,9 @@ public class Chunk : MonoBehaviour
     {
         state = ChunkState.Building;
         mesher.Extract(field, OnMeshDataRecieve);
+
+        if (onBuildCallback != null)
+            onBuildCallback(this);
     }
 
     private void OnMeshDataRecieve(MeshData data)
@@ -127,6 +133,16 @@ public class Chunk : MonoBehaviour
         state = ChunkState.Built;
 
         hasMeshData = false;
+    }
+
+    public void SetOnLoadCallback(Action<Chunk> callback)
+    {
+        onLoadCallback = callback;
+    }
+
+    public void SetOnBuildCallback(Action<Chunk> callback)
+    {
+        onBuildCallback = callback;
     }
 
     public void SetPosition(Vector3 position)

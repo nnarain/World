@@ -29,12 +29,24 @@ public class ChunkManager : MonoBehaviour
     private Camera playerCamera;
     private ChunkLoader chunkLoader;
 
+    // chunks that are currently building
+    private int batchCount = 0;
+    // chunks that have loaded from the current batch
+    private int loadedInBatch = 0;
+    // chunks that have built from the current batch
+    private int builtInBatch = 0;
+    private Queue<Chunk> buildQueue;
+    private readonly object buildLock = new object();
+    private readonly object loadLock = new object();
+
+
     // Use this for initialization
     private void Start()
     {
         chunkLoader = GetComponent<ChunkLoader>();
         chunkList = new Dictionary<Vector3Int, Chunk>();
         playerCamera = player.GetComponentInChildren<Camera>();
+        buildQueue = new Queue<Chunk>();
     }
 
     // Update is called once per frame
@@ -42,6 +54,14 @@ public class ChunkManager : MonoBehaviour
     {
         UpdatePlayerPosition(player.transform.position);
         UpdatePlayerRotation();
+
+        if (loadedInBatch == batchCount && loadedInBatch > 0)
+        {
+            while (buildQueue.Count > 0)
+            {
+                chunkLoader.Build(buildQueue.Dequeue());
+            }
+        }
     }
 
     private void UpdatePlayerPosition(Vector3 playerPosition)
@@ -68,9 +88,19 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Update chunks around the player
+    /// </summary>
+    /// <param name="playerPosition"></param>
     private void UpdateSurroundingChunks(Vector3 playerPosition)
     {
-        UpdateVisibleChunks(playerPosition);
+
+        // only update visible chunks if all chunks that were queued for loading are done
+        if (builtInBatch == batchCount)
+        {
+            UpdateVisibleChunks(playerPosition);
+        }
+
         RemoveFarChunks(playerPosition);
     }
 
@@ -80,6 +110,10 @@ public class ChunkManager : MonoBehaviour
     /// <param name="playerPosition"></param>
     private void UpdateVisibleChunks(Vector3 playerPosition)
     {
+        batchCount = 0;
+        loadedInBatch = 0;
+        builtInBatch = 0;
+
         // the player's chunk position
         Vector3Int playerChunkPosition = GetChunkPosition(playerPosition);
 
@@ -147,7 +181,8 @@ public class ChunkManager : MonoBehaviour
                 chunkList.Add(p, chunk);
 
                 // queue the chunk for loading
-                chunkLoader.Enqueue(chunk);
+                chunkLoader.Load(chunk);
+                batchCount++;
             }
         }
     }
@@ -193,12 +228,31 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
+    private void OnChunkLoad(Chunk chunk)
+    {
+        lock(loadLock)
+        {
+            loadedInBatch++;
+            buildQueue.Enqueue(chunk);
+        }
+    }
+
+    private void OnChunkBuild(Chunk chunk)
+    {
+        lock(buildLock)
+        {
+            builtInBatch++;
+        }
+    }
+
     private Chunk CreateChunk(int x, int z)
     {
         // if the chunk does not exist yet, create it.
         var chunk = Instantiate(chunkPrefab);
         chunk.SetPosition(new Vector3(x * chunkPrefab.chunkSizeX, 0, z * chunkPrefab.chunkSizeZ));
         chunk.transform.SetParent(transform, false);
+        chunk.SetOnLoadCallback(OnChunkLoad);
+        chunk.SetOnBuildCallback(OnChunkBuild);
 
         // Set chunk neighbors
 
