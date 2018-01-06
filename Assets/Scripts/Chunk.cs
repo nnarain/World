@@ -108,7 +108,7 @@ public class Chunk : MonoBehaviour
     public void Build()
     {
         state = ChunkState.Building;
-        mesher.Extract(field, OnMeshDataRecieve);
+        mesher.Extract(this, OnMeshDataRecieve);
 
         if (onBuildCallback != null)
             onBuildCallback(this);
@@ -160,6 +160,59 @@ public class Chunk : MonoBehaviour
     {
         neighbors[direction.ToInt()] = chunk;
         // TODO set opposite neighbor
+    }
+
+    /// <summary>
+    /// Get field data fro mthe chunk, accounting for overflow into adjacent chunks
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="z"></param>
+    /// <returns></returns>
+    public float GetField(int x, int y, int z)
+    {
+        if (x < 0)
+        {
+            return GetNeighborField(Direction.Left, x + chunkSizeX, y, z);
+        }
+        else if (x >= chunkSizeX)
+        {
+            return GetNeighborField(Direction.Right, x - chunkSizeX, y, z);
+        }
+
+        if (y < 0)
+        {
+            return GetNeighborField(Direction.Bottom, x, y + chunkSizeY, z);
+        }
+        else if (y >= chunkSizeY)
+        {
+            return GetNeighborField(Direction.Top, x, y - chunkSizeY, z);
+        }
+
+        if (z < 0)
+        {
+            return GetNeighborField(Direction.Near, x, y, z + chunkSizeZ);
+        }
+        else if (z >= chunkSizeZ)
+        {
+            return GetNeighborField(Direction.Far, x, y, z - chunkSizeZ);
+        }
+
+        return field.Get(x, y, z);
+    }
+
+    private float GetNeighborField(Direction d, int x, int y, int z)
+    {
+        var chunk = GetNeighbor(d);
+
+        if (chunk != null)
+        {
+            return chunk.GetField(x, y, z);
+        }
+        else
+        {
+            return -1;
+        }
     }
 
     /// <summary>

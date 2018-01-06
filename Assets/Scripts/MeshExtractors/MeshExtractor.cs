@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface MeshExtractor
 {
-    void Extract(Field field, Action<MeshData> callback);
+    void Extract(Chunk chunk, Action<MeshData> callback);
 }

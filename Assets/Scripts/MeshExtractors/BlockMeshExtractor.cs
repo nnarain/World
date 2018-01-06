@@ -16,28 +16,28 @@ public class BlockMeshExtractor : MeshExtractor
         triangles = new List<int>();
     }
 
-    void MeshExtractor.Extract(Field field, Action<MeshData> callback)
+    void MeshExtractor.Extract(Chunk chunk, Action<MeshData> callback)
     {
         vertices.Clear();
         triangles.Clear();
 
-        for (int x = 0; x < field.X; ++x)
+        for (int x = 0; x < chunk.Field.X; ++x)
         {
-            for (int y = 0; y < field.Y; ++y)
+            for (int y = 0; y < chunk.Field.Y; ++y)
             {
-                for (int z = 0; z < field.Z; ++z)
+                for (int z = 0; z < chunk.Field.Z; ++z)
                 {
-                    float block = field.Get(x, y, z);
+                    float block = chunk.GetField(x, y, z);
 
                     if (block != 0)
                     {
                         // get neighbor states and determine which faces should be constructed
-                        bool l = field.Get(x - 1, y, z) <= 0;
-                        bool r = field.Get(x + 1, y, z) <= 0;
-                        bool t = field.Get(x, y + 1, z) <= 0;
-                        bool b = field.Get(x, y - 1, z) <= 0;
-                        bool n = field.Get(x, y, z - 1) <= 0;
-                        bool f = field.Get(x, y, z + 1) <= 0;
+                        bool l = chunk.GetField(x - 1, y, z) <= 0;
+                        bool r = chunk.GetField(x + 1, y, z) <= 0;
+                        bool t = chunk.GetField(x, y + 1, z) <= 0;
+                        bool b = chunk.GetField(x, y - 1, z) <= 0;
+                        bool n = chunk.GetField(x, y, z - 1) <= 0;
+                        bool f = chunk.GetField(x, y, z + 1) <= 0;
 
                         CreateCubeMesh(x, y, z, l, r, t, b, n, f);
                     }
