@@ -170,7 +170,7 @@ MonoBehaviour:
   player: {fileID: 1561890006}
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
-  forwardRenderDistance: 150
+  forwardRenderDistance: 225
   generalRenderDistance: 35
   moveThreshold: 8
   rotationThreshold: 7.5

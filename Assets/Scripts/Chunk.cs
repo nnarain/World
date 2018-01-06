@@ -125,6 +125,8 @@ public class Chunk : MonoBehaviour
         mesh.RecalculateNormals();
 
         state = ChunkState.Built;
+
+        hasMeshData = false;
     }
 
     public void SetPosition(Vector3 position)
@@ -152,6 +154,16 @@ public class Chunk : MonoBehaviour
     public Chunk GetNeighbor(Direction direction)
     {
         return neighbors[direction.ToInt()];
+    }
+
+    public void Hide()
+    {
+        gameObject.layer = 0;
+    }
+
+    public void Show()
+    {
+        gameObject.layer = LayerMask.NameToLayer("Default");
     }
 
     /// <summary>
