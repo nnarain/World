@@ -16,6 +16,8 @@ public class ChunkManager : MonoBehaviour
     public float rotationThreshold;
     public float distanceToInactive;
     public float distanceToDestroy;
+    [Range(0, 1f)]
+    public float viewportMargin;
 
     [Tooltip("Draw chunk debug info")]
     public bool drawDebug;
@@ -49,8 +51,7 @@ public class ChunkManager : MonoBehaviour
         {
             lastPlayerPosition = playerPosition;
 
-            UpdateVisibleChunks(playerPosition);
-            RemoveFarChunks(player.transform.position);
+            UpdateSurroundingChunks(playerPosition);
         }
     }
 
@@ -63,8 +64,14 @@ public class ChunkManager : MonoBehaviour
         if (rotateDiff >= rotationThreshold)
         {
             lastPlayerRotation = playerRotation;
-            UpdateVisibleChunks(player.transform.position);
+            UpdateSurroundingChunks(player.transform.position);
         }
+    }
+
+    private void UpdateSurroundingChunks(Vector3 playerPosition)
+    {
+        UpdateVisibleChunks(playerPosition);
+        RemoveFarChunks(playerPosition);
     }
 
     /// <summary>
@@ -153,25 +160,29 @@ public class ChunkManager : MonoBehaviour
         foreach (var pair in chunkList)
         {
             var chunk = pair.Value;
-            var chunkPosition = chunk.transform.position;
+            var chunkPosition = GetWorldPositionFromChunkPosition(pair.Key);
 
             // calculate distance between player and chunk
             var distanceToChunk = (playerPosition - chunkPosition).magnitude;
 
-            // if the distance is greater than the distance to which the chunk should be inactive, but not removed
-            if (distanceToChunk >= distanceToInactive)
+            // check if the chunk is not in the view frustum
+            if (!IsChunkInFrustum(chunkPosition))
             {
-                // set the chunk to inactive
-                chunk.gameObject.SetActive(false);
-            }
+                // if the distance is greater than the distance to which the chunk should be inactive, but not removed
+                if (distanceToChunk >= distanceToInactive)
+                {
+                    // set the chunk to inactive
+                    chunk.gameObject.SetActive(false);
+                }
 
-            // if the distance is grater tan the distance to which the chunk shoould be destroyed
-            if (distanceToChunk >= distanceToDestroy)
-            {
-                // set the chunk for removal from the list
-                toRemove.Add(pair.Key);
-                // and destroy the gamebobject
-                Destroy(chunk);
+                // if the distance is grater tan the distance to which the chunk shoould be destroyed
+                if (distanceToChunk >= distanceToDestroy)
+                {
+                    // set the chunk for removal from the list
+                    toRemove.Add(pair.Key);
+                    // and destroy the gamebobject
+                    Destroy(chunk);
+                }
             }
         }
 
@@ -210,7 +221,7 @@ public class ChunkManager : MonoBehaviour
 
         foreach (var corner in corners)
         {
-            if (playerCamera.IsPointInFrustum(corner))
+            if (playerCamera.IsPointInFrustum(corner, viewportMargin))
             {
                 return true;
             }
@@ -277,6 +288,8 @@ public class ChunkManager : MonoBehaviour
 
     private void OnValidate()
     {
+        if (forwardRenderDistance < 0) forwardRenderDistance = 0;
+        if (generalRenderDistance < 0) generalRenderDistance = 0;
         if (moveThreshold <= 0) moveThreshold = 1f;
         if (distanceToInactive <= 0) distanceToInactive = 100f;
         if (distanceToDestroy <= 0) distanceToDestroy = 1f;

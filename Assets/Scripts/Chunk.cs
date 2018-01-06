@@ -125,6 +125,8 @@ public class Chunk : MonoBehaviour
         mesh.RecalculateNormals();
 
         state = ChunkState.Built;
+
+        hasMeshData = false;
     }
 
     public void SetPosition(Vector3 position)
