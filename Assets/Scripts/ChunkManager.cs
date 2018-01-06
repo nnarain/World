@@ -49,8 +49,7 @@ public class ChunkManager : MonoBehaviour
         {
             lastPlayerPosition = playerPosition;
 
-            UpdateVisibleChunks(playerPosition);
-            RemoveFarChunks(player.transform.position);
+            UpdateSurroundingChunks(playerPosition);
         }
     }
 
@@ -63,8 +62,14 @@ public class ChunkManager : MonoBehaviour
         if (rotateDiff >= rotationThreshold)
         {
             lastPlayerRotation = playerRotation;
-            UpdateVisibleChunks(player.transform.position);
+            UpdateSurroundingChunks(player.transform.position);
         }
+    }
+
+    private void UpdateSurroundingChunks(Vector3 playerPosition)
+    {
+        UpdateVisibleChunks(playerPosition);
+        RemoveFarChunks(playerPosition);
     }
 
     /// <summary>
