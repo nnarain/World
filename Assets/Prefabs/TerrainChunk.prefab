@@ -23,11 +23,11 @@ GameObject:
   - component: {fileID: 23791216910468290}
   - component: {fileID: 114428542671886206}
   m_Layer: 0
-  m_Name: Chunk
+  m_Name: TerrainChunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4225350253594898
 Transform:
@@ -94,14 +94,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b79e66ee4b33dd4458055da743b8569b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkSizeX: 32
+  chunkSizeX: 16
   chunkSizeY: 16
-  chunkSizeZ: 32
+  chunkSizeZ: 16
   extractorType: 0
   fieldType: 1
   perlinConfig:
-    seed: -222
-    scale: 115.4
-    octaves: 4
-    persistance: 0.935
-    lacunarity: 1.948
+    seed: -258
+    scale: 47.69
+    octaves: 5
+    persistance: 0.285
+    lacunarity: 2

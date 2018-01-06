@@ -11,15 +11,5 @@ public class WorldManagerEditor : Editor
         WorldManager worldManager = (WorldManager)target;
 
         DrawDefaultInspector();
-
-        if (GUILayout.Button("Generate"))
-        {
-            worldManager.Generate();
-        }
-
-        if (GUILayout.Button("Destroy Chunks"))
-        {
-            worldManager.DestroyChunks();
-        }
     }
 }
