@@ -200,7 +200,18 @@ public class ChunkManager : MonoBehaviour
         chunk.SetPosition(new Vector3(x * chunkPrefab.chunkSizeX, 0, z * chunkPrefab.chunkSizeZ));
         chunk.transform.SetParent(transform, false);
 
-        // TODO: Set chunk neighbors
+        // Set chunk neighbors
+
+        Vector3Int[] neighbors = GetChunkNeighbors(new Vector3Int(x, 0, z));
+        Direction[] directions = { Direction.Left, Direction.Right, Direction.Far, Direction.Near };
+
+        for (int i = 0; i < neighbors.Length; ++i)
+        {
+            if (chunkList.ContainsKey(neighbors[i]))
+            {
+                chunk.SetNeighbor(chunkList[neighbors[i]], directions[i]);
+            }
+        }
 
         return chunk;
     }
@@ -230,12 +241,17 @@ public class ChunkManager : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Get the chunk neighbors in the order l, r, f, and n
+    /// </summary>
+    /// <param name="p"></param>
+    /// <returns></returns>
     private Vector3Int[] GetChunkNeighbors(Vector3Int p)
     {
         return new Vector3Int[]
         {
-            new Vector3Int(p.x + 1, 0, p.z),
             new Vector3Int(p.x - 1, 0, p.z),
+            new Vector3Int(p.x + 1, 0, p.z),
             new Vector3Int(p.x, 0, p.z + 1),
             new Vector3Int(p.x, 0, p.z - 1)
         };
