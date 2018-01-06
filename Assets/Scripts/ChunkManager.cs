@@ -137,7 +137,6 @@ public class ChunkManager : MonoBehaviour
                 // the chunk already exists, ensure it is enabled
                 var chunk = chunkList[p];
                 chunk.gameObject.SetActive(true);
-            //    chunk.Show();
             }
             else
             {
@@ -167,8 +166,6 @@ public class ChunkManager : MonoBehaviour
             // check if the chunk is not in the view frustum
             if (!IsChunkInFrustum(chunkPosition))
             {
-             //   chunk.Hide();
-
                 // if the distance is greater than the distance to which the chunk should be inactive, but not removed
                 if (distanceToChunk >= distanceToInactive)
                 {

@@ -156,16 +156,6 @@ public class Chunk : MonoBehaviour
         return neighbors[direction.ToInt()];
     }
 
-    public void Hide()
-    {
-        gameObject.layer = 0;
-    }
-
-    public void Show()
-    {
-        gameObject.layer = LayerMask.NameToLayer("Default");
-    }
-
     /// <summary>
     /// Get the mesh extractor
     /// </summary>
