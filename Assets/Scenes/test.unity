@@ -170,12 +170,13 @@ MonoBehaviour:
   player: {fileID: 1561890006}
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
-  forwardRenderDistance: 225
-  generalRenderDistance: 35
+  forwardRenderDistance: 200
+  generalRenderDistance: 50.2
   moveThreshold: 8
-  rotationThreshold: 5
-  distanceToInactive: 75
-  distanceToDestroy: 300
+  rotationThreshold: 3
+  distanceToInactive: 70.14
+  distanceToDestroy: 200.16
+  viewportMargin: 0.2
   drawDebug: 0
 --- !u!114 &788152807
 MonoBehaviour:

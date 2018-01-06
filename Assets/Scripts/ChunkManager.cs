@@ -16,6 +16,8 @@ public class ChunkManager : MonoBehaviour
     public float rotationThreshold;
     public float distanceToInactive;
     public float distanceToDestroy;
+    [Range(0, 1f)]
+    public float viewportMargin;
 
     [Tooltip("Draw chunk debug info")]
     public bool drawDebug;
@@ -219,7 +221,7 @@ public class ChunkManager : MonoBehaviour
 
         foreach (var corner in corners)
         {
-            if (playerCamera.IsPointInFrustum(corner))
+            if (playerCamera.IsPointInFrustum(corner, viewportMargin))
             {
                 return true;
             }
@@ -286,6 +288,8 @@ public class ChunkManager : MonoBehaviour
 
     private void OnValidate()
     {
+        if (forwardRenderDistance < 0) forwardRenderDistance = 0;
+        if (generalRenderDistance < 0) generalRenderDistance = 0;
         if (moveThreshold <= 0) moveThreshold = 1f;
         if (distanceToInactive <= 0) distanceToInactive = 100f;
         if (distanceToDestroy <= 0) distanceToDestroy = 1f;

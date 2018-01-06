@@ -27,10 +27,13 @@ public static class CameraExtension
         return new CameraFrustum(nearCorners, farCorners);
     }
 
-    public static bool IsPointInFrustum(this Camera camera, Vector3 point)
+    public static bool IsPointInFrustum(this Camera camera, Vector3 point, float margin = 0.0f)
     {
+        float min = 0 - margin;
+        float max = 1 + margin;
+
         Vector3 viewportPoint = camera.WorldToViewportPoint(point);
 
-        return viewportPoint.x >= 0 && viewportPoint.x <= 1 && viewportPoint.y >= 0 && viewportPoint.y <= 1 && viewportPoint.z > 0;
+        return viewportPoint.x >= min && viewportPoint.x <= max && viewportPoint.y >= min && viewportPoint.y <= max && viewportPoint.z > 0;
     }
 }
