@@ -51,7 +51,7 @@ public class GreedyMesh
 
             int[] x = { 0, 0, 0 };
             int[] q = { 0, 0, 0 };
-            int[] mask = new int[(dims[u] + 0) * (dims[v] + 0)];
+            int[] mask = new int[(dims[u] + 1) * (dims[v] + 1)];
 
 
             q[d] = 1;
