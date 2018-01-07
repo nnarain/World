@@ -10,7 +10,8 @@ public class Chunk : MonoBehaviour
 {
     public enum MeshExtractorType
     {
-        Block
+        SimpleBlocks,
+        GreedyBlocks
     }
 
     public enum FieldGeneratorType
@@ -33,7 +34,7 @@ public class Chunk : MonoBehaviour
     public int chunkSizeY;
     public int chunkSizeZ;
 
-    public MeshExtractorType extractorType = MeshExtractorType.Block;
+    public MeshExtractorType extractorType = MeshExtractorType.SimpleBlocks;
     public FieldGeneratorType fieldType = FieldGeneratorType.Sine;
     public PerlinHeightMapGenerator.Config perlinConfig;
 
@@ -234,8 +235,10 @@ public class Chunk : MonoBehaviour
     {
         switch (type)
         {
-            case MeshExtractorType.Block:
+            case MeshExtractorType.SimpleBlocks:
                 return new BlockMeshExtractor();
+            case MeshExtractorType.GreedyBlocks:
+                return new GreedyMeshExtractor();
             default:
                 return null;
         }

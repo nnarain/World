@@ -97,7 +97,7 @@ MonoBehaviour:
   chunkSizeX: 16
   chunkSizeY: 16
   chunkSizeZ: 16
-  extractorType: 0
+  extractorType: 1
   fieldType: 1
   perlinConfig:
     seed: -258
