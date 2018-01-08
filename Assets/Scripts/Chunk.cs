@@ -16,6 +16,7 @@ public class Chunk : MonoBehaviour
 
     public enum FieldGeneratorType
     {
+        Fill,
         Sine,
         PerlinHeight
     }
@@ -253,6 +254,8 @@ public class Chunk : MonoBehaviour
     {
         switch(type)
         {
+            case FieldGeneratorType.Fill:
+                return new FillFieldGenerator();
             case FieldGeneratorType.Sine:
                 return new SineFieldGenerator();
             case FieldGeneratorType.PerlinHeight:

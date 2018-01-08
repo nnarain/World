@@ -62,12 +62,32 @@ public class GreedyMesh
                 int n = 0;
                 for (x[v] = 0; x[v] < dims[v]; ++x[v])
                 {
-                    for (x[u] = 0; x[u] < dims[u]; ++x[u])
+                    for (x[u] = 0; x[u] < dims[u]; ++x[u], ++n)
                     {
-                        bool test = (0 <= x[d] ? (int)chunk.GetField(x[0], x[1], x[2]) : 0) !=
-                            (x[d] < dims[d] - 1 ? (int)chunk.GetField(x[0] + q[0], x[1] + q[1], x[2] + q[2]) : 0);
+                        int vox1 = (int)chunk.GetField(x[0], x[1], x[2]);
+                        int vox2 = (int)chunk.GetField(x[0] + q[0], x[1] + q[1], x[2] + q[2]);
 
-                        mask[n++] = test ? 1 : 0;
+                        int a = (0 <= x[d] ? vox1 : 0);
+                        int b = (x[d] < dims[d] - 1 ? vox2 : 0);
+
+                        if ((a != 0) == (b != 0))
+                        {
+                            mask[n] = 0;
+                        }
+                        else if ((a !=0))
+                        {
+                            mask[n] = a;
+                        }
+                        else
+                        {
+                            mask[n] = -b;
+                        }
+                        
+
+                    //    bool test = (0 <= x[d] ? (int)chunk.GetField(x[0], x[1], x[2]) : 0) !=
+                     //       (x[d] < dims[d] - 1 ? (int)chunk.GetField(x[0] + q[0], x[1] + q[1], x[2] + q[2]) : 0);
+
+                      //  mask[n++] = test ? 1 : 0;
                     }
                 }
 
@@ -80,13 +100,12 @@ public class GreedyMesh
                 {
                     for (i = 0; i < dims[u];)
                     {
-                        // Debug.Log("Here");
+                        var c = mask[n];
 
-
-                        if (mask[n] != 0)
+                        if (c != 0)
                         {
                             // compute width
-                            for (w = 1; mask[n + w] != 0 && (i + w) < dims[u]; ++w) { }
+                            for (w = 1; mask[n + w] == c && (i + w) < dims[u]; ++w) { }
 
                             // compute height
                             bool done = false;
@@ -94,7 +113,7 @@ public class GreedyMesh
                             {
                                 for (k = 0; k < w; ++k)
                                 {
-                                    if (mask[n + k + h * dims[u]] == 0)
+                                    if (mask[n + k + h * dims[u]] != c)
                                     {
                                         done = true;
                                         break;
@@ -111,16 +130,25 @@ public class GreedyMesh
                             x[v] = j;
 
                             int[] du = { 0, 0, 0 };
-                            du[u] = w;
                             int[] dv = { 0, 0, 0 };
-                            dv[v] = h;
+
+                            if (c > 0)
+                            {
+                                dv[v] = h;
+                                du[u] = w;
+                            }
+                            else
+                            {
+                                du[v] = h;
+                                dv[u] = w;
+                            }
 
                             Vector3 v1 = new Vector3(x[0], x[1], x[2]);
                             Vector3 v2 = new Vector3(x[0] + du[0], x[1] + du[1], x[2] + du[2]);
                             Vector3 v3 = new Vector3(x[0] + du[0] + dv[0], x[1] + du[1] + dv[1], x[2] + du[2] + dv[2]);
                             Vector3 v4 = new Vector3(x[0] + dv[0], x[1] + dv[1], x[2] + dv[2]);
 
-                            AddFace(v1, v2, v3, v4, vertices, elements);
+                            AddQuad(v1, v2, v3, v4, vertices, elements);
 
                             for (l = 0; l < h; ++l)
                             {
@@ -148,7 +176,7 @@ public class GreedyMesh
         return data;
     }
 
-    private void AddFace(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, List<Vector3> vertices, List<int> elements)
+    private void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, List<Vector3> vertices, List<int> elements)
     {
         int i = vertices.Count;
         vertices.Add(v1);
