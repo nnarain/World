@@ -27,7 +27,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4225350253594898
 Transform:
@@ -97,11 +97,11 @@ MonoBehaviour:
   chunkSizeX: 16
   chunkSizeY: 16
   chunkSizeZ: 16
-  extractorType: 0
-  fieldType: 1
+  extractorType: 1
+  fieldType: 2
   perlinConfig:
-    seed: -258
-    scale: 47.69
-    octaves: 5
-    persistance: 0.285
-    lacunarity: 2
+    seed: -584
+    scale: 69.56
+    octaves: 4
+    persistance: 0.692
+    lacunarity: 1.815

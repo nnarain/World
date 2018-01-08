@@ -10,11 +10,13 @@ public class Chunk : MonoBehaviour
 {
     public enum MeshExtractorType
     {
-        Block
+        SimpleBlocks,
+        GreedyBlocks
     }
 
     public enum FieldGeneratorType
     {
+        Fill,
         Sine,
         PerlinHeight
     }
@@ -33,7 +35,7 @@ public class Chunk : MonoBehaviour
     public int chunkSizeY;
     public int chunkSizeZ;
 
-    public MeshExtractorType extractorType = MeshExtractorType.Block;
+    public MeshExtractorType extractorType = MeshExtractorType.SimpleBlocks;
     public FieldGeneratorType fieldType = FieldGeneratorType.Sine;
     public PerlinHeightMapGenerator.Config perlinConfig;
 
@@ -108,7 +110,7 @@ public class Chunk : MonoBehaviour
     public void Build()
     {
         state = ChunkState.Building;
-        mesher.Extract(field, OnMeshDataRecieve);
+        mesher.Extract(this, OnMeshDataRecieve);
 
         if (onBuildCallback != null)
             onBuildCallback(this);
@@ -163,6 +165,59 @@ public class Chunk : MonoBehaviour
     }
 
     /// <summary>
+    /// Get field data fro mthe chunk, accounting for overflow into adjacent chunks
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="z"></param>
+    /// <returns></returns>
+    public float GetField(int x, int y, int z)
+    {
+        if (x < 0)
+        {
+            return GetNeighborField(Direction.Left, x + chunkSizeX, y, z);
+        }
+        else if (x >= chunkSizeX)
+        {
+            return GetNeighborField(Direction.Right, x - chunkSizeX, y, z);
+        }
+
+        if (y < 0)
+        {
+            return GetNeighborField(Direction.Bottom, x, y + chunkSizeY, z);
+        }
+        else if (y >= chunkSizeY)
+        {
+            return GetNeighborField(Direction.Top, x, y - chunkSizeY, z);
+        }
+
+        if (z < 0)
+        {
+            return GetNeighborField(Direction.Near, x, y, z + chunkSizeZ);
+        }
+        else if (z >= chunkSizeZ)
+        {
+            return GetNeighborField(Direction.Far, x, y, z - chunkSizeZ);
+        }
+
+        return field.Get(x, y, z);
+    }
+
+    private float GetNeighborField(Direction d, int x, int y, int z)
+    {
+        var chunk = GetNeighbor(d);
+
+        if (chunk != null)
+        {
+            return chunk.GetField(x, y, z);
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    /// <summary>
     /// Get the chunk's neighbor for the given direction
     /// </summary>
     /// <param name="direction"></param>
@@ -181,8 +236,10 @@ public class Chunk : MonoBehaviour
     {
         switch (type)
         {
-            case MeshExtractorType.Block:
+            case MeshExtractorType.SimpleBlocks:
                 return new BlockMeshExtractor();
+            case MeshExtractorType.GreedyBlocks:
+                return new GreedyMeshExtractor();
             default:
                 return null;
         }
@@ -197,6 +254,8 @@ public class Chunk : MonoBehaviour
     {
         switch(type)
         {
+            case FieldGeneratorType.Fill:
+                return new FillFieldGenerator();
             case FieldGeneratorType.Sine:
                 return new SineFieldGenerator();
             case FieldGeneratorType.PerlinHeight:
