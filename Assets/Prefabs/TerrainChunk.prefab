@@ -27,7 +27,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4225350253594898
 Transform:
@@ -98,7 +98,7 @@ MonoBehaviour:
   chunkSizeY: 16
   chunkSizeZ: 16
   extractorType: 1
-  fieldType: 1
+  fieldType: 2
   perlinConfig:
     seed: -584
     scale: 69.56
