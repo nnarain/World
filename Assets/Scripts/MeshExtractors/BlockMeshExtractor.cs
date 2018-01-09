@@ -9,11 +9,13 @@ public class BlockMeshExtractor : MeshExtractor
 {
     private List<Vector3> vertices;
     private List<int> triangles;
+    private List<Color> colors;
 
     public BlockMeshExtractor()
     {
         vertices = new List<Vector3>();
         triangles = new List<int>();
+        colors = new List<Color>();
     }
 
     void MeshExtractor.Extract(Chunk chunk, Action<MeshData> callback)
@@ -39,17 +41,17 @@ public class BlockMeshExtractor : MeshExtractor
                         bool n = chunk.GetField(x, y, z - 1) <= 0;
                         bool f = chunk.GetField(x, y, z + 1) <= 0;
 
-                        CreateCubeMesh(x, y, z, l, r, t, b, n, f);
+                        CreateCubeMesh(x, y, z, Color.red, l, r, t, b, n, f);
                     }
                 }
             }
         }
 
-        MeshData data = new MeshData(vertices, triangles);
+        MeshData data = new MeshData(vertices, triangles, colors);
         callback(data);
     }
 
-    private void CreateCubeMesh(int x, int y, int z, bool l, bool r, bool t, bool b, bool n, bool f)
+    private void CreateCubeMesh(int x, int y, int z, Color c, bool l, bool r, bool t, bool b, bool n, bool f)
     {
         // local block position
         Vector3 blockPosition = new Vector3(x, y, z);
@@ -60,7 +62,8 @@ public class BlockMeshExtractor : MeshExtractor
                 CubeMetrics.LBF + blockPosition,
                 CubeMetrics.LTF + blockPosition,
                 CubeMetrics.LTN + blockPosition,
-                CubeMetrics.LBN + blockPosition
+                CubeMetrics.LBN + blockPosition,
+                c
             );
         }
 
@@ -70,7 +73,8 @@ public class BlockMeshExtractor : MeshExtractor
                 CubeMetrics.RBN + blockPosition,
                 CubeMetrics.RTN + blockPosition,
                 CubeMetrics.RTF + blockPosition,
-                CubeMetrics.RBF + blockPosition
+                CubeMetrics.RBF + blockPosition,
+                c
             );
         }
 
@@ -80,7 +84,8 @@ public class BlockMeshExtractor : MeshExtractor
                 CubeMetrics.LTN + blockPosition,
                 CubeMetrics.LTF + blockPosition,
                 CubeMetrics.RTF + blockPosition,
-                CubeMetrics.RTN + blockPosition
+                CubeMetrics.RTN + blockPosition,
+                c
             );
         }
 
@@ -90,7 +95,8 @@ public class BlockMeshExtractor : MeshExtractor
                 CubeMetrics.LBF + blockPosition,
                 CubeMetrics.LBN + blockPosition,
                 CubeMetrics.RBN + blockPosition,
-                CubeMetrics.RBF + blockPosition
+                CubeMetrics.RBF + blockPosition,
+                c
             );
         }
 
@@ -100,7 +106,8 @@ public class BlockMeshExtractor : MeshExtractor
                 CubeMetrics.LBN + blockPosition,
                 CubeMetrics.LTN + blockPosition,
                 CubeMetrics.RTN + blockPosition,
-                CubeMetrics.RBN + blockPosition
+                CubeMetrics.RBN + blockPosition,
+                c
             );
         }
 
@@ -110,7 +117,8 @@ public class BlockMeshExtractor : MeshExtractor
                 CubeMetrics.RBF + blockPosition,
                 CubeMetrics.RTF + blockPosition,
                 CubeMetrics.LTF + blockPosition,
-                CubeMetrics.LBF + blockPosition
+                CubeMetrics.LBF + blockPosition,
+                c
             );
         }
     }
@@ -122,13 +130,18 @@ public class BlockMeshExtractor : MeshExtractor
     /// <param name="lt">Left Top</param>
     /// <param name="rt">Right Top</param>
     /// <param name="rb">Right Bottom</param>
-    private void MakeFace(Vector3 lb, Vector3 lt, Vector3 rt, Vector3 rb)
+    private void MakeFace(Vector3 lb, Vector3 lt, Vector3 rt, Vector3 rb, Color c)
     {
         int index = vertices.Count;
         vertices.Add(lb);
         vertices.Add(lt);
         vertices.Add(rt);
         vertices.Add(rb);
+
+        colors.Add(c);
+        colors.Add(c);
+        colors.Add(c);
+        colors.Add(c);
 
         triangles.Add(index + 0);
         triangles.Add(index + 1);
