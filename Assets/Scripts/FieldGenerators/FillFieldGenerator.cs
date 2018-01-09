@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class FillFieldGenerator : FieldGenerator
 {
-    void FieldGenerator.Generate(Field field, Vector3 position)
+    void FieldGenerator.Generate(VoxelField field, Vector3 position)
     {
         field.ForEach((x, y, z, v) =>
         {
-            field.Set(x, y, z, 1);
+            field.Set(x, y, z, Voxel.VoxelType.Grass);
         });
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +6,7 @@ using System.Text;
 /// <summary>
 /// Represents a 3D scalar field
 /// </summary>
-public class Field
+public class VoxelField
 {
     int x, y, z;
 
@@ -15,33 +14,38 @@ public class Field
     public int Y { get { return y; } }
     public int Z { get { return z; } }
 
-    private float[] field = null;
+    private List<Voxel> field = null;
 
-    public Field(int x, int y, int z)
+    public VoxelField(int x, int y, int z)
     {
         this.x = x;
         this.y = y;
         this.z = z;
 
-        field = new float[x * y * z];
+        field = new List<Voxel>();
+        int size = x * y * z;
+        for (int i = 0; i < size; ++i)
+        {
+            field.Add(new Voxel(Voxel.VoxelType.Air));
+        }
     }
 
-    public void Set(int x, int y, int z, float v)
+    public void Set(int x, int y, int z, Voxel.VoxelType t)
     {
-        field[GetIndex(x, y, z)] = v;
+        field[GetIndex(x, y, z)].Type = t;
     }
 
-    public float Get(int x, int y, int z)
+    public Voxel Get(int x, int y, int z)
     {
         if (x >= this.x || x < 0 || y >= this.y || y < 0 || z >= this.z || z < 0)
         {
-            return -1.0f;
+            return Voxel.air;
         }
 
         return field[GetIndex(x, y, z)];
     }
 
-    public void ForEach(Action<int, int, int, float> action)
+    public void ForEach(Action<int, int, int, Voxel> action)
     {
         for (int x = 0; x < this.x; ++x)
         {
@@ -49,7 +53,7 @@ public class Field
             {
                 for (int z = 0; z < this.z; ++z)
                 {
-                    float v = Get(x, y, z);
+                    Voxel v = Get(x, y, z);
                     action(x, y, z, v);
                 }
             }
