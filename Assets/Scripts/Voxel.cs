@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-struct Voxel
+[System.Serializable]
+public class Voxel
 {
-    enum Type
+    public enum VoxelType
     {
         Air,
         Water,
@@ -15,5 +16,22 @@ struct Voxel
         Snow
     }
 
-    Type type;
+    private VoxelType type;
+    public VoxelType Type
+    {
+        get { return type; }
+        set { type = value; }
+    }
+
+    public Voxel(VoxelType type)
+    {
+        this.type = type;
+    }
+
+    public Voxel() : this(VoxelType.Air)
+    {
+    }
+
+    // default types
+    public static readonly Voxel air = new Voxel();
 }

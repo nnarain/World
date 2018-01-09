@@ -7,5 +7,5 @@ using UnityEngine;
 /// </summary>
 public interface FieldGenerator
 {
-    void Generate(Field field, Vector3 position);
+    void Generate(VoxelField field, Vector3 position);
 }

@@ -62,8 +62,8 @@ public class GreedyMesh
                 {
                     for (x[u] = 0; x[u] < dims[u]; ++x[u], ++n)
                     {
-                        int vox1 = (int)chunk.GetField(x[0], x[1], x[2]);
-                        int vox2 = (int)chunk.GetField(x[0] + q[0], x[1] + q[1], x[2] + q[2]);
+                        int vox1 = (int)chunk.GetField(x[0], x[1], x[2]).Type;
+                        int vox2 = (int)chunk.GetField(x[0] + q[0], x[1] + q[1], x[2] + q[2]).Type;
 
                         int a = (0 <= x[d] ? vox1 : 0);
                         int b = (x[d] < dims[d] - 1 ? vox2 : 0);

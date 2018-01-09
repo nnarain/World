@@ -31,7 +31,7 @@ public class PerlinHeightMapGenerator : FieldGenerator
         lacunarity = config.lacunarity;
     }
 
-    void FieldGenerator.Generate(Field field, Vector3 position)
+    void FieldGenerator.Generate(VoxelField field, Vector3 position)
     {
         Vector2 samplePosition = new Vector2(position.x, position.z);
         float[,] heightMap = PerlinNoise.Generate(field.X, field.Z, seed, scale, octaves, persistance, lacunarity, samplePosition);
@@ -43,7 +43,7 @@ public class PerlinHeightMapGenerator : FieldGenerator
 
             for (int i = y; i >= 0; --i)
             {
-                field.Set(x, i, z, 1);
+                field.Set(x, i, z, Voxel.VoxelType.Dirt);
             }
         });
     }

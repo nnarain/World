@@ -45,8 +45,8 @@ public class Chunk : MonoBehaviour
     private MeshExtractor mesher;
     private FieldGenerator fieldGenerator;
 
-    private Field field;
-    public Field Field { get { return field; } }
+    private VoxelField field;
+    public VoxelField Field { get { return field; } }
 
     private ChunkState state = ChunkState.Unloaded;
     public ChunkState State { get { return state; } }
@@ -72,7 +72,7 @@ public class Chunk : MonoBehaviour
 
         mesher = CreateMeshExtractor(extractorType);
 
-        field = new Field(chunkSizeX, chunkSizeY, chunkSizeZ);
+        field = new VoxelField(chunkSizeX, chunkSizeY, chunkSizeZ);
         fieldGenerator = CreateFieldGenerator(fieldType);
 
         neighbors = new Chunk[6];
@@ -172,7 +172,7 @@ public class Chunk : MonoBehaviour
     /// <param name="y"></param>
     /// <param name="z"></param>
     /// <returns></returns>
-    public float GetField(int x, int y, int z)
+    public Voxel GetField(int x, int y, int z)
     {
         if (x < 0)
         {
@@ -204,7 +204,7 @@ public class Chunk : MonoBehaviour
         return field.Get(x, y, z);
     }
 
-    private float GetNeighborField(Direction d, int x, int y, int z)
+    private Voxel GetNeighborField(Direction d, int x, int y, int z)
     {
         var chunk = GetNeighbor(d);
 
@@ -214,7 +214,7 @@ public class Chunk : MonoBehaviour
         }
         else
         {
-            return -1;
+            return Voxel.air;
         }
     }
 

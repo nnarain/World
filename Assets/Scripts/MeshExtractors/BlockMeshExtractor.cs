@@ -29,17 +29,17 @@ public class BlockMeshExtractor : MeshExtractor
             {
                 for (int z = 0; z < chunk.Field.Z; ++z)
                 {
-                    float block = chunk.GetField(x, y, z);
+                    Voxel block = chunk.GetField(x, y, z);
 
-                    if (block != 0)
+                    if (block.Type != Voxel.VoxelType.Air)
                     {
                         // get neighbor states and determine which faces should be constructed
-                        bool l = chunk.GetField(x - 1, y, z) <= 0;
-                        bool r = chunk.GetField(x + 1, y, z) <= 0;
-                        bool t = chunk.GetField(x, y + 1, z) <= 0;
-                        bool b = chunk.GetField(x, y - 1, z) <= 0;
-                        bool n = chunk.GetField(x, y, z - 1) <= 0;
-                        bool f = chunk.GetField(x, y, z + 1) <= 0;
+                        bool l = chunk.GetField(x - 1, y, z).Type == Voxel.VoxelType.Air;
+                        bool r = chunk.GetField(x + 1, y, z).Type == Voxel.VoxelType.Air;
+                        bool t = chunk.GetField(x, y + 1, z).Type == Voxel.VoxelType.Air;
+                        bool b = chunk.GetField(x, y - 1, z).Type == Voxel.VoxelType.Air;
+                        bool n = chunk.GetField(x, y, z - 1).Type == Voxel.VoxelType.Air;
+                        bool f = chunk.GetField(x, y, z + 1).Type == Voxel.VoxelType.Air;
 
                         CreateCubeMesh(x, y, z, Color.red, l, r, t, b, n, f);
                     }
