@@ -130,6 +130,7 @@ public class Chunk : MonoBehaviour
     {
         mesh.vertices = data.vertices.ToArray();
         mesh.triangles = data.triangles.ToArray();
+        mesh.colors = data.colors.ToArray();
         mesh.RecalculateNormals();
 
         state = ChunkState.Built;
