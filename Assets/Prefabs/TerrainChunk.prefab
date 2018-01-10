@@ -27,7 +27,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4225350253594898
 Transform:
@@ -95,13 +95,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkSizeX: 16
-  chunkSizeY: 16
+  chunkSizeY: 32
   chunkSizeZ: 16
+  voxelColors:
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.221237, g: 0.56748897, b: 0.9705882, a: 0}
+  - {r: 0.9705882, g: 0.7731237, b: 0.12846021, a: 0}
+  - {r: 0.52205884, g: 0.4062645, b: 0.15738538, a: 0}
+  - {r: 0.07201559, g: 0.8161765, b: 0.07714769, a: 0}
+  - {r: 0.61764705, g: 0.61764705, b: 0.61764705, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
   extractorType: 1
   fieldType: 2
   perlinConfig:
-    seed: -584
-    scale: 69.56
+    seed: -1043
+    scale: 73.52
     octaves: 4
-    persistance: 0.692
-    lacunarity: 1.815
+    persistance: 0.942
+    lacunarity: 1.918
+    heightCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.35610652
+        value: 0.013800148
+        inSlope: 0.04216271
+        outSlope: 0.04216271
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0

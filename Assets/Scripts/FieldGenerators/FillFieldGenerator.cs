@@ -8,7 +8,7 @@ public class FillFieldGenerator : FieldGenerator
     {
         field.ForEach((x, y, z, v) =>
         {
-            field.Set(x, y, z, Voxel.VoxelType.Grass);
+            field.Set(x, y, z, VoxelType.Grass);
         });
     }
 }

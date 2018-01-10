@@ -35,6 +35,8 @@ public class Chunk : MonoBehaviour
     public int chunkSizeY;
     public int chunkSizeZ;
 
+    public Color[] voxelColors = new Color[Enum.GetNames(typeof(VoxelType)).Length];
+
     public MeshExtractorType extractorType = MeshExtractorType.SimpleBlocks;
     public FieldGeneratorType fieldType = FieldGeneratorType.Sine;
     public PerlinHeightMapGenerator.Config perlinConfig;
@@ -226,6 +228,11 @@ public class Chunk : MonoBehaviour
     public Chunk GetNeighbor(Direction direction)
     {
         return neighbors[direction.ToInt()];
+    }
+
+    public Color GetVoxelColor(VoxelType t)
+    {
+        return voxelColors[(int)t];
     }
 
     /// <summary>
