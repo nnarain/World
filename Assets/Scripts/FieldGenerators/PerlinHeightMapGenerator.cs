@@ -69,7 +69,11 @@ public class PerlinHeightMapGenerator : FieldGenerator
         {
             return VoxelType.Grass;
         }
+        else if (elevation < 60)
+        {
+            return VoxelType.Stone;
+        }
 
-        return VoxelType.Stone;
+        return VoxelType.Snow;
     }
 }
