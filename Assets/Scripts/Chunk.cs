@@ -82,7 +82,6 @@ public class Chunk : MonoBehaviour
 
     private void Start()
     {
-        chunkPosition = transform.position;
     }
 
     private void Update()
