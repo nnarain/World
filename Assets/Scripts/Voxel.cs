@@ -2,36 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Voxel
+public enum VoxelType
 {
-    public enum VoxelType
-    {
-        Air,
-        Water,
-        Sand,
-        Dirt,
-        Grass,
-        Stone,
-        Snow
-    }
+    Air,
+    Water,
+    Sand,
+    Dirt,
+    Grass,
+    Stone,
+    Snow
+}
 
-    private VoxelType type;
+[System.Serializable]
+public struct Voxel
+{
+    byte type;
     public VoxelType Type
     {
-        get { return type; }
-        set { type = value; }
+        get { return (VoxelType)type; }
+        set { type = (byte)value; }
     }
 
-    public Voxel(VoxelType type)
-    {
-        this.type = type;
-    }
-
-    public Voxel() : this(VoxelType.Air)
-    {
-    }
-
-    // default types
     public static readonly Voxel air = new Voxel();
 }

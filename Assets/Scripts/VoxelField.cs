@@ -14,7 +14,7 @@ public class VoxelField
     public int Y { get { return y; } }
     public int Z { get { return z; } }
 
-    private List<Voxel> field = null;
+    private Voxel[] field = null;
 
     public VoxelField(int x, int y, int z)
     {
@@ -22,15 +22,10 @@ public class VoxelField
         this.y = y;
         this.z = z;
 
-        field = new List<Voxel>();
-        int size = x * y * z;
-        for (int i = 0; i < size; ++i)
-        {
-            field.Add(new Voxel(Voxel.VoxelType.Air));
-        }
+        field = new Voxel[x * y * z];        
     }
 
-    public void Set(int x, int y, int z, Voxel.VoxelType t)
+    public void Set(int x, int y, int z, VoxelType t)
     {
         field[GetIndex(x, y, z)].Type = t;
     }

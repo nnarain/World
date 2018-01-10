@@ -16,7 +16,7 @@ class SineFieldGenerator : FieldGenerator
             float y = a * Mathf.Sin(m * f) + a;
             y = Mathf.Clamp(y, 0, field.Y);
 
-            field.Set(x, (int)y, z, Voxel.VoxelType.Grass);
+            field.Set(x, (int)y, z, VoxelType.Grass);
         });
 
     }
