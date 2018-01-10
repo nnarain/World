@@ -56,7 +56,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: b8c7557a94ad38141945789ba2821d1e, type: 2}
+  - {fileID: 2100000, guid: d46e0729abcfbda409f34340374f7c6b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkSizeX: 16
-  chunkSizeY: 32
+  chunkSizeY: 64
   chunkSizeZ: 16
   voxelColors:
   - {r: 0, g: 0, b: 0, a: 0}
@@ -108,11 +108,11 @@ MonoBehaviour:
   extractorType: 1
   fieldType: 2
   perlinConfig:
-    seed: -1043
-    scale: 73.52
+    seed: 1687
+    scale: 269.55
     octaves: 4
-    persistance: 0.942
-    lacunarity: 1.918
+    persistance: 0.996
+    lacunarity: 1.989
     heightCurve:
       serializedVersion: 2
       m_Curve:
@@ -123,7 +123,7 @@ MonoBehaviour:
         outSlope: 0
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.35610652
+        time: 0.331105
         value: 0.013800148
         inSlope: 0.04216271
         outSlope: 0.04216271
