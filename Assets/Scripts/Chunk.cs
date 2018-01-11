@@ -18,7 +18,8 @@ public class Chunk : MonoBehaviour
     {
         Fill,
         Sine,
-        PerlinHeight
+        PerlinHeight,
+        ElvationMoisture
     }
 
     public enum ChunkState
@@ -40,6 +41,7 @@ public class Chunk : MonoBehaviour
     public MeshExtractorType extractorType = MeshExtractorType.SimpleBlocks;
     public FieldGeneratorType fieldType = FieldGeneratorType.Sine;
     public PerlinHeightMapGenerator.Config perlinConfig;
+    public ElevationMoistureFieldGenerator.Config elevationMoistureConfig;
 
     private Mesh mesh;
     public Mesh Mesh { get { return mesh; } }
@@ -215,7 +217,7 @@ public class Chunk : MonoBehaviour
         }
         else
         {
-            return Voxel.air;
+            return Voxel.none;
         }
     }
 
@@ -267,6 +269,8 @@ public class Chunk : MonoBehaviour
                 return new SineFieldGenerator();
             case FieldGeneratorType.PerlinHeight:
                 return new PerlinHeightMapGenerator(perlinConfig);
+            case FieldGeneratorType.ElvationMoisture:
+                return new ElevationMoistureFieldGenerator(elevationMoistureConfig);
             default:
                 return null;
         }

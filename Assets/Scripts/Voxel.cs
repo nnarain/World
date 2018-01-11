@@ -23,5 +23,5 @@ public struct Voxel
         set { type = (byte)value; }
     }
 
-    public static readonly Voxel air = new Voxel();
+    public static readonly Voxel none = new Voxel();
 }

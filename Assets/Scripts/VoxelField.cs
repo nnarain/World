@@ -34,7 +34,7 @@ public class VoxelField
     {
         if (x >= this.x || x < 0 || y >= this.y || y < 0 || z >= this.z || z < 0)
         {
-            return Voxel.air;
+            return Voxel.none;
         }
 
         return field[GetIndex(x, y, z)];
