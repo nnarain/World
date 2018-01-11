@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Generator : MonoBehaviour
+public class FieldGenerator : MonoBehaviour
 {
+    public virtual void Generate(VoxelField field, Vector3 position)
+    {
+        // TODO: Throw exception
+    }
 
-
-	// Use this for initialization
-	void Start () 
-	{
-		
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		
-	}
+    public virtual Color GetVoxelColor(byte type)
+    {
+        return Color.black;
+    }
 }

@@ -97,43 +97,6 @@ MonoBehaviour:
   chunkSizeX: 16
   chunkSizeY: 64
   chunkSizeZ: 16
-  voxelColors:
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0.221237, g: 0.56748897, b: 0.9705882, a: 0}
-  - {r: 0.9705882, g: 0.7731237, b: 0.12846021, a: 0}
-  - {r: 0.52205884, g: 0.4062645, b: 0.15738538, a: 0}
-  - {r: 0.07201559, g: 0.8161765, b: 0.07714769, a: 0}
-  - {r: 0.61764705, g: 0.61764705, b: 0.61764705, a: 0}
-  - {r: 1, g: 1, b: 1, a: 0}
+  fieldGeneratorPrefab: {fileID: 114079209533620130, guid: 5c078f38eda71834c97fb743625f7558,
+    type: 2}
   extractorType: 1
-  fieldType: 2
-  perlinConfig:
-    seed: 1687
-    scale: 269.55
-    octaves: 4
-    persistance: 0.996
-    lacunarity: 1.989
-    heightCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 0.331105
-        value: 0.013800148
-        inSlope: 0.04216271
-        outSlope: 0.04216271
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 1
-        inSlope: 2
-        outSlope: 2
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0

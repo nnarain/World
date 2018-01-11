@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GreedyMeshExtractor : MeshExtractor
+public class GreedyMeshExtractor : IMeshExtractor
 {
-    void MeshExtractor.Extract(Chunk chunk, Action<MeshData> callback)
+    void IMeshExtractor.Extract(Chunk chunk, Action<MeshData> callback)
     {
         GreedyMesh greedy = new GreedyMesh();
 

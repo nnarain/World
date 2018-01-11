@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Generate a cube mesh from a field
 /// </summary>
-public class BlockMeshExtractor : MeshExtractor
+public class BlockMeshExtractor : IMeshExtractor
 {
     private List<Vector3> vertices;
     private List<int> triangles;
@@ -18,7 +18,7 @@ public class BlockMeshExtractor : MeshExtractor
         colors = new List<Color>();
     }
 
-    void MeshExtractor.Extract(Chunk chunk, Action<MeshData> callback)
+    void IMeshExtractor.Extract(Chunk chunk, Action<MeshData> callback)
     {
         vertices.Clear();
         triangles.Clear();

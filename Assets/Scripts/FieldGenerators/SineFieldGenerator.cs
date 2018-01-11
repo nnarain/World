@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-class SineFieldGenerator : FieldGenerator
+class SineFieldGenerator : IFieldGenerator
 {
-    void FieldGenerator.Generate(VoxelField field, Vector3 position)
+    void IFieldGenerator.Generate(VoxelField field, Vector3 position)
     {
         float a = (float)field.Y / 3f;
         const float f = 0.25f;

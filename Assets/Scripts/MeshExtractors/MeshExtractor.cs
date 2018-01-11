@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface MeshExtractor
+public interface IMeshExtractor
 {
     void Extract(Chunk chunk, Action<MeshData> callback);
 }

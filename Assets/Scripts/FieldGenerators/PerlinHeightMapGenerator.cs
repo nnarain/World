@@ -4,44 +4,26 @@ using UnityEngine;
 
 public class PerlinHeightMapGenerator : FieldGenerator
 {
-    [System.Serializable]
-    public struct Config
-    {
-        public int seed;
-        public float scale;
-        public int octaves;
-        [Range(0,1)]
-        public float persistance;
-        [Range(1, 2)]
-        public float lacunarity;
-        public AnimationCurve heightCurve;
-    }
-
-    private int seed;
-    private float scale;
-    private int octaves;
-    private float persistance;
-    private float lacunarity;
+    public int seed;
+    public float scale;
+    [Range(1, 100)]
+    public int octaves;
+    [Range(0,1)]
+    public float persistance;
+    [Range(1, 2)]
+    public float lacunarity;
     public AnimationCurve heightCurve;
 
-    public PerlinHeightMapGenerator(Config config)
-    {
-        seed = config.seed;
-        scale = config.scale;
-        octaves = config.octaves;
-        persistance = config.persistance;
-        lacunarity = config.lacunarity;
-        heightCurve = config.heightCurve;
-    }
+    public Color[] voxelColors = new Color[Enum.GetNames(typeof(VoxelType)).Length];
 
-    void FieldGenerator.Generate(VoxelField field, Vector3 position)
+    public override void Generate(VoxelField field, Vector3 position)
     {
         Vector2 samplePosition = new Vector2(position.x, position.z);
         float[,] heightMap = PerlinNoise.Generate(field.X, field.Z, seed, scale, octaves, persistance, lacunarity, samplePosition);
 
         field.ForEachXZ((x, z) => {
             float height = heightCurve.Evaluate(heightMap[x, z]) * (float)(field.Y - 1);
-            
+
             int y = Mathf.RoundToInt(height);
 
             for (int i = y; i >= 0; --i)
@@ -51,7 +33,12 @@ public class PerlinHeightMapGenerator : FieldGenerator
         });
     }
 
-    VoxelType ElevationToVoxelType (int elevation, int max)
+    public override Color GetVoxelColor(byte type)
+    {
+        return voxelColors[type];
+    }
+
+    private VoxelType ElevationToVoxelType (int elevation, int max)
     {
         if (elevation < 3)
         {

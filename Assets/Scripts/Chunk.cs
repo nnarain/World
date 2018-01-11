@@ -36,18 +36,12 @@ public class Chunk : MonoBehaviour
     public int chunkSizeY;
     public int chunkSizeZ;
 
-    public Color[] voxelColors = new Color[Enum.GetNames(typeof(VoxelType)).Length];
+    public FieldGenerator fieldGeneratorPrefab;
+    private FieldGenerator fieldGenerator;
 
     public MeshExtractorType extractorType = MeshExtractorType.SimpleBlocks;
-    public FieldGeneratorType fieldType = FieldGeneratorType.Sine;
-    public PerlinHeightMapGenerator.Config perlinConfig;
-    public ElevationMoistureFieldGenerator.Config elevationMoistureConfig;
+    private IMeshExtractor mesher;
 
-    private Mesh mesh;
-    public Mesh Mesh { get { return mesh; } }
-
-    private MeshExtractor mesher;
-    private FieldGenerator fieldGenerator;
 
     private VoxelField field;
     public VoxelField Field { get { return field; } }
@@ -57,7 +51,10 @@ public class Chunk : MonoBehaviour
 
     public bool IsLoaded { get { return state == ChunkState.Loaded; } }
 
-    private Chunk[] neighbors;
+    private Mesh mesh;
+    public Mesh Mesh { get { return mesh; } }
+
+    private Chunk[] neighbors = new Chunk[6];
 
     // mesh data recieves from a builder thread
     private MeshData meshData;
@@ -77,9 +74,8 @@ public class Chunk : MonoBehaviour
         mesher = CreateMeshExtractor(extractorType);
 
         field = new VoxelField(chunkSizeX, chunkSizeY, chunkSizeZ);
-        fieldGenerator = CreateFieldGenerator(fieldType);
-
-        neighbors = new Chunk[6];
+        fieldGenerator = Instantiate(fieldGeneratorPrefab);
+        fieldGenerator.transform.SetParent(transform);
     }
 
     private void Start()
@@ -233,7 +229,7 @@ public class Chunk : MonoBehaviour
 
     public Color GetVoxelColor(VoxelType t)
     {
-        return voxelColors[(int)t];
+        return fieldGenerator.GetVoxelColor((byte)t);
     }
 
     /// <summary>
@@ -241,7 +237,7 @@ public class Chunk : MonoBehaviour
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    private MeshExtractor CreateMeshExtractor(MeshExtractorType type)
+    private IMeshExtractor CreateMeshExtractor(MeshExtractorType type)
     {
         switch (type)
         {
@@ -249,28 +245,6 @@ public class Chunk : MonoBehaviour
                 return new BlockMeshExtractor();
             case MeshExtractorType.GreedyBlocks:
                 return new GreedyMeshExtractor();
-            default:
-                return null;
-        }
-    }
-
-    /// <summary>
-    ///  Get the firld generator
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    private FieldGenerator CreateFieldGenerator(FieldGeneratorType type)
-    {
-        switch(type)
-        {
-            case FieldGeneratorType.Fill:
-                return new FillFieldGenerator();
-            case FieldGeneratorType.Sine:
-                return new SineFieldGenerator();
-            case FieldGeneratorType.PerlinHeight:
-                return new PerlinHeightMapGenerator(perlinConfig);
-            case FieldGeneratorType.ElvationMoisture:
-                return new ElevationMoistureFieldGenerator(elevationMoistureConfig);
             default:
                 return null;
         }
