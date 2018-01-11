@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1561890007}
+  generator: {fileID: 0}
 --- !u!4 &788152805
 Transform:
   m_ObjectHideFlags: 0
@@ -175,7 +176,7 @@ MonoBehaviour:
   moveThreshold: 10
   rotationThreshold: 10
   distanceToInactive: 100
-  distanceToDestroy: 500
+  distanceToDestroy: 400
   viewportMargin: 0.2
   drawDebug: 0
 --- !u!114 &788152807

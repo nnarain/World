@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Interface for generating a 3d scalar field
 /// </summary>
-public interface FieldGenerator
+public interface IFieldGenerator
 {
     void Generate(VoxelField field, Vector3 position);
 }

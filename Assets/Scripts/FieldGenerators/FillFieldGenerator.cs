@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FillFieldGenerator : FieldGenerator
+public class FillFieldGenerator : IFieldGenerator
 {
-    void FieldGenerator.Generate(VoxelField field, Vector3 position)
+    void IFieldGenerator.Generate(VoxelField field, Vector3 position)
     {
         field.ForEach((x, y, z, v) =>
         {

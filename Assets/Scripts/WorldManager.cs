@@ -5,6 +5,7 @@ using UnityEngine;
 public class WorldManager : MonoBehaviour
 {
     public Transform player;
+    public FieldGenerator generator;
 
     private void Awake()
     {
