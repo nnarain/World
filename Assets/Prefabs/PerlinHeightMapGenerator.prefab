@@ -51,10 +51,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62b250f06dee644409d1d2e9bd48e16f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 412
-  scale: 117.53
+  seed: -491
+  scale: 110.92
   octaves: 4
-  persistance: 0.754
+  persistance: 0.85
   lacunarity: 1.877
   heightCurve:
     serializedVersion: 2

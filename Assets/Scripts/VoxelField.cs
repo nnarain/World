@@ -25,7 +25,7 @@ public class VoxelField
         field = new Voxel[x * y * z];        
     }
 
-    public void Set(int x, int y, int z, VoxelType t)
+    public void Set(int x, int y, int z, byte t)
     {
         field[GetIndex(x, y, z)].Type = t;
     }

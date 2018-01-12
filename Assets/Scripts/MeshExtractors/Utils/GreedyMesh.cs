@@ -141,7 +141,7 @@ public class GreedyMesh
                             Vector3 v3 = new Vector3(x[0] + du[0] + dv[0], x[1] + du[1] + dv[1], x[2] + du[2] + dv[2]);
                             Vector3 v4 = new Vector3(x[0] + dv[0], x[1] + dv[1], x[2] + dv[2]);
 
-                            AddQuad(v1, v2, v3, v4, chunk.GetVoxelColor((VoxelType)c), vertices, elements, colors);
+                            AddQuad(v1, v2, v3, v4, chunk.GetVoxelColor((byte)c), vertices, elements, colors);
 
                             for (l = 0; l < h; ++l)
                             {

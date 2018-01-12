@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class PerlinHeightMapGenerator : FieldGenerator
 {
+    public enum VoxelType
+    {
+        Air,
+        Water,
+        Sand,
+        Dirt,
+        Grass,
+        Stone,
+        Snow
+    }
+
     public int seed;
     public float scale;
     [Range(1, 100)]
@@ -28,7 +39,7 @@ public class PerlinHeightMapGenerator : FieldGenerator
 
             for (int i = y; i >= 0; --i)
             {
-                field.Set(x, i, z, ElevationToVoxelType(i, field.Y));
+                field.Set(x, i, z, (byte)ElevationToVoxelType(i, field.Y));
             }
         });
     }

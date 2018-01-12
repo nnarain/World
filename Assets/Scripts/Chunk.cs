@@ -36,8 +36,7 @@ public class Chunk : MonoBehaviour
     public int chunkSizeY;
     public int chunkSizeZ;
 
-    public FieldGenerator fieldGeneratorPrefab;
-    private FieldGenerator fieldGenerator;
+    public FieldGenerator fieldGenerator;
 
     public MeshExtractorType extractorType = MeshExtractorType.SimpleBlocks;
     private IMeshExtractor mesher;
@@ -74,8 +73,6 @@ public class Chunk : MonoBehaviour
         mesher = CreateMeshExtractor(extractorType);
 
         field = new VoxelField(chunkSizeX, chunkSizeY, chunkSizeZ);
-        fieldGenerator = Instantiate(fieldGeneratorPrefab);
-        fieldGenerator.transform.SetParent(transform);
     }
 
     private void Start()
@@ -227,9 +224,9 @@ public class Chunk : MonoBehaviour
         return neighbors[direction.ToInt()];
     }
 
-    public Color GetVoxelColor(VoxelType t)
+    public Color GetVoxelColor(byte type)
     {
-        return fieldGenerator.GetVoxelColor((byte)t);
+        return fieldGenerator.GetVoxelColor(type);
     }
 
     /// <summary>

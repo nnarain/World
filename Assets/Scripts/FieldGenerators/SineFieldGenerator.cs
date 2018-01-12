@@ -4,6 +4,11 @@ using UnityEngine;
 
 class SineFieldGenerator : IFieldGenerator
 {
+    public enum VoxelType
+    {
+        Air
+    }
+
     void IFieldGenerator.Generate(VoxelField field, Vector3 position)
     {
         float a = (float)field.Y / 3f;
@@ -16,7 +21,7 @@ class SineFieldGenerator : IFieldGenerator
             float y = a * Mathf.Sin(m * f) + a;
             y = Mathf.Clamp(y, 0, field.Y);
 
-            field.Set(x, (int)y, z, VoxelType.Grass);
+            field.Set(x, (int)y, z, (byte)VoxelType.Air);
         });
 
     }

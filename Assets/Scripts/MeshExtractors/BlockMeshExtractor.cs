@@ -31,15 +31,15 @@ public class BlockMeshExtractor : IMeshExtractor
                 {
                     Voxel block = chunk.GetField(x, y, z);
 
-                    if (block.Type != VoxelType.Air)
+                    if (block.Type != 0)
                     {
                         // get neighbor states and determine which faces should be constructed
-                        bool l = chunk.GetField(x - 1, y, z).Type == VoxelType.Air;
-                        bool r = chunk.GetField(x + 1, y, z).Type == VoxelType.Air;
-                        bool t = chunk.GetField(x, y + 1, z).Type == VoxelType.Air;
-                        bool b = chunk.GetField(x, y - 1, z).Type == VoxelType.Air;
-                        bool n = chunk.GetField(x, y, z - 1).Type == VoxelType.Air;
-                        bool f = chunk.GetField(x, y, z + 1).Type == VoxelType.Air;
+                        bool l = chunk.GetField(x - 1, y, z).Type == 0;
+                        bool r = chunk.GetField(x + 1, y, z).Type == 0;
+                        bool t = chunk.GetField(x, y + 1, z).Type == 0;
+                        bool b = chunk.GetField(x, y - 1, z).Type == 0;
+                        bool n = chunk.GetField(x, y, z - 1).Type == 0;
+                        bool f = chunk.GetField(x, y, z + 1).Type == 0;
 
                         CreateCubeMesh(x, y, z, Color.red, l, r, t, b, n, f);
                     }

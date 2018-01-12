@@ -2,25 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum VoxelType
-{
-    Air,
-    Water,
-    Sand,
-    Dirt,
-    Grass,
-    Stone,
-    Snow
-}
-
 [System.Serializable]
 public struct Voxel
 {
-    byte type;
-    public VoxelType Type
+    public byte Type
     {
-        get { return (VoxelType)type; }
-        set { type = (byte)value; }
+        get; set;
     }
 
     public static readonly Voxel none = new Voxel();

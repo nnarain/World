@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1320339352297266}
+  m_IsPrefabParent: 1
+--- !u!1 &1320339352297266
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4933812082329570}
+  - component: {fileID: 114455000829142472}
+  m_Layer: 0
+  m_Name: ElevationMoistureFieldGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4933812082329570
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1320339352297266}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 48.415886, y: -342.80383, z: -383.9835}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114455000829142472
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1320339352297266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e281ce9b01c9f4e49ae0e31d8e5f7dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heightConfig:
+    seed: 181
+    scale: 110.38
+    octaves: 4
+    persistance: 0.673
+    lacunarity: 1.85
+  moistureConfig:
+    seed: -515
+    scale: 91.8
+    octaves: 3
+    persistance: 0.85
+    lacunarity: 1.488
+  heightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: -0.0041656494
+      value: 0.012496948
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.39357543
+      value: 0.025018424
+      inSlope: 0.25741857
+      outSlope: 0.25741857
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1.0562439
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  heightToTemperature:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.9666748
+      value: 0.03125
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  voxelColors:
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.24080883, g: 0.5746197, b: 0.9632353, a: 0}
+  - {r: 0.9705882, g: 0.8709701, b: 0.31401384, a: 0}
+  - {r: 0.5514706, g: 0.30090374, b: 0.032439444, a: 0}
+  - {r: 0.10542818, g: 0.47794116, b: 0.1388258, a: 0}
+  - {r: 0.5147059, g: 0.4844291, b: 0.4844291, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
