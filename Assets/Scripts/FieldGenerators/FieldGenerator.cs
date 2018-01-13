@@ -1,11 +1,16 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Interface for generating a 3d scalar field
-/// </summary>
-public interface IFieldGenerator
+public class FieldGenerator : MonoBehaviour
 {
-    void Generate(VoxelField field, Vector3 position);
+    public virtual void Generate(VoxelField field, Vector3 position)
+    {
+        // TODO: Throw exception
+    }
+
+    public virtual Color GetVoxelColor(byte type)
+    {
+        return Color.black;
+    }
 }

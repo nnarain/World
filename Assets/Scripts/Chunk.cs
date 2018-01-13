@@ -14,14 +14,6 @@ public class Chunk : MonoBehaviour
         GreedyBlocks
     }
 
-    public enum FieldGeneratorType
-    {
-        Fill,
-        Sine,
-        PerlinHeight,
-        ElvationMoisture
-    }
-
     public enum ChunkState
     {
         Unloaded,
