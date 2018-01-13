@@ -59,10 +59,10 @@ MonoBehaviour:
     lacunarity: 1.85
   moistureConfig:
     seed: -515
-    scale: 91.8
-    octaves: 3
-    persistance: 0.85
-    lacunarity: 1.488
+    scale: 548.39
+    octaves: 6
+    persistance: 0.929
+    lacunarity: 1.878
   heightCurve:
     serializedVersion: 2
     m_Curve:
@@ -91,14 +91,26 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: 0
-      value: 1
+      time: 0.011528015
+      value: 0.96276855
       inSlope: 0
       outSlope: 0
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.9666748
-      value: 0.03125
+      time: 0.3121019
+      value: 0.63640594
+      inSlope: -1.5078924
+      outSlope: -1.5078924
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.6538953
+      value: 0.49287748
+      inSlope: -0.1971188
+      outSlope: -0.1971188
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.9223633
+      value: 0.03807068
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -107,9 +119,11 @@ MonoBehaviour:
     m_RotationOrder: 0
   voxelColors:
   - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0.24080883, g: 0.5746197, b: 0.9632353, a: 0}
-  - {r: 0.9705882, g: 0.8709701, b: 0.31401384, a: 0}
-  - {r: 0.5514706, g: 0.30090374, b: 0.032439444, a: 0}
-  - {r: 0.10542818, g: 0.47794116, b: 0.1388258, a: 0}
-  - {r: 0.5147059, g: 0.4844291, b: 0.4844291, a: 0}
+  - {r: 0.22658953, g: 0.6997049, b: 0.9338235, a: 0}
+  - {r: 0.50884646, g: 0.75735295, b: 0.37867647, a: 0}
+  - {r: 0.48210174, g: 0.6544118, b: 0.20209776, a: 0}
+  - {r: 0.97794116, g: 0.81964564, b: 0.15819634, a: 0}
+  - {r: 0, g: 0.47794116, b: 0.20042697, a: 0}
   - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 0.816, g: 1, b: 1, a: 0}
+  - {r: 0.816, g: 1, b: 1, a: 0}
