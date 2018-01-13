@@ -142,10 +142,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9505a4cd0fd28184ba06a5c73e0b5d51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generator: 1
+  seed: 0
+  generator: 2
   generators:
   - {fileID: 114079209533620130, guid: 5c078f38eda71834c97fb743625f7558, type: 2}
   - {fileID: 114455000829142472, guid: 5f6eae1367fd6b342a5356122148a75b, type: 2}
+  - {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a, type: 2}
 --- !u!4 &788152805
 Transform:
   m_ObjectHideFlags: 0
