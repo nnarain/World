@@ -29,11 +29,13 @@ public class PerlinHeightMapGenerator : FieldGenerator
 
     public override void Generate(VoxelField field, Vector3 position)
     {
+        AnimationCurve heightEval = new AnimationCurve(heightCurve.keys);
         Vector2 samplePosition = new Vector2(position.x, position.z);
         float[,] heightMap = PerlinNoise.Generate(field.X, field.Z, seed, scale, octaves, persistance, lacunarity, samplePosition);
 
+
         field.ForEachXZ((x, z) => {
-            float height = heightCurve.Evaluate(heightMap[x, z]) * (float)(field.Y - 1);
+            float height = heightEval.Evaluate(heightMap[x, z]) * (float)(field.Y - 1);
 
             int y = Mathf.RoundToInt(height);
 
