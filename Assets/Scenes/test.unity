@@ -190,9 +190,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d6ef63f70cac940ae34603d48ae098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxWorkersPerFrame: 15
+  maxWorkersPerFrame: 4
   loadAll: 1
-  buildAll: 1
+  buildAll: 0
+  debugMode: 0
 --- !u!1 &1561890006
 GameObject:
   m_ObjectHideFlags: 0
