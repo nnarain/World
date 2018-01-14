@@ -17,6 +17,9 @@ public class WorldManager : MonoBehaviour
     public GeneratorType generator;
     public FieldGenerator[] generators = new FieldGenerator[Enum.GetNames(typeof(GeneratorType)).Length];
 
+    public float rotationSpeed;
+    public bool enableRotation = false;
+
     private ChunkManager chunkManager;
 
     private void Awake()
@@ -37,5 +40,9 @@ public class WorldManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (enableRotation)
+        {
+            chunkManager.transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
+        }
     }
 }

@@ -54,7 +54,7 @@ MonoBehaviour:
   islandRadius: 500
   seaLevel: 5
   continentNoise:
-    seed: 5509
+    seed: -3425
     scale: 168.28
     octaves: 4
     persistance: 0.546
@@ -78,7 +78,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   mountainNoise:
-    seed: -1853
+    seed: -2772
     scale: 76.57
     octaves: 6
     persistance: 0.564
@@ -101,30 +101,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  hillNoise:
-    seed: -2080
-    scale: 90.03
-    octaves: 4
-    persistance: 0.823
-    lacunarity: 1.342
-  hillCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
+  mountainScale: 1.24
   islandMaskCurve:
     serializedVersion: 2
     m_Curve:
@@ -143,10 +120,41 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  continentWeight: 0.75
-  mountainWeight: 0.25
-  hillWeight: 0
+  terrainScale: 2.5
+  moistureNoise:
+    seed: -781
+    scale: 95.12
+    octaves: 4
+    persistance: 0.516
+    lacunarity: 1.523
+  moistureMapWeight: 0.457
+  temperatureCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: -0.0041656494
+      value: 1.0062561
+      inSlope: -1.0909489
+      outSlope: -1.0909489
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.9791565
+      value: -0.012500763
+      inSlope: -1.3449472
+      outSlope: -1.3449472
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  continentWeight: 0.5
+  mountainWeight: 0.5
   voxelColor:
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0.1362457, g: 0.50138414, b: 0.9264706, a: 0}
   - {r: 0.5, g: 0.33382347, b: 0.084558815, a: 0}
+  - {r: 0.44852942, g: 0.44589102, b: 0.4419334, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 0.99264705, g: 0.96798193, b: 0.6350022, a: 0}
+  - {r: 0.56894463, g: 0.85294116, b: 0.4327422, a: 0}
+  - {r: 0.045198973, g: 0.5588235, b: 0.2400221, a: 0}
+  - {r: 1, g: 0.53144014, b: 0.22794116, a: 0}
