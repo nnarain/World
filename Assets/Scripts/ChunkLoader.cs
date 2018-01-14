@@ -8,9 +8,10 @@ using UnityEngine;
 /// </summary>
 public class ChunkLoader : MonoBehaviour
 {
-    public int maxWorkersPerFrame;
+    public int maxWorkersPerFrame = System.Environment.ProcessorCount;
     public bool loadAll = false;
     public bool buildAll = false;
+    public bool debugMode = false;
 
     private Queue<Chunk> loadQueue;
     private Queue<Chunk> buildQueue;
@@ -32,8 +33,15 @@ public class ChunkLoader : MonoBehaviour
         {
             // dequeue and start loading the chunk
             Chunk chunk = loadQueue.Dequeue();
-            ThreadPool.QueueUserWorkItem(new WaitCallback(LoadChunkWorker), chunk);
 
+            if (debugMode)
+            {
+                chunk.Load();
+            }
+            else
+            {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(LoadChunkWorker), chunk);
+            }
             workItemCount--;
         }
 
@@ -42,7 +50,15 @@ public class ChunkLoader : MonoBehaviour
         while (buildQueue.Count > 0 && (workItemCount > 0 || buildAll))
         {
             Chunk chunk = buildQueue.Dequeue();
-            ThreadPool.QueueUserWorkItem(new WaitCallback(BuildChunkWorker), chunk);
+         
+            if (debugMode)
+            {
+                chunk.Build();
+            }
+            else
+            {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(BuildChunkWorker), chunk);
+            }
 
             workItemCount--;
         }

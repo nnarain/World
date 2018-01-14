@@ -142,7 +142,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9505a4cd0fd28184ba06a5c73e0b5d51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1561890007}
+  seed: 0
+  generator: 2
+  generators:
+  - {fileID: 114079209533620130, guid: 5c078f38eda71834c97fb743625f7558, type: 2}
+  - {fileID: 114455000829142472, guid: 5f6eae1367fd6b342a5356122148a75b, type: 2}
+  - {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a, type: 2}
+  rotationSpeed: 5
+  enableRotation: 1
 --- !u!4 &788152805
 Transform:
   m_ObjectHideFlags: 0
@@ -170,13 +177,13 @@ MonoBehaviour:
   player: {fileID: 1561890006}
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
-  forwardRenderDistance: 200
-  generalRenderDistance: 45.5
-  moveThreshold: 8
-  rotationThreshold: 10
-  distanceToInactive: 75
-  distanceToDestroy: 200
-  viewportMargin: 0.2
+  forwardRenderDistance: 500
+  generalRenderDistance: 500
+  moveThreshold: 10
+  rotationThreshold: 255
+  distanceToInactive: 900
+  distanceToDestroy: 1000
+  viewportMargin: 0.331
   drawDebug: 0
 --- !u!114 &788152807
 MonoBehaviour:
@@ -189,9 +196,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d6ef63f70cac940ae34603d48ae098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxWorkersPerFrame: 15
+  maxWorkersPerFrame: 4
   loadAll: 1
-  buildAll: 1
+  buildAll: 0
+  debugMode: 0
 --- !u!1 &1561890006
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,8 +241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7377bdb63d9467449b65867bf9f04a3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 10
-  rotationSpeed: 30
+  movementSpeed: 30
+  rotationSpeed: 40
 --- !u!1 &1908616990
 GameObject:
   m_ObjectHideFlags: 0

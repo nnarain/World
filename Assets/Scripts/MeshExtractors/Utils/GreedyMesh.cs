@@ -30,9 +30,7 @@ public class GreedyMesh
     {
         List<Vector3> vertices = new List<Vector3>();
         List<int> elements = new List<int>();
-
-        //   List<Vector2> uvs = new List<Vector2>();
-        // List<Color> colors = new List<Color>();
+        List<Color> colors = new List<Color>();
 
         int[] dims = { chunk.chunkSizeX, chunk.chunkSizeY, chunk.chunkSizeZ };
 
@@ -64,8 +62,8 @@ public class GreedyMesh
                 {
                     for (x[u] = 0; x[u] < dims[u]; ++x[u], ++n)
                     {
-                        int vox1 = (int)chunk.GetField(x[0], x[1], x[2]);
-                        int vox2 = (int)chunk.GetField(x[0] + q[0], x[1] + q[1], x[2] + q[2]);
+                        int vox1 = (int)chunk.GetField(x[0], x[1], x[2]).Type;
+                        int vox2 = (int)chunk.GetField(x[0] + q[0], x[1] + q[1], x[2] + q[2]).Type;
 
                         int a = (0 <= x[d] ? vox1 : 0);
                         int b = (x[d] < dims[d] - 1 ? vox2 : 0);
@@ -82,12 +80,6 @@ public class GreedyMesh
                         {
                             mask[n] = -b;
                         }
-                        
-
-                    //    bool test = (0 <= x[d] ? (int)chunk.GetField(x[0], x[1], x[2]) : 0) !=
-                     //       (x[d] < dims[d] - 1 ? (int)chunk.GetField(x[0] + q[0], x[1] + q[1], x[2] + q[2]) : 0);
-
-                      //  mask[n++] = test ? 1 : 0;
                     }
                 }
 
@@ -139,6 +131,7 @@ public class GreedyMesh
                             }
                             else
                             {
+                                c = -c;
                                 du[v] = h;
                                 dv[u] = w;
                             }
@@ -148,7 +141,7 @@ public class GreedyMesh
                             Vector3 v3 = new Vector3(x[0] + du[0] + dv[0], x[1] + du[1] + dv[1], x[2] + du[2] + dv[2]);
                             Vector3 v4 = new Vector3(x[0] + dv[0], x[1] + dv[1], x[2] + dv[2]);
 
-                            AddQuad(v1, v2, v3, v4, vertices, elements);
+                            AddQuad(v1, v2, v3, v4, chunk.GetVoxelColor((byte)c), vertices, elements, colors);
 
                             for (l = 0; l < h; ++l)
                             {
@@ -171,18 +164,23 @@ public class GreedyMesh
             }
         }
 
-        MeshData data = new MeshData(vertices, elements);
+        MeshData data = new MeshData(vertices, elements, colors);
 
         return data;
     }
 
-    private void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, List<Vector3> vertices, List<int> elements)
+    private void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, Color c,  List<Vector3> vertices, List<int> elements, List<Color> colors)
     {
         int i = vertices.Count;
         vertices.Add(v1);
         vertices.Add(v2);
         vertices.Add(v3);
         vertices.Add(v4);
+
+        colors.Add(c);
+        colors.Add(c);
+        colors.Add(c);
+        colors.Add(c);
 
         elements.Add(i + 0);
         elements.Add(i + 1);

@@ -14,13 +14,6 @@ public class Chunk : MonoBehaviour
         GreedyBlocks
     }
 
-    public enum FieldGeneratorType
-    {
-        Fill,
-        Sine,
-        PerlinHeight
-    }
-
     public enum ChunkState
     {
         Unloaded,
@@ -35,25 +28,24 @@ public class Chunk : MonoBehaviour
     public int chunkSizeY;
     public int chunkSizeZ;
 
+    public FieldGenerator fieldGenerator;
+
     public MeshExtractorType extractorType = MeshExtractorType.SimpleBlocks;
-    public FieldGeneratorType fieldType = FieldGeneratorType.Sine;
-    public PerlinHeightMapGenerator.Config perlinConfig;
+    private IMeshExtractor mesher;
 
-    private Mesh mesh;
-    public Mesh Mesh { get { return mesh; } }
 
-    private MeshExtractor mesher;
-    private FieldGenerator fieldGenerator;
-
-    private Field field;
-    public Field Field { get { return field; } }
+    private VoxelField field;
+    public VoxelField Field { get { return field; } }
 
     private ChunkState state = ChunkState.Unloaded;
     public ChunkState State { get { return state; } }
 
     public bool IsLoaded { get { return state == ChunkState.Loaded; } }
 
-    private Chunk[] neighbors;
+    private Mesh mesh;
+    public Mesh Mesh { get { return mesh; } }
+
+    private Chunk[] neighbors = new Chunk[6];
 
     // mesh data recieves from a builder thread
     private MeshData meshData;
@@ -72,15 +64,11 @@ public class Chunk : MonoBehaviour
 
         mesher = CreateMeshExtractor(extractorType);
 
-        field = new Field(chunkSizeX, chunkSizeY, chunkSizeZ);
-        fieldGenerator = CreateFieldGenerator(fieldType);
-
-        neighbors = new Chunk[6];
+        field = new VoxelField(chunkSizeX, chunkSizeY, chunkSizeZ);
     }
 
     private void Start()
     {
-        chunkPosition = transform.position;
     }
 
     private void Update()
@@ -130,6 +118,7 @@ public class Chunk : MonoBehaviour
     {
         mesh.vertices = data.vertices.ToArray();
         mesh.triangles = data.triangles.ToArray();
+        mesh.colors = data.colors.ToArray();
         mesh.RecalculateNormals();
 
         state = ChunkState.Built;
@@ -171,7 +160,7 @@ public class Chunk : MonoBehaviour
     /// <param name="y"></param>
     /// <param name="z"></param>
     /// <returns></returns>
-    public float GetField(int x, int y, int z)
+    public Voxel GetField(int x, int y, int z)
     {
         if (x < 0)
         {
@@ -203,7 +192,7 @@ public class Chunk : MonoBehaviour
         return field.Get(x, y, z);
     }
 
-    private float GetNeighborField(Direction d, int x, int y, int z)
+    private Voxel GetNeighborField(Direction d, int x, int y, int z)
     {
         var chunk = GetNeighbor(d);
 
@@ -213,7 +202,7 @@ public class Chunk : MonoBehaviour
         }
         else
         {
-            return -1;
+            return Voxel.none;
         }
     }
 
@@ -227,12 +216,17 @@ public class Chunk : MonoBehaviour
         return neighbors[direction.ToInt()];
     }
 
+    public Color GetVoxelColor(byte type)
+    {
+        return fieldGenerator.GetVoxelColor(type);
+    }
+
     /// <summary>
     /// Get the mesh extractor
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    private MeshExtractor CreateMeshExtractor(MeshExtractorType type)
+    private IMeshExtractor CreateMeshExtractor(MeshExtractorType type)
     {
         switch (type)
         {
@@ -240,26 +234,6 @@ public class Chunk : MonoBehaviour
                 return new BlockMeshExtractor();
             case MeshExtractorType.GreedyBlocks:
                 return new GreedyMeshExtractor();
-            default:
-                return null;
-        }
-    }
-
-    /// <summary>
-    ///  Get the firld generator
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    private FieldGenerator CreateFieldGenerator(FieldGeneratorType type)
-    {
-        switch(type)
-        {
-            case FieldGeneratorType.Fill:
-                return new FillFieldGenerator();
-            case FieldGeneratorType.Sine:
-                return new SineFieldGenerator();
-            case FieldGeneratorType.PerlinHeight:
-                return new PerlinHeightMapGenerator(perlinConfig);
             default:
                 return null;
         }

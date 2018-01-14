@@ -27,7 +27,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4225350253594898
 Transform:
@@ -56,7 +56,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: b8c7557a94ad38141945789ba2821d1e, type: 2}
+  - {fileID: 2100000, guid: d46e0729abcfbda409f34340374f7c6b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -95,13 +95,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkSizeX: 16
-  chunkSizeY: 16
+  chunkSizeY: 64
   chunkSizeZ: 16
+  fieldGenerator: {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a,
+    type: 2}
   extractorType: 1
-  fieldType: 2
-  perlinConfig:
-    seed: -584
-    scale: 69.56
-    octaves: 4
-    persistance: 0.692
-    lacunarity: 1.815
