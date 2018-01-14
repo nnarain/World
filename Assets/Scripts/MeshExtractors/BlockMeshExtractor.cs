@@ -41,7 +41,7 @@ public class BlockMeshExtractor : IMeshExtractor
                         bool n = chunk.GetField(x, y, z - 1).Type == 0;
                         bool f = chunk.GetField(x, y, z + 1).Type == 0;
 
-                        CreateCubeMesh(x, y, z, Color.red, l, r, t, b, n, f);
+                        CreateCubeMesh(x, y, z, chunk.GetVoxelColor(block.Type), l, r, t, b, n, f);
                     }
                 }
             }

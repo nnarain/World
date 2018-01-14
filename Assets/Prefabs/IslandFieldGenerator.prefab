@@ -51,13 +51,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b924ef4c621b80f4f9e3d323569d6dc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heightNoise:
-    seed: 2100
-    scale: 130.76
-    octaves: 3
-    persistance: 0.77
-    lacunarity: 1.928
-  heightCurve:
+  islandRadius: 500
+  seaLevel: 5
+  continentNoise:
+    seed: 5509
+    scale: 168.28
+    octaves: 4
+    persistance: 0.546
+    lacunarity: 1.523
+  continentCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
@@ -75,6 +77,76 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  mountainNoise:
+    seed: -1853
+    scale: 76.57
+    octaves: 6
+    persistance: 0.564
+    lacunarity: 1.561
+  mountainCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  hillNoise:
+    seed: -2080
+    scale: 90.03
+    octaves: 4
+    persistance: 0.823
+    lacunarity: 1.342
+  hillCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  islandMaskCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  continentWeight: 0.75
+  mountainWeight: 0.25
+  hillWeight: 0
   voxelColor:
   - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0.36764705, g: 0.3379109, b: 0.3379109, a: 0}
+  - {r: 0.1362457, g: 0.50138414, b: 0.9264706, a: 0}
+  - {r: 0.5, g: 0.33382347, b: 0.084558815, a: 0}

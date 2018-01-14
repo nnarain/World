@@ -97,6 +97,6 @@ MonoBehaviour:
   chunkSizeX: 16
   chunkSizeY: 64
   chunkSizeZ: 16
-  fieldGenerator: {fileID: 114455000829142472, guid: 5f6eae1367fd6b342a5356122148a75b,
+  fieldGenerator: {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a,
     type: 2}
   extractorType: 1
