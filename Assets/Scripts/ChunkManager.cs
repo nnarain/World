@@ -180,8 +180,10 @@ public class ChunkManager : MonoBehaviour
                 var chunk = CreateChunk(p.x, p.z);
                 chunkList.Add(p, chunk);
 
+                var distanceFromPlayer = (playerPosition - chunk.transform.position).magnitude;
+
                 // queue the chunk for loading
-                chunkLoader.Load(chunk);
+                chunkLoader.Load(chunk, distanceFromPlayer);
                 batchCount++;
             }
         }

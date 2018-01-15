@@ -13,14 +13,14 @@ public class ChunkLoader : MonoBehaviour
     public bool buildAll = false;
     public bool debugMode = false;
 
-    private Queue<Chunk> loadQueue;
-    private Queue<Chunk> buildQueue;
+    private PriorityQueue<Chunk> loadQueue;
+    private PriorityQueue<Chunk> buildQueue;
 
     // Use this for initialization
     void Start()
     {
-        loadQueue = new Queue<Chunk>();
-        buildQueue = new Queue<Chunk>();
+        loadQueue = new PriorityQueue<Chunk>();
+        buildQueue = new PriorityQueue<Chunk>();
     }
 
     // Update is called once per frame
@@ -78,17 +78,17 @@ public class ChunkLoader : MonoBehaviour
         chunk.Build();
     }
 
-    public void Load(Chunk chunk)
+    public void Load(Chunk chunk, float priority = 0f)
     {
         // flag the chunk is pending to be loading
         chunk.MarkLoadPending();
         // queue the chunk
-        loadQueue.Enqueue(chunk);
+        loadQueue.Enqueue(chunk, priority);
     }
 
-    public void Build(Chunk chunk)
+    public void Build(Chunk chunk, float priority = 0f)
     {
-        buildQueue.Enqueue(chunk);
+        buildQueue.Enqueue(chunk, priority);
     }
 
     private void OnValidate()
