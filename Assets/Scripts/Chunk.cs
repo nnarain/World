@@ -45,6 +45,9 @@ public class Chunk : MonoBehaviour
     private Mesh mesh;
     public Mesh Mesh { get { return mesh; } }
 
+    private MeshCollider meshCollider;
+    public bool ColliderEnabled { get { return meshCollider.enabled; } set { meshCollider.enabled = value; } }
+
     private Chunk[] neighbors = new Chunk[6];
 
     // mesh data recieves from a builder thread
@@ -61,6 +64,8 @@ public class Chunk : MonoBehaviour
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
+
+        meshCollider = gameObject.AddComponent<MeshCollider>();
 
         mesher = CreateMeshExtractor(extractorType);
 
@@ -120,6 +125,9 @@ public class Chunk : MonoBehaviour
         mesh.triangles = data.triangles.ToArray();
         mesh.colors = data.colors.ToArray();
         mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+
+        meshCollider.sharedMesh = mesh;
 
         state = ChunkState.Built;
 
