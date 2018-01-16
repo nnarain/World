@@ -15,6 +15,7 @@ public class ChunkManager : MonoBehaviour
     [Range(0, 360)]
     public float rotationThreshold;
     public float distanceToInactive;
+    public float colliderDistance;
     public float distanceToDestroy;
     [Range(0, 1f)]
     public float viewportMargin;
@@ -101,7 +102,7 @@ public class ChunkManager : MonoBehaviour
             UpdateVisibleChunks(playerPosition);
         }
 
-        RemoveFarChunks(playerPosition);
+        ProcessLoadedChunks(playerPosition);
     }
 
     /// <summary>
@@ -189,7 +190,7 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
-    private void RemoveFarChunks(Vector3 playerPosition)
+    private void ProcessLoadedChunks(Vector3 playerPosition)
     {
         List<Vector3Int> toRemove = new List<Vector3Int>();
 
@@ -221,6 +222,9 @@ public class ChunkManager : MonoBehaviour
                     Destroy(chunk);
                 }
             }
+
+            // TODO: Separate removal and collision enable stuff
+            chunk.ColliderEnabled = (distanceToChunk <= colliderDistance);
         }
 
         // remove destroyed chunks from the list

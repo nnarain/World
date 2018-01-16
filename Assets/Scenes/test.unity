@@ -149,7 +149,7 @@ MonoBehaviour:
   - {fileID: 114455000829142472, guid: 5f6eae1367fd6b342a5356122148a75b, type: 2}
   - {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a, type: 2}
   rotationSpeed: 5
-  enableRotation: 1
+  enableRotation: 0
 --- !u!4 &788152805
 Transform:
   m_ObjectHideFlags: 0
@@ -182,6 +182,7 @@ MonoBehaviour:
   moveThreshold: 10
   rotationThreshold: 255
   distanceToInactive: 900
+  colliderDistance: 150
   distanceToDestroy: 1000
   viewportMargin: 0.331
   drawDebug: 0
