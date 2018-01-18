@@ -66,6 +66,7 @@ public class Chunk : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
 
         meshCollider = gameObject.AddComponent<MeshCollider>();
+        meshCollider.enabled = true;
 
         mesher = CreateMeshExtractor(extractorType);
 
