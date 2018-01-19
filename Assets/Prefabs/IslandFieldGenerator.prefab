@@ -54,7 +54,7 @@ MonoBehaviour:
   islandRadius: 500
   seaLevel: 5
   continentNoise:
-    seed: -3425
+    seed: -3739
     scale: 168.28
     octaves: 4
     persistance: 0.546
@@ -78,7 +78,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   mountainNoise:
-    seed: -2772
+    seed: -2974
     scale: 76.57
     octaves: 6
     persistance: 0.564

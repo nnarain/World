@@ -183,6 +183,9 @@ public class ChunkManager : MonoBehaviour
 
                 var distanceFromPlayer = (playerPosition - chunk.transform.position).magnitude;
 
+            //    chunk.ColliderEnabled = distanceFromPlayer <= colliderDistance;
+
+
                 // queue the chunk for loading
                 chunkLoader.Load(chunk, distanceFromPlayer);
                 batchCount++;
