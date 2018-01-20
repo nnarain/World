@@ -82,6 +82,7 @@ public class Chunk : MonoBehaviour
         if (hasMeshData)
         {
             UpdateMesh(meshData);
+            meshData.Clear();
         }
     }
 
@@ -122,11 +123,11 @@ public class Chunk : MonoBehaviour
     /// <param name="data"></param>
     private void UpdateMesh(MeshData data)
     {
+        mesh.Clear();
         mesh.vertices = data.vertices.ToArray();
         mesh.triangles = data.triangles.ToArray();
         mesh.colors = data.colors.ToArray();
         mesh.RecalculateNormals();
-        mesh.RecalculateBounds();
 
         meshCollider.sharedMesh = mesh;
 
