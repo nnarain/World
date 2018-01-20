@@ -14,4 +14,11 @@ public class MeshData
         triangles = t;
         colors = c;
     }
+
+    public void Clear()
+    {
+        vertices.Clear();
+        triangles.Clear();
+        colors.Clear();
+    }
 }
