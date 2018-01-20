@@ -401,7 +401,7 @@ MonoBehaviour:
     StrafeSpeed: 10
     RunMultiplier: 2
     RunKey: 304
-    JumpForce: 60
+    JumpForce: 40
     SlopeCurveModifier:
       serializedVersion: 2
       m_Curve:
@@ -427,6 +427,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     CurrentTargetSpeed: 8
+    maxVerticalSpeed: 12.5
   mouseLook:
     XSensitivity: 2
     YSensitivity: 2
@@ -498,3 +499,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkManager: {fileID: 788152806}
+  range: 0
