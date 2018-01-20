@@ -500,4 +500,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkManager: {fileID: 788152806}
-  range: 0
+  selectRange: 4
