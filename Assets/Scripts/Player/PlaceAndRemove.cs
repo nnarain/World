@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,25 +41,17 @@ public class PlaceAndRemove : MonoBehaviour
 
     private void PlaceBlock()
     {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(inputRay, out hit))
-        {
+        PerformRaycast((ray, hit) => {
             SetBlockType(RaycastHitToAdjacentBlockWorldPosition(hit), 1);
-        }
+        });
     }
 
 
     private void RemoveBlock()
     {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(inputRay, out hit))
-        {
+        PerformRaycast((ray, hit) => {
             SetBlockType(RaycastHitToBlockWorldPosition(hit), 0);
-        }
+        });
     }
 
     private void SetBlockType(Vector3 position, byte type)
@@ -74,6 +67,16 @@ public class PlaceAndRemove : MonoBehaviour
         }
     }
 
+    private void PerformRaycast(Action<Ray, RaycastHit> action)
+    {
+        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(inputRay, out hit))
+        {
+            action(inputRay, hit);
+        }
+    }
 
     private Vector3 RaycastHitToAdjacentBlockWorldPosition(RaycastHit hit)
     {
