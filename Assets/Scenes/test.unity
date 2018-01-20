@@ -428,6 +428,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     CurrentTargetSpeed: 8
     maxVerticalSpeed: 12.5
+    flyDrag: 10
   mouseLook:
     XSensitivity: 2
     YSensitivity: 2
