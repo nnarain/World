@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickAndPlace : MonoBehaviour
+public class PlaceAndRemove : MonoBehaviour
 {
     public ChunkManager chunkManager;
 
     private int chunkSizeX;
     private int chunkSizeY;
     private int chunkSizeZ;
+
+    private const float HALF_BLOCK_WIDTH = CubeMetrics.CUBE_SIZE / 2f;
 
     // Use this for initialization
     void Start()
@@ -43,6 +45,7 @@ public class PickAndPlace : MonoBehaviour
         if (Physics.Raycast(inputRay, out hit))
         {
             Debug.DrawLine(inputRay.origin, hit.point, Color.red);
+            
         }
     }
 
@@ -53,8 +56,8 @@ public class PickAndPlace : MonoBehaviour
 
         if (Physics.Raycast(inputRay, out hit))
         {
-            Debug.DrawLine(inputRay.origin, hit.point, Color.blue);
-            SetBlockType(hit.point, 1);
+            //Debug.DrawLine(inputRay.origin, hit.point, Color.blue);
+            SetBlockType(RaycastHitToBlockWorldPosition(hit), 1);
         }
     }
 
@@ -69,6 +72,17 @@ public class PickAndPlace : MonoBehaviour
             chunk.Field.Set(bp.x, bp.y, bp.z, type);
             chunkManager.UpdateChunk(chunk);
         }
+    }
+
+    private void RemoveBlock(Vector3 position)
+    {
+
+    }
+
+    private Vector3 RaycastHitToBlockWorldPosition(RaycastHit hit)
+    {
+        // Take the hit point and add the normal vector of the surface scale to a half block width
+        return hit.point + (hit.normal * HALF_BLOCK_WIDTH);
     }
 
     private Vector3Int BlockPosition(Vector3 position)
