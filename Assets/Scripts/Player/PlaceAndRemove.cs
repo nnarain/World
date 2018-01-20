@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlaceAndRemove : MonoBehaviour
 {
     public ChunkManager chunkManager;
+    public float range;
 
     private int chunkSizeX;
     private int chunkSizeY;
@@ -37,18 +38,6 @@ public class PlaceAndRemove : MonoBehaviour
         }
     }
 
-    private void RemoveBlock()
-    {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(inputRay, out hit))
-        {
-            Debug.DrawLine(inputRay.origin, hit.point, Color.red);
-            
-        }
-    }
-
     private void PlaceBlock()
     {
         Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -56,8 +45,19 @@ public class PlaceAndRemove : MonoBehaviour
 
         if (Physics.Raycast(inputRay, out hit))
         {
-            //Debug.DrawLine(inputRay.origin, hit.point, Color.blue);
-            SetBlockType(RaycastHitToBlockWorldPosition(hit), 1);
+            SetBlockType(RaycastHitToAdjacentBlockWorldPosition(hit), 1);
+        }
+    }
+
+
+    private void RemoveBlock()
+    {
+        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(inputRay, out hit))
+        {
+            SetBlockType(RaycastHitToBlockWorldPosition(hit), 0);
         }
     }
 
@@ -74,15 +74,16 @@ public class PlaceAndRemove : MonoBehaviour
         }
     }
 
-    private void RemoveBlock(Vector3 position)
-    {
 
+    private Vector3 RaycastHitToAdjacentBlockWorldPosition(RaycastHit hit)
+    {
+        // Take the hit point and add the normal vector of the surface scale to a half block width
+        return hit.point + (hit.normal * HALF_BLOCK_WIDTH);
     }
 
     private Vector3 RaycastHitToBlockWorldPosition(RaycastHit hit)
     {
-        // Take the hit point and add the normal vector of the surface scale to a half block width
-        return hit.point + (hit.normal * HALF_BLOCK_WIDTH);
+        return hit.point - (hit.normal * HALF_BLOCK_WIDTH);
     }
 
     private Vector3Int BlockPosition(Vector3 position)
