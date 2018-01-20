@@ -21,21 +21,21 @@ public class PickAndPlace : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool pick = Input.GetMouseButtonDown(0);
-        bool place = Input.GetMouseButtonDown(1);
+        bool placeBlock = Input.GetMouseButtonDown(0);
+        bool removeBlock = Input.GetMouseButtonDown(1);
 
-        if (pick)
+        if (placeBlock)
         {
-            Pick();
+            PlaceBlock();
         }
 
-        if (place)
+        if (removeBlock)
         {
-            Place();
+            RemoveBlock();
         }
     }
 
-    private void Place()
+    private void RemoveBlock()
     {
         Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -46,7 +46,7 @@ public class PickAndPlace : MonoBehaviour
         }
     }
 
-    private void Pick()
+    private void PlaceBlock()
     {
         Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -54,49 +54,34 @@ public class PickAndPlace : MonoBehaviour
         if (Physics.Raycast(inputRay, out hit))
         {
             Debug.DrawLine(inputRay.origin, hit.point, Color.blue);
-            GetBlockFromWorldPosition(hit.point);
+            SetBlockType(hit.point, 1);
         }
     }
 
-    private Chunk GetChunkFromWorldPosition(Vector3 position)
-    {
-        return chunkManager.GetChunkFromWorldPosition(position);
-    }
-
-    private Voxel GetBlockFromWorldPosition(Vector3 position)
+    private void SetBlockType(Vector3 position, byte type)
     {
         Chunk chunk = chunkManager.GetChunkFromWorldPosition(position);
-        
 
         if (chunk != null)
         {
-            //Debug.Log(string.Format("Chunk Position: {0}", chunk.transform.position));
-            //int x = (int)position.x % chunkManager.chunkPrefab.chunkSizeX - ((position.x < 0) ? 1 : 0);
-            //int y = (int)position.y % chunkManager.chunkPrefab.chunkSizeY - ((position.y < 0) ? 1 : 0);
-            //int z = (int)position.z % chunkManager.chunkPrefab.chunkSizeZ - ((position.z < 0) ? 1 : 0);
+            var bp = BlockPosition(position);
 
-            int px = (int)Mathf.Abs(position.x) % chunkSizeX;
-            int py = (int)Mathf.Abs(position.y) % chunkSizeY;
-            int pz = (int)Mathf.Abs(position.z) % chunkSizeZ;
-
-
-            int x = (position.x >= 0) ? px : chunkSizeX - (px + 1);
-            int y = (position.y >= 0) ? py : chunkSizeY - (py + 1);
-            int z = (position.z >= 0) ? pz : chunkSizeZ - (pz + 1);
-
-
-
-            //Debug.Log(string.Format("Block: {0}, {1}, {2}", x, y, z));
-            Debug.Log(string.Format("p.z = {0}, z = {1}", position.z, z));
-
-            chunk.Field.Set(x, y, z, 1);
+            chunk.Field.Set(bp.x, bp.y, bp.z, type);
             chunkManager.UpdateChunk(chunk);
+        }
+    }
 
-            return chunk.GetField(x, y, z);
-        }
-        else
-        {
-            return new Voxel();
-        }
+    private Vector3Int BlockPosition(Vector3 position)
+    {
+        int px = (int)Mathf.Abs(position.x) % chunkSizeX;
+        int py = (int)Mathf.Abs(position.y) % chunkSizeY;
+        int pz = (int)Mathf.Abs(position.z) % chunkSizeZ;
+
+
+        int x = (position.x >= 0) ? px : chunkSizeX - (px + 1);
+        int y = (position.y >= 0) ? py : chunkSizeY - (py + 1);
+        int z = (position.z >= 0) ? pz : chunkSizeZ - (pz + 1);
+
+        return new Vector3Int(x, y, z);
     }
 }
