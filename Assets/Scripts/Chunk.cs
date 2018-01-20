@@ -45,6 +45,9 @@ public class Chunk : MonoBehaviour
     private Mesh mesh;
     public Mesh Mesh { get { return mesh; } }
 
+    private MeshCollider meshCollider;
+    public bool ColliderEnabled { get { return meshCollider.enabled; } set { meshCollider.enabled = value; } }
+
     private Chunk[] neighbors = new Chunk[6];
 
     // mesh data recieves from a builder thread
@@ -62,6 +65,9 @@ public class Chunk : MonoBehaviour
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
+        meshCollider = gameObject.AddComponent<MeshCollider>();
+        meshCollider.enabled = true;
+
         mesher = CreateMeshExtractor(extractorType);
 
         field = new VoxelField(chunkSizeX, chunkSizeY, chunkSizeZ);
@@ -76,6 +82,7 @@ public class Chunk : MonoBehaviour
         if (hasMeshData)
         {
             UpdateMesh(meshData);
+            meshData.Clear();
         }
     }
 
@@ -116,10 +123,13 @@ public class Chunk : MonoBehaviour
     /// <param name="data"></param>
     private void UpdateMesh(MeshData data)
     {
+        mesh.Clear();
         mesh.vertices = data.vertices.ToArray();
         mesh.triangles = data.triangles.ToArray();
         mesh.colors = data.colors.ToArray();
         mesh.RecalculateNormals();
+
+        meshCollider.sharedMesh = mesh;
 
         state = ChunkState.Built;
 

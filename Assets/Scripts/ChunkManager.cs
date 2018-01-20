@@ -15,6 +15,7 @@ public class ChunkManager : MonoBehaviour
     [Range(0, 360)]
     public float rotationThreshold;
     public float distanceToInactive;
+    public float colliderDistance;
     public float distanceToDestroy;
     [Range(0, 1f)]
     public float viewportMargin;
@@ -101,7 +102,7 @@ public class ChunkManager : MonoBehaviour
             UpdateVisibleChunks(playerPosition);
         }
 
-        RemoveFarChunks(playerPosition);
+        ProcessLoadedChunks(playerPosition);
     }
 
     /// <summary>
@@ -182,6 +183,9 @@ public class ChunkManager : MonoBehaviour
 
                 var distanceFromPlayer = (playerPosition - chunk.transform.position).magnitude;
 
+            //    chunk.ColliderEnabled = distanceFromPlayer <= colliderDistance;
+
+
                 // queue the chunk for loading
                 chunkLoader.Load(chunk, distanceFromPlayer);
                 batchCount++;
@@ -189,7 +193,7 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
-    private void RemoveFarChunks(Vector3 playerPosition)
+    private void ProcessLoadedChunks(Vector3 playerPosition)
     {
         List<Vector3Int> toRemove = new List<Vector3Int>();
 
@@ -221,6 +225,9 @@ public class ChunkManager : MonoBehaviour
                     Destroy(chunk);
                 }
             }
+
+            // TODO: Separate removal and collision enable stuff
+            chunk.ColliderEnabled = (distanceToChunk <= colliderDistance);
         }
 
         // remove destroyed chunks from the list
@@ -249,9 +256,12 @@ public class ChunkManager : MonoBehaviour
 
     private Chunk CreateChunk(int x, int z)
     {
+        int chunkSizeX = chunkPrefab.chunkSizeX;
+        int chunkSizeZ = chunkPrefab.chunkSizeZ;
+
         // if the chunk does not exist yet, create it.
         var chunk = Instantiate(chunkPrefab);
-        chunk.SetPosition(new Vector3(x * chunkPrefab.chunkSizeX, 0, z * chunkPrefab.chunkSizeZ));
+        chunk.SetPosition(new Vector3(x * chunkSizeX + 0, 0, z * chunkSizeZ + chunkSizeZ/2));
         chunk.transform.SetParent(transform, false);
         chunk.SetOnLoadCallback(OnChunkLoad);
         chunk.SetOnBuildCallback(OnChunkBuild);
@@ -313,13 +323,13 @@ public class ChunkManager : MonoBehaviour
         };
     }
 
-    private Vector3Int GetChunkPosition(Vector3 position)
+    public Vector3Int GetChunkPosition(Vector3 position)
     {
         Vector3Int chunkPosition = new Vector3Int();
 
-        chunkPosition.x = (int)position.x / chunkPrefab.chunkSizeX;
-        chunkPosition.y = (int)position.y / chunkPrefab.chunkSizeY;
-        chunkPosition.z = (int)position.z / chunkPrefab.chunkSizeZ;
+        chunkPosition.x = ((int)position.x / chunkPrefab.chunkSizeX) - ((position.x < 0) ? 1 : 0);
+        chunkPosition.y = ((int)position.y / chunkPrefab.chunkSizeY) - ((position.y < 0) ? 1 : 0);
+        chunkPosition.z = ((int)position.z / chunkPrefab.chunkSizeZ) - ((position.z < 0) ? 1 : 0);
 
         return chunkPosition;
     }
@@ -348,6 +358,25 @@ public class ChunkManager : MonoBehaviour
         worldPosition.z = chunkPosition.z * chunkPrefab.chunkSizeZ;
 
         return worldPosition;
+    }
+
+    public Chunk GetChunkFromWorldPosition(Vector3 worldPosition)
+    {
+        Vector3Int chunkPosition = GetChunkPosition(worldPosition);
+
+        if (chunkList.ContainsKey(chunkPosition))
+        {
+            return chunkList[chunkPosition];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public void UpdateChunk(Chunk chunk)
+    {
+        chunkLoader.Build(chunk);
     }
 
     private void OnDrawGizmosSelected()
