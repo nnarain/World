@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlaceAndRemove : MonoBehaviour
 {
     public ChunkManager chunkManager;
-    public float range;
+    public float selectRange;
 
     private int chunkSizeX;
     private int chunkSizeY;
@@ -74,7 +74,10 @@ public class PlaceAndRemove : MonoBehaviour
 
         if (Physics.Raycast(inputRay, out hit))
         {
-            action(inputRay, hit);
+            if (hit.distance <= selectRange)
+            {
+                action(inputRay, hit);
+            }
         }
     }
 
