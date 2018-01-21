@@ -274,7 +274,7 @@ MonoBehaviour:
   player: {fileID: 2030482056}
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
-  forwardRenderDistance: 500
+  forwardRenderDistance: 400
   generalRenderDistance: 150
   moveThreshold: 10
   rotationThreshold: 30
@@ -401,7 +401,7 @@ MonoBehaviour:
     StrafeSpeed: 10
     RunMultiplier: 2
     RunKey: 304
-    JumpForce: 40
+    JumpForce: 55
     SlopeCurveModifier:
       serializedVersion: 2
       m_Curve:

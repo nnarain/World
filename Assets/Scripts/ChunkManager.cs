@@ -15,7 +15,6 @@ public class ChunkManager : MonoBehaviour
     [Range(0, 360)]
     public float rotationThreshold;
     public float distanceToInactive;
-    public float colliderDistance;
     public float distanceToDestroy;
     [Range(0, 1f)]
     public float viewportMargin;
@@ -183,9 +182,6 @@ public class ChunkManager : MonoBehaviour
 
                 var distanceFromPlayer = (playerPosition - chunk.transform.position).magnitude;
 
-            //    chunk.ColliderEnabled = distanceFromPlayer <= colliderDistance;
-
-
                 // queue the chunk for loading
                 chunkLoader.Load(chunk, distanceFromPlayer);
                 batchCount++;
@@ -225,9 +221,6 @@ public class ChunkManager : MonoBehaviour
                     Destroy(chunk);
                 }
             }
-
-            // TODO: Separate removal and collision enable stuff
-            chunk.ColliderEnabled = (distanceToChunk <= colliderDistance);
         }
 
         // remove destroyed chunks from the list
