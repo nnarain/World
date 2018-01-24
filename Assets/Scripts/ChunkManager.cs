@@ -15,7 +15,6 @@ public class ChunkManager : MonoBehaviour
     [Range(0, 360)]
     public float rotationThreshold;
     public float distanceToInactive;
-    public float colliderDistance;
     public float distanceToDestroy;
     [Range(0, 1f)]
     public float viewportMargin;
@@ -60,7 +59,8 @@ public class ChunkManager : MonoBehaviour
         {
             while (buildQueue.Count > 0)
             {
-                chunkLoader.Build(buildQueue.Dequeue());
+                Chunk chunk = buildQueue.Dequeue();
+                chunkLoader.Build(chunk, CalculateChunkPriority(chunk));
             }
         }
     }
@@ -181,10 +181,7 @@ public class ChunkManager : MonoBehaviour
                 var chunk = CreateChunk(p.x, p.z);
                 chunkList.Add(p, chunk);
 
-                var distanceFromPlayer = (playerPosition - chunk.transform.position).magnitude;
-
-            //    chunk.ColliderEnabled = distanceFromPlayer <= colliderDistance;
-
+                var distanceFromPlayer = CalculateChunkPriority(chunk);
 
                 // queue the chunk for loading
                 chunkLoader.Load(chunk, distanceFromPlayer);
@@ -225,9 +222,6 @@ public class ChunkManager : MonoBehaviour
                     Destroy(chunk);
                 }
             }
-
-            // TODO: Separate removal and collision enable stuff
-            chunk.ColliderEnabled = (distanceToChunk <= colliderDistance);
         }
 
         // remove destroyed chunks from the list
@@ -252,6 +246,11 @@ public class ChunkManager : MonoBehaviour
         {
             builtInBatch++;
         }
+    }
+
+    private float CalculateChunkPriority(Chunk chunk)
+    {
+        return (chunk.transform.position - player.transform.position).magnitude;
     }
 
     private Chunk CreateChunk(int x, int z)
@@ -376,7 +375,8 @@ public class ChunkManager : MonoBehaviour
 
     public void UpdateChunk(Chunk chunk)
     {
-        chunkLoader.Build(chunk);
+        float priority = CalculateChunkPriority(chunk);
+        chunkLoader.Build(chunk, priority);
     }
 
     private void OnDrawGizmosSelected()
