@@ -29,6 +29,7 @@ public class Chunk : MonoBehaviour
     public int chunkSizeZ;
 
     public FieldGenerator fieldGenerator;
+    public TextureAtlas blockAtlas;
 
     public MeshExtractorType extractorType = MeshExtractorType.SimpleBlocks;
     private IMeshExtractor mesher;
@@ -123,12 +124,21 @@ public class Chunk : MonoBehaviour
     /// <param name="data"></param>
     private void UpdateMesh(MeshData data)
     {
+        // clear previous mesh data
         mesh.Clear();
+
+        // add vertex data
         mesh.vertices = data.vertices.ToArray();
-        mesh.triangles = data.triangles.ToArray();
         mesh.colors = data.colors.ToArray();
+        mesh.uv = data.uvs.ToArray();
+
+        // add triangles indices
+        mesh.triangles = data.triangles.ToArray();
+
+        // recalculate vertex normals
         mesh.RecalculateNormals();
 
+        // add the collider
         meshCollider.sharedMesh = mesh;
 
         state = ChunkState.Built;
@@ -229,6 +239,16 @@ public class Chunk : MonoBehaviour
     public Color GetVoxelColor(byte type)
     {
         return fieldGenerator.GetVoxelColor(type);
+    }
+
+    public TextureAtlas.BlockFaces GetFaces(byte t)
+    {
+        return blockAtlas.GetBlockFaces((Blocks.Type)t);
+    }
+
+    public Vector2[] GetFaceUVs(byte t, Direction d)
+    {
+        return GetFaces(t).GetUVs(d);
     }
 
     /// <summary>

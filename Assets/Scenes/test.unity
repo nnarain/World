@@ -245,6 +245,7 @@ MonoBehaviour:
   - {fileID: 114079209533620130, guid: 5c078f38eda71834c97fb743625f7558, type: 2}
   - {fileID: 114455000829142472, guid: 5f6eae1367fd6b342a5356122148a75b, type: 2}
   - {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a, type: 2}
+  atlas: {fileID: 114577762429812144, guid: 98ff5379faee3f045bf3b7714cfcbda2, type: 2}
   rotationSpeed: 5
   enableRotation: 0
 --- !u!4 &788152805

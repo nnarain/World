@@ -10,12 +10,14 @@ public class BlockMeshExtractor : IMeshExtractor
     private List<Vector3> vertices;
     private List<int> triangles;
     private List<Color> colors;
+    private List<Vector2> texCoords;
 
     public BlockMeshExtractor()
     {
         vertices = new List<Vector3>();
         triangles = new List<int>();
         colors = new List<Color>();
+        texCoords = new List<Vector2>();
     }
 
     void IMeshExtractor.Extract(Chunk chunk, Action<MeshData> callback)
@@ -41,17 +43,17 @@ public class BlockMeshExtractor : IMeshExtractor
                         bool n = chunk.GetField(x, y, z - 1).Type == 0;
                         bool f = chunk.GetField(x, y, z + 1).Type == 0;
 
-                        CreateCubeMesh(x, y, z, chunk.GetVoxelColor(block.Type), l, r, t, b, n, f);
+                        CreateCubeMesh(x, y, z, chunk.GetFaces(block.Type), l, r, t, b, n, f);
                     }
                 }
             }
         }
 
-        MeshData data = new MeshData(vertices, triangles, colors);
+        MeshData data = new MeshData(vertices, triangles, colors, texCoords);
         callback(data);
     }
 
-    private void CreateCubeMesh(int x, int y, int z, Color c, bool l, bool r, bool t, bool b, bool n, bool f)
+    private void CreateCubeMesh(int x, int y, int z, TextureAtlas.BlockFaces faces, bool l, bool r, bool t, bool b, bool n, bool f)
     {
         // local block position
         Vector3 blockPosition = new Vector3(x, y, z);
@@ -63,7 +65,7 @@ public class BlockMeshExtractor : IMeshExtractor
                 CubeMetrics.LTF + blockPosition,
                 CubeMetrics.LTN + blockPosition,
                 CubeMetrics.LBN + blockPosition,
-                c
+                faces.GetUVs(Direction.Left)
             );
         }
 
@@ -74,7 +76,7 @@ public class BlockMeshExtractor : IMeshExtractor
                 CubeMetrics.RTN + blockPosition,
                 CubeMetrics.RTF + blockPosition,
                 CubeMetrics.RBF + blockPosition,
-                c
+                faces.GetUVs(Direction.Right)
             );
         }
 
@@ -85,7 +87,7 @@ public class BlockMeshExtractor : IMeshExtractor
                 CubeMetrics.LTF + blockPosition,
                 CubeMetrics.RTF + blockPosition,
                 CubeMetrics.RTN + blockPosition,
-                c
+                faces.GetUVs(Direction.Top)
             );
         }
 
@@ -96,7 +98,7 @@ public class BlockMeshExtractor : IMeshExtractor
                 CubeMetrics.LBN + blockPosition,
                 CubeMetrics.RBN + blockPosition,
                 CubeMetrics.RBF + blockPosition,
-                c
+                faces.GetUVs(Direction.Bottom)
             );
         }
 
@@ -107,7 +109,7 @@ public class BlockMeshExtractor : IMeshExtractor
                 CubeMetrics.LTN + blockPosition,
                 CubeMetrics.RTN + blockPosition,
                 CubeMetrics.RBN + blockPosition,
-                c
+                faces.GetUVs(Direction.Near)
             );
         }
 
@@ -118,19 +120,19 @@ public class BlockMeshExtractor : IMeshExtractor
                 CubeMetrics.RTF + blockPosition,
                 CubeMetrics.LTF + blockPosition,
                 CubeMetrics.LBF + blockPosition,
-                c
+                faces.GetUVs(Direction.Far)
             );
         }
     }
 
     /// <summary>
-    /// Make a fae of the cube using 4 points
+    /// Make a face of the cube using 4 points
     /// </summary>
     /// <param name="lb">Left Bottom</param>
     /// <param name="lt">Left Top</param>
     /// <param name="rt">Right Top</param>
     /// <param name="rb">Right Bottom</param>
-    private void MakeFace(Vector3 lb, Vector3 lt, Vector3 rt, Vector3 rb, Color c)
+    private void MakeFace(Vector3 lb, Vector3 lt, Vector3 rt, Vector3 rb, Vector2[] uvs)
     {
         int index = vertices.Count;
         vertices.Add(lb);
@@ -138,10 +140,7 @@ public class BlockMeshExtractor : IMeshExtractor
         vertices.Add(rt);
         vertices.Add(rb);
 
-        colors.Add(c);
-        colors.Add(c);
-        colors.Add(c);
-        colors.Add(c);
+        texCoords.AddRange(uvs);
 
         triangles.Add(index + 0);
         triangles.Add(index + 1);

@@ -99,4 +99,6 @@ MonoBehaviour:
   chunkSizeZ: 16
   fieldGenerator: {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a,
     type: 2}
-  extractorType: 1
+  blockAtlas: {fileID: 114577762429812144, guid: 98ff5379faee3f045bf3b7714cfcbda2,
+    type: 2}
+  extractorType: 0

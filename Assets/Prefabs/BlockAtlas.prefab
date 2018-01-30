@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1243630515998146}
+  m_IsPrefabParent: 1
+--- !u!1 &1243630515998146
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4113999284886712}
+  - component: {fileID: 114577762429812144}
+  m_Layer: 0
+  m_Name: BlockAtlas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4113999284886712
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1243630515998146}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -104.375, y: -367.5, z: 171.625}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114577762429812144
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1243630515998146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa50f6c4eadd9734b9c426cacbc9eb40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockFaces:
+  - name: dirt
+    leftFace: {fileID: 21300002, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    rightFace: {fileID: 21300002, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    topFace: {fileID: 21300004, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    bottomFace: {fileID: 21300004, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    nearFace: {fileID: 21300002, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    farFace: {fileID: 21300002, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+  - name: sand
+    leftFace: {fileID: 21300002, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    rightFace: {fileID: 21300002, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    topFace: {fileID: 21300004, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    bottomFace: {fileID: 21300004, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    nearFace: {fileID: 21300002, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    farFace: {fileID: 21300002, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
