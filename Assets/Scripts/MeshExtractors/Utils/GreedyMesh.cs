@@ -143,8 +143,6 @@ public class GreedyMesh
                             Vector3 v2 = new Vector3(x[0] + du[0], x[1] + du[1], x[2] + du[2]);
                             Vector3 v3 = new Vector3(x[0] + du[0] + dv[0], x[1] + du[1] + dv[1], x[2] + du[2] + dv[2]);
                             Vector3 v4 = new Vector3(x[0] + dv[0], x[1] + dv[1], x[2] + dv[2]);
-
-                            //AddQuad(v1, v2, v3, v4, chunk.GetVoxelColor((byte)c), vertices, elements, colors);
                             
                             Direction direction = GetDirection(d, bitset);
                             TextureAtlas.BlockFaces faces = chunk.GetFaces((byte)c);
