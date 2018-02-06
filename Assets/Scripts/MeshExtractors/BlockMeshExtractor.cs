@@ -140,7 +140,10 @@ public class BlockMeshExtractor : IMeshExtractor
         vertices.Add(rt);
         vertices.Add(rb);
 
-        texCoords.AddRange(uvs);
+        texCoords.Add(uvs[0]);
+        texCoords.Add(uvs[0]);
+        texCoords.Add(uvs[0]);
+        texCoords.Add(uvs[0]);
 
         triangles.Add(index + 0);
         triangles.Add(index + 1);
