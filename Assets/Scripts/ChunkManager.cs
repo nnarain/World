@@ -260,7 +260,7 @@ public class ChunkManager : MonoBehaviour
 
         // if the chunk does not exist yet, create it.
         var chunk = Instantiate(chunkPrefab);
-        chunk.SetPosition(new Vector3(x * chunkSizeX + 0, 0, z * chunkSizeZ + chunkSizeZ/2));
+        chunk.SetPosition(new Vector3(x * chunkSizeX, 0, z * chunkSizeZ + chunkSizeZ/2));
         chunk.transform.SetParent(transform, false);
         chunk.SetOnLoadCallback(OnChunkLoad);
         chunk.SetOnBuildCallback(OnChunkBuild);

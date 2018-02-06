@@ -151,7 +151,7 @@ public class GreedyMesh
 
                             if (direction == Direction.Far || direction == Direction.Left || direction == Direction.Bottom)
                             {
-                                faceUVs = RotateUVs(faceUVs);
+                            //    faceUVs = RotateUVs(faceUVs);
                             }
 
                             AddQuad(v1, v2, v3, v4, faceUVs, vertices, uvs, elements);
@@ -194,7 +194,10 @@ public class GreedyMesh
         vertices.Add(v3);
         vertices.Add(v4);
 
-        textCoords.AddRange(uvs);
+        textCoords.Add(uvs[0]);
+        textCoords.Add(uvs[0]);
+        textCoords.Add(uvs[0]);
+        textCoords.Add(uvs[0]);
 
         elements.Add(i + 0);
         elements.Add(i + 1);
@@ -223,26 +226,5 @@ public class GreedyMesh
                 // should be not here.
                 return default(Direction);
         }
-    }
-
-    private void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, Color c,  List<Vector3> vertices, List<int> elements, List<Color> colors)
-    {
-        int i = vertices.Count;
-        vertices.Add(v1);
-        vertices.Add(v2);
-        vertices.Add(v3);
-        vertices.Add(v4);
-
-        colors.Add(c);
-        colors.Add(c);
-        colors.Add(c);
-        colors.Add(c);
-
-        elements.Add(i + 0);
-        elements.Add(i + 1);
-        elements.Add(i + 2);
-        elements.Add(i + 2);
-        elements.Add(i + 3);
-        elements.Add(i + 0);
     }
 }
