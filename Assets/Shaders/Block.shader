@@ -31,6 +31,75 @@
 		half _TileSize;
 		half _Offset;
 
+		float3 getU(int n) {
+			if (n == 0 || n == 1) {
+				return float3(0, 1, 0);
+			}
+			else if (n == 2) {
+				return float3(0, 0, 1);
+			}
+			else if (n == 3) {
+				return float3(0, 0, -1);
+			}
+			else if (n == 4 || n == 5) {
+				return float3(0, 1, 0);
+			}
+			else {
+				return float3(0, 0, 0);
+			}
+		}
+
+		float3 getV(int n) {
+			if (n == 0) {
+				return float3(0, 0, -1);
+			}
+			else if (n == 1) {
+				return float3(0, 0, 1);
+			}
+			else if (n == 2 || n == 3) {
+				return float3(1, 0, 0);
+			}
+			else if (n == 4) {
+				return float3(1, 0, 0);
+			}
+			else if (n == 5) {
+				return float3(-1, 0, 0);
+			}
+			else {
+				return float3(0, 0, 0);
+			}
+		}
+
+		int getType(float3 n) {
+			if (n.x != 0) {
+				if (n.x < 0) {
+					return 0;
+				}
+				else {
+					return 1;
+				}
+			}
+			else if (n.y != 0) {
+				if (n.y > 0) {
+					return 2;
+				}
+				else {
+					return 3;
+				}
+			}
+			else if (n.z != 0) {
+				if (n.z < 0) {
+					return 4;
+				}
+				else {
+					return 5;
+				}
+			}
+			else {
+				return 6;
+			}
+		}
+
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 
 			float3 offset = float3(0, 0, 1) * _Offset;
@@ -41,8 +110,12 @@
 			float2 tileOffset = IN.uv_BlockAtlas;
 			float2 tileSize = float2(_TileSize, _TileSize);
 
-			float2 tileUV = float2(dot(normal.zxy, position), dot(normal.yzx, position));
-			float2 texCoord = tileOffset + (tileSize * frac(abs(tileUV)));
+			int nt = getType(normal);
+			float3 du = getU(nt);
+			float3 dv = getV(nt);
+
+			float2 tileUV = float2(dot(dv, position), dot(du, position));
+			float2 texCoord = tileOffset + (tileSize * frac((tileUV)));
 
 			// sample the texture atlas at the calculated position.
 			fixed4 c = tex2D (_BlockAtlas, texCoord);
@@ -54,6 +127,8 @@
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
 		}
+
+
 		ENDCG
 	}
 	FallBack "Diffuse"
