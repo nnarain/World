@@ -17,6 +17,8 @@ public class WorldManager : MonoBehaviour
     public GeneratorType generator;
     public FieldGenerator[] generators = new FieldGenerator[Enum.GetNames(typeof(GeneratorType)).Length];
 
+    public TextureAtlas atlas;
+
     public float rotationSpeed;
     public bool enableRotation = false;
 
@@ -30,6 +32,8 @@ public class WorldManager : MonoBehaviour
         {
             chunkManager.chunkPrefab.fieldGenerator = generators[(int)generator];
         }
+
+        atlas.Init();
     }
 
     // Use this for initialization
