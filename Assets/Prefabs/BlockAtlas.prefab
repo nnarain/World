@@ -53,16 +53,65 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockFaces:
   - name: air
-    leftFace: {fileID: 21300002, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
-    rightFace: {fileID: 21300004, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
-    topFace: {fileID: 21300008, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
-    bottomFace: {fileID: 21300010, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
-    nearFace: {fileID: 21300012, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
-    farFace: {fileID: 21300014, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    leftFace: {fileID: 21300016, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    rightFace: {fileID: 21300016, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    topFace: {fileID: 21300016, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    bottomFace: {fileID: 21300016, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    nearFace: {fileID: 21300016, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    farFace: {fileID: 21300016, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
   - name: water
-    leftFace: {fileID: 21300002, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
-    rightFace: {fileID: 21300004, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
-    topFace: {fileID: 21300008, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
-    bottomFace: {fileID: 21300010, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
-    nearFace: {fileID: 21300012, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
-    farFace: {fileID: 21300014, guid: c474abcdb2eaa4a4fb4f43c5a0f185dc, type: 3}
+    leftFace: {fileID: 21300004, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    rightFace: {fileID: 21300004, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    topFace: {fileID: 21300004, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    bottomFace: {fileID: 21300004, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    nearFace: {fileID: 21300004, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    farFace: {fileID: 21300004, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+  - name: land
+    leftFace: {fileID: 21300006, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    rightFace: {fileID: 21300006, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    topFace: {fileID: 21300006, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    bottomFace: {fileID: 21300006, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    nearFace: {fileID: 21300006, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    farFace: {fileID: 21300006, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+  - name: stone
+    leftFace: {fileID: 21300000, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    rightFace: {fileID: 21300000, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    topFace: {fileID: 21300000, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    bottomFace: {fileID: 21300000, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    nearFace: {fileID: 21300000, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    farFace: {fileID: 21300000, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+  - name: snow
+    leftFace: {fileID: 21300014, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    rightFace: {fileID: 21300014, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    topFace: {fileID: 21300014, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    bottomFace: {fileID: 21300014, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    nearFace: {fileID: 21300014, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    farFace: {fileID: 21300014, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+  - name: sand
+    leftFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    rightFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    topFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    bottomFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    nearFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    farFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+  - name: grassland
+    leftFace: {fileID: 21300008, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    rightFace: {fileID: 21300008, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    topFace: {fileID: 21300012, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    bottomFace: {fileID: 21300006, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    nearFace: {fileID: 21300008, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    farFace: {fileID: 21300008, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+  - name: rainforest
+    leftFace: {fileID: 21300008, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    rightFace: {fileID: 21300008, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    topFace: {fileID: 21300010, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    bottomFace: {fileID: 21300006, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    nearFace: {fileID: 21300008, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    farFace: {fileID: 21300008, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+  - name: scorched
+    leftFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    rightFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    topFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    bottomFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    nearFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}
+    farFace: {fileID: 21300002, guid: a32cdd3b270c6ea419321a170558d549, type: 3}

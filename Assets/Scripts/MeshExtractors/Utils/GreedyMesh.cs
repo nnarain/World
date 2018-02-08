@@ -194,10 +194,10 @@ public class GreedyMesh
         vertices.Add(v3);
         vertices.Add(v4);
 
-        textCoords.Add(uvs[0]);
-        textCoords.Add(uvs[0]);
-        textCoords.Add(uvs[0]);
-        textCoords.Add(uvs[0]);
+        textCoords.Add(uvs[3]);
+        textCoords.Add(uvs[3]);
+        textCoords.Add(uvs[3]);
+        textCoords.Add(uvs[3]);
 
         elements.Add(i + 0);
         elements.Add(i + 1);
