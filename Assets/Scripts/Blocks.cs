@@ -17,6 +17,19 @@ public static class Blocks
         Snow
     }
 
+    public static int[] BlockMeshProperty = new int[]
+    {
+        0,
+        1,
+        0,
+        0, 
+        0, 
+        0,
+        0,
+        0,
+        0
+    };
+
     public static byte ToByte(this Type t)
     {
         return (byte)t;

@@ -240,10 +240,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: 0
-  generator: 2
+  generator: 0
   generators:
-  - {fileID: 114079209533620130, guid: 5c078f38eda71834c97fb743625f7558, type: 2}
-  - {fileID: 114455000829142472, guid: 5f6eae1367fd6b342a5356122148a75b, type: 2}
   - {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a, type: 2}
   atlas: {fileID: 114577762429812144, guid: 98ff5379faee3f045bf3b7714cfcbda2, type: 2}
   rotationSpeed: 5
@@ -275,8 +273,8 @@ MonoBehaviour:
   player: {fileID: 2030482056}
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
-  forwardRenderDistance: 450
-  generalRenderDistance: 100
+  forwardRenderDistance: 500
+  generalRenderDistance: 500
   moveThreshold: 10
   rotationThreshold: 10
   distanceToInactive: 600
