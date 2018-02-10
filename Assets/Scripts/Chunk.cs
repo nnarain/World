@@ -133,7 +133,7 @@ public class Chunk : MonoBehaviour
         mesh.uv = data.uvs.ToArray();
 
         // add triangles indices
-        mesh.triangles = data.triangles.ToArray();
+        mesh.triangles = data.elements.ToArray();
 
         // recalculate vertex normals
         mesh.RecalculateNormals();

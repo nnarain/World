@@ -28,10 +28,7 @@ public class GreedyMesh
 {
     public MeshData ReduceMesh(Chunk chunk)
     {
-        List<Vector3> vertices = new List<Vector3>();
-        List<int> elements = new List<int>();
-        List<Color> colors = new List<Color>();
-        List<Vector2> uvs = new List<Vector2>();
+        MeshDataAllocator meshAllocator = new MeshDataAllocator();
 
         int[] dims = { chunk.chunkSizeX, chunk.chunkSizeY, chunk.chunkSizeZ };
 
@@ -144,17 +141,15 @@ public class GreedyMesh
                             Vector3 v3 = new Vector3(x[0] + du[0] + dv[0], x[1] + du[1] + dv[1], x[2] + du[2] + dv[2]);
                             Vector3 v4 = new Vector3(x[0] + dv[0], x[1] + dv[1], x[2] + dv[2]);
                             
+
                             Direction direction = GetDirection(d, bitset);
+                            // TODO: this should be replaced with block properties. 
                             TextureAtlas.BlockFaces faces = chunk.GetFaces((byte)c);
+                            int meshIndex = Blocks.BlockMeshProperty[c];
 
                             var faceUVs = faces.GetUVs(direction);
 
-                            if (direction == Direction.Far || direction == Direction.Left || direction == Direction.Bottom)
-                            {
-                            //    faceUVs = RotateUVs(faceUVs);
-                            }
-
-                            AddQuad(v1, v2, v3, v4, faceUVs, vertices, uvs, elements);
+                            meshAllocator.Get(meshIndex).AddQuad(v1, v2, v3, v4, faceUVs[3]);
 
                             for (l = 0; l < h; ++l)
                             {
@@ -177,39 +172,7 @@ public class GreedyMesh
             }
         }
 
-        MeshData data = new MeshData(vertices, elements, colors, uvs);
-
-        return data;
-    }
-
-    private void AddQuad(
-        Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, 
-        Vector2[] uvs,
-        List<Vector3> vertices, List<Vector2> textCoords, 
-        List<int> elements)
-    {
-        int i = vertices.Count;
-        vertices.Add(v1);
-        vertices.Add(v2);
-        vertices.Add(v3);
-        vertices.Add(v4);
-
-        textCoords.Add(uvs[3]);
-        textCoords.Add(uvs[3]);
-        textCoords.Add(uvs[3]);
-        textCoords.Add(uvs[3]);
-
-        elements.Add(i + 0);
-        elements.Add(i + 1);
-        elements.Add(i + 2);
-        elements.Add(i + 2);
-        elements.Add(i + 3);
-        elements.Add(i + 0);
-    }
-
-    private Vector2[] RotateUVs(Vector2[] uvs)
-    {
-        return new Vector2[] { uvs[3], uvs[0], uvs[1], uvs[2] };
+        return meshAllocator.Get(0);
     }
 
     private Direction GetDirection(int d, bool c)
