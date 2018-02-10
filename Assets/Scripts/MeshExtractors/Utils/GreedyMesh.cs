@@ -26,7 +26,7 @@ using UnityEngine;
 
 public class GreedyMesh
 {
-    public MeshData ReduceMesh(Chunk chunk)
+    public MeshData[] ReduceMesh(Chunk chunk)
     {
         MeshDataAllocator meshAllocator = new MeshDataAllocator();
 
@@ -172,7 +172,7 @@ public class GreedyMesh
             }
         }
 
-        return meshAllocator.Get(0);
+        return meshAllocator.Get();
     }
 
     private Direction GetDirection(int d, bool c)

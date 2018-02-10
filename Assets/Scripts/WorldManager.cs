@@ -7,9 +7,7 @@ public class WorldManager : MonoBehaviour
 {
     public enum GeneratorType
     {
-        PerlinHeight,
-        ElevationAndMoisture,
-        Island
+        Island = 0
     }
 
     public int seed;

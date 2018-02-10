@@ -12,6 +12,11 @@ public class MeshDataAllocator
         meshData = new List<MeshData>();
     }
 
+    public MeshData[] Get()
+    {
+        return meshData.ToArray();
+    }
+
     /// <summary>
     /// Get the mesh data for mesh `i`
     /// </summary>

@@ -52,7 +52,7 @@ public class Chunk : MonoBehaviour
     private Chunk[] neighbors = new Chunk[6];
 
     // mesh data recieves from a builder thread
-    private MeshData meshData;
+    private MeshData[] meshData;
     // flag indicatin that a chunk mesh needs to be updated
     private bool hasMeshData;
     // temporary object to store the chunks position since the transform cannot be used in a thread
@@ -64,7 +64,9 @@ public class Chunk : MonoBehaviour
     private void Awake()
     {
         mesh = new Mesh();
+        mesh.subMeshCount = 2;
         GetComponent<MeshFilter>().mesh = mesh;
+
 
         meshCollider = gameObject.AddComponent<MeshCollider>();
         meshCollider.enabled = true;
@@ -83,7 +85,6 @@ public class Chunk : MonoBehaviour
         if (hasMeshData)
         {
             UpdateMesh(meshData);
-            meshData.Clear();
         }
     }
 
@@ -112,7 +113,7 @@ public class Chunk : MonoBehaviour
             onBuildCallback(this);
     }
 
-    private void OnMeshDataRecieve(MeshData data)
+    private void OnMeshDataRecieve(MeshData[] data)
     {
         meshData = data;
         hasMeshData = true;
@@ -122,21 +123,32 @@ public class Chunk : MonoBehaviour
     /// Recieve the calculated mesh data and update the mesh
     /// </summary>
     /// <param name="data"></param>
-    private void UpdateMesh(MeshData data)
+    private void UpdateMesh(MeshData[] data)
     {
-        // clear previous mesh data
-        mesh.Clear();
+        List<Vector3> meshVertices = new List<Vector3>();
+        List<Vector2> meshUVs = new List<Vector2>();
+        List<int> subMeshOffsets = new List<int>();
+
+        foreach (var d in data)
+        {
+            subMeshOffsets.Add(meshVertices.Count);
+            meshVertices.AddRange(d.vertices);
+            meshUVs.AddRange(d.uvs);
+        }
 
         // add vertex data
-        mesh.vertices = data.vertices.ToArray();
-        mesh.colors = data.colors.ToArray();
-        mesh.uv = data.uvs.ToArray();
+        mesh.vertices = meshVertices.ToArray();
+        mesh.uv = meshUVs.ToArray();
 
-        // add triangles indices
-        mesh.triangles = data.elements.ToArray();
+        for (int i = 0; i < data.Length; ++i)
+        {
+            mesh.SetTriangles(data[i].elements, i, false, subMeshOffsets[i]);
+        }
 
         // recalculate vertex normals
         mesh.RecalculateNormals();
+        // recalculate bounds after meshes are added
+        mesh.RecalculateBounds();
 
         // add the collider
         meshCollider.sharedMesh = mesh;
