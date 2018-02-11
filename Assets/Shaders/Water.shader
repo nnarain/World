@@ -53,7 +53,9 @@
 
 			// water texture
 			float2 texCoord = float2(frac(i.worldPos.x), frac(i.worldPos.z));
-			fixed4 waterColor = tex2D(_WaterTexture, texCoord);
+			float2 waveOffset = tex2D(_WaveTexture, texCoord) * sin(_Time * _WaveSpeed);
+
+			fixed4 waterColor = tex2D(_WaterTexture, texCoord + waveOffset);
 
 			fixed4 c = _Color + foamLine * _EdgeColor;
 			

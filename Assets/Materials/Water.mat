@@ -58,6 +58,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _WaterTexture:
+        m_Texture: {fileID: 2800000, guid: 23441991701011843b1f1f5ccd7bb669, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _WaveTexture:
         m_Texture: {fileID: 2800000, guid: 43b14789d1c80764f9d6414a37209710, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -65,7 +69,7 @@ Material:
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _DepthFactor: 2.99
+    - _DepthFactor: 3.58
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
@@ -81,10 +85,10 @@ Material:
     - _SrcBlend: 1
     - _TileSize: 0
     - _UVSec: 0
-    - _WaveAmp: 0
-    - _WaveSpeed: 0
+    - _WaveAmp: 0.96
+    - _WaveSpeed: 0.33
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.093101196, g: 0.6334993, b: 0.9044118, a: 0.421}
-    - _EdgeColor: {r: 0.105590396, g: 0.25604787, b: 0.46323532, a: 1}
+    - _Color: {r: 0.093101196, g: 0.6334993, b: 0.9044118, a: 0.278}
+    - _EdgeColor: {r: 0.67441607, g: 0.7804528, b: 0.9264706, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
