@@ -9,7 +9,6 @@
 		
 		_WaterTexture("Water Texture", 2D) = "white"{}
 		_WaveSpeed("Wave Speed", float) = 0.0
-		_WaveAmp("Wave Amplitube", float) = 0.0
 		_WaveTexture("Wave Texture", 2D) = "white" {}
 	}
 	SubShader {
