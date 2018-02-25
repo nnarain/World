@@ -19,7 +19,7 @@
 		LOD 100
 
 		CGPROGRAM
-		#pragma surface surf Standard fullforwardshadows alpha
+		#pragma surface surf Standard fullforwardshadows
 		#pragma target 3.0
 
 		#include "UnityCG.cginc"
@@ -60,7 +60,7 @@
 			
 
 			o.Albedo = c.rgb * waterColor;
-			o.Alpha = _Color.a;
+			o.Alpha = 1;
 			o.Metallic = 0.5;
 			o.Smoothness = 0.5;
 		}

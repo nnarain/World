@@ -27,6 +27,11 @@ public class MeshData
 
     public void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, Vector2 uvOffset)
     {
+        AddQuad(v1, v2, v3, v4, uvOffset, Color.white);
+    }
+
+    public void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, Vector2 uvOffset, Color c)
+    {
         int i = vertices.Count;
         vertices.Add(v1);
         vertices.Add(v2);
@@ -37,6 +42,11 @@ public class MeshData
         uvs.Add(uvOffset);
         uvs.Add(uvOffset);
         uvs.Add(uvOffset);
+
+        colors.Add(c);
+        colors.Add(c);
+        colors.Add(c);
+        colors.Add(c);
 
         elements.Add(i + 0);
         elements.Add(i + 1);
