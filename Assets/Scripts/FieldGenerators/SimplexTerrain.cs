@@ -11,8 +11,7 @@ public class SimplexTerrain : FieldGenerator
     [Range(0, 1)]
     public float hillWeight;
 
-    public Simplex densityNoise;
-    public CombinedNoise densityNoise2;
+    public CombinedNoise densityNoise;
 
 
     [Range(0, 1)]
@@ -21,7 +20,8 @@ public class SimplexTerrain : FieldGenerator
 
     public double hardFloorY;
     public double hardFloorScale;
-    public int seaLevel;
+    public double seaLevel;
+    public double maxHeight;
 
     public float islandRadius;
     public AnimationCurve islandCurve;
@@ -29,6 +29,8 @@ public class SimplexTerrain : FieldGenerator
     public override void Generate(VoxelField field, Vector3 position)
     {
         var islandEval = islandCurve.Copy();
+
+        DensitySampler densitySampler = new DensitySampler(densityNoise, position, field.X, field.Y, field.Z, 4);
 
         field.ForEachXZ((x, z) =>
         {
@@ -38,43 +40,16 @@ public class SimplexTerrain : FieldGenerator
             var hillHeight = ((float)AddOctaves(hillNoise, ws.x, ws.z, 1, 1, 1)).Remap(-1, 1, 0, 1);
             var islandMask = IslandMask(ws.x, ws.z, islandEval);
 
-            var height = (float)((continentHeight * continentWeight + hillHeight * hillWeight) * islandMask * (field.Y - 1));
+            var height = (float)((continentHeight * continentWeight + hillHeight * hillWeight) * islandMask * maxHeight);
             height = Mathf.Clamp(height, 0, field.Y - 1);
 
-            int maxY = Mathf.RoundToInt(height);
-
             ///*
-            for (int y = 0; y < field.Y; ++y)
-            {
-                ws.y = y;
-
-                if (y <= seaLevel)
-                {
-                    field.Set(x, y, z, Blocks.Type.Water.ToByte());
-                }
-                else if (y <= maxY)
-                {
-                    if (ws.y <= seaLevel + 3)
-                    {
-                        field.Set(x, y, z, Blocks.Type.Sand.ToByte());
-                    }
-                    else
-                    {
-                        field.Set(x, y, z, Blocks.Type.Land.ToByte());
-                    }
-                }
-            }
-            //*/
-
-            /*
             for (int y = 0; y < field.Y; ++y)
             {
                 ws.y = position.y + y;
 
                 var density = -(position.y + height + ws.y);
-                //density += (float)AddOctaves(densityNoise, ws, 1, 1, 3) * islandMask;
-                //density += (float)(Saturate((hardFloorY - ws.y) * 3) * hardFloorScale);
-                density += (float)densityNoise2.Sample(ws);
+                density += (float)densitySampler.Sample(x, y, z);
                 density += (float)(Saturate((hardFloorY - ws.y) * 3) * hardFloorScale);
 
                 if (density >= isolevel)
@@ -96,7 +71,7 @@ public class SimplexTerrain : FieldGenerator
                     }
                 }
             }
-            */
+            //*/
         });
     }
 

@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: 0
-  generator: 2
+  generator: 1
   generators:
   - {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a, type: 2}
   - {fileID: 114174795048307780, guid: db0e81da894109a48be3d10020c1cdbe, type: 2}

@@ -53,19 +53,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noise:
     sampleNoise:
-      seed: 44
-      scaleH: 100
-      scaleV: 100
+      seed: 31
+      scaleH: 211.05
+      scaleV: 204.6
       persistance: 0.484
       lacunarity: 1.488
       scale: 1
     offsetNoise:
       seed: 3
-      scaleH: 132
-      scaleV: 100
-      persistance: 0.165
+      scaleH: 277.7
+      scaleV: 348.7
+      persistance: 0.246
       lacunarity: 1.497
       scale: 1
   hardFloorY: 0
   hardFloorScale: 0
-  seaLevel: 5
+  maxHeight: 64
+  seaLevel: 0

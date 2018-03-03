@@ -8,7 +8,8 @@ public class CombineSimplexTerrain : FieldGenerator
 
     public double hardFloorY;
     public double hardFloorScale;
-    public int seaLevel;
+    public double maxHeight;
+    public double seaLevel;
 
     public override void Generate(VoxelField field, Vector3 position)
     {
@@ -16,9 +17,9 @@ public class CombineSimplexTerrain : FieldGenerator
         {
             Vector3 ws = position + new Vector3(x, 0, z);
 
-            var height = ((float)noise.Sample(ws.x, ws.z)).Remap(-1, 1, 0, 1) * (field.Y - 1);
+            var height = (noise.Sample(ws.x, ws.z)).Remap(-1, 1, 0, 1) * maxHeight;
 
-            int y = (int)Mathf.Clamp(height, 0, field.Y - 1);
+            int y = (int)Mathf.Clamp((float)height, 0, field.Y - 1);
 
             for (int j = 0; j < y; ++j)
             {
