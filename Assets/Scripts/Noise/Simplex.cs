@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Simplex
+public class Simplex : INoiseSampler
 {
     public int seed;
     public double scaleH;
@@ -22,6 +22,16 @@ public class Simplex
         n = new OpenSimplexNoise(seed);
     }
 
+    public double Sample(double x, double y)
+    {
+        return Sample(x, y, 1, 1, 3);
+    }
+
+    public double Sample(double x, double y, double z)
+    {
+        return Sample(x, y, z, 1, 1, 3);
+    }
+
     public double Sample(Vector3 p, double f, double a, int o = 0)
     {
         return Sample(p.x, p.y, p.z, f, a, o);
@@ -38,7 +48,7 @@ public class Simplex
         var fh = f / scaleH;
         var fv = f / scaleV;
 
-        return n.Evaluate(x * fh, y * fv, z * fh) * scale;
+        return n.Evaluate(x * fh, y * fv, z * fh) * a * scale;
     }
 
     public double Sample(double x, double z, double f, double a, int o = 0)

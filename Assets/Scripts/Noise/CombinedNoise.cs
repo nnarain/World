@@ -22,4 +22,9 @@ public class CombinedNoise : INoiseSampler
     {
         return Sample(ws.x, ws.y, ws.z);
     }
+
+    public double Sample2D(Vector3 ws)
+    {
+        return Sample(ws.x, ws.z);
+    }
 }

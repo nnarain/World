@@ -56,7 +56,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: d46e0729abcfbda409f34340374f7c6b, type: 2}
+  - {fileID: 2100000, guid: a96b5fbba89f03f4fb74aaca8a1e1533, type: 2}
   - {fileID: 2100000, guid: 74f139dd2cc307343ad7a51ad3456227, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkSizeX: 16
-  chunkSizeY: 128
+  chunkSizeY: 256
   chunkSizeZ: 16
   fieldGenerator: {fileID: 114174795048307780, guid: db0e81da894109a48be3d10020c1cdbe,
     type: 2}

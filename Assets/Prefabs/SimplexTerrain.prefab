@@ -51,59 +51,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f5700ca16efdfb46b7a886240e874c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contientNoise:
-    seed: 18
-    scaleH: 155
-    scaleV: 158.3
-    persistance: 0.446
-    lacunarity: 1.23
+  heightNoise:
+    seed: 64
+    scaleH: 175
+    scaleV: 175
+    persistance: 0.623
+    lacunarity: 1.814
     scale: 1
-  hillNoise:
-    seed: 25
-    scaleH: 149.42
-    scaleV: 58.5
-    persistance: 0.652
-    lacunarity: 1.866
-    scale: 1
-  continentWeight: 0.5
-  hillWeight: 0.5
   densityNoise:
-    sampleNoise:
-      seed: 112
-      scaleH: 168.11
-      scaleV: 107.42
-      persistance: 0.46
-      lacunarity: 1.441
-      scale: 10.63
-    offsetNoise:
-      seed: 49
-      scaleH: 288.1
-      scaleV: 281.9
-      persistance: 0.525
-      lacunarity: 1.535
-      scale: 0.51
-  isolevel: 0
-  terrainScale: 32.8
-  hardFloorY: -13
-  hardFloorScale: 64
-  seaLevel: 5
-  maxHeight: 125.3
-  islandRadius: 500
-  islandCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: -0.0041656494
-      value: 0.98124695
-      inSlope: -0.7682799
-      outSlope: -0.7682799
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.9833374
-      value: 0.006248474
-      inSlope: -0.68999374
-      outSlope: -0.68999374
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
+    seed: 42
+    scaleH: 300
+    scaleV: 300
+    persistance: 0.653
+    lacunarity: 1.749
+    scale: 25
+  maxHeight: 80
+  midLevel: 30
