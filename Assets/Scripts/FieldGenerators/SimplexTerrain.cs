@@ -6,10 +6,12 @@ public class SimplexTerrain : FieldGenerator
 {
     public Simplex heightNoise;
     public Simplex densityNoise;
+    public Worley worley;
 
     public double maxHeight;
     public double midLevel;
     public double seaLevel;
+
 
     public override void Generate(VoxelField field, Vector3 position)
     {
@@ -19,7 +21,8 @@ public class SimplexTerrain : FieldGenerator
         {
             var ws = position + new Vector3(x, 0, z);
 
-            var height = (AddOctaves(heightNoise, ws.x, ws.z, 1, 1, 2) * maxHeight) + midLevel;
+            var w = worley.Sample(ws.x, ws.z);
+            var height = (AddOctaves(heightNoise, ws.x, ws.z, 1, 1, 2) * maxHeight * w) + midLevel;
 
             int maxY = Mathf.RoundToInt(Mathf.Clamp((float)height, 0, field.Y - 1));
 
@@ -27,13 +30,17 @@ public class SimplexTerrain : FieldGenerator
             {
                 ws.y = position.y + y;
 
-                var density = (double)(-y + maxY - 0);
+                var density = (double)(-y + maxY);
                 density += sampler.Sample(x, y, z);
                 density += Saturate((midLevel - ws.y) * 3) * 40;
 
                 if (density > 0)
                 {
                     field.Set(x, y, z, Blocks.Type.Stone.ToByte());
+                }
+                else
+                {
+
                 }
             }
         });

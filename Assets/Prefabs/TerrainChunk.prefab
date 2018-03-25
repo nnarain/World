@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkSizeX: 16
-  chunkSizeY: 256
+  chunkSizeY: 128
   chunkSizeZ: 16
   fieldGenerator: {fileID: 114174795048307780, guid: db0e81da894109a48be3d10020c1cdbe,
     type: 2}
