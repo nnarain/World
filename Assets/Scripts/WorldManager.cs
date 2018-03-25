@@ -10,7 +10,8 @@ public class WorldManager : MonoBehaviour
         Island,
         SimplexTerrain,
         CombinedSimplexTerrain,
-        WorleyTerrain
+        WorleyTerrain,
+        RidgedTerrain
     }
 
     public int seed;
