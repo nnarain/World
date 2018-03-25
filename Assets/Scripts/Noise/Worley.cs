@@ -81,7 +81,7 @@ public class Worley : INoiseSampler
         return GetPoints(ws.x, ws.z);
     }
 
-    private Vector3 GetClosestPoint(Vector3 ws)
+    public Vector3 GetClosestPoint(Vector3 ws)
     {
         var points = GetPoints(ws);
 

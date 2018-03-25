@@ -64,10 +64,15 @@ MonoBehaviour:
     scaleV: 300
     persistance: 0.653
     lacunarity: 1.749
-    scale: 25
+    scale: 10
   worley:
     seed: 20
     cellSize: 100
   maxHeight: 70
   midLevel: 30
-  seaLevel: 0
+  maxHeights:
+  - 30
+  - 40
+  - 50
+  - 60
+  - 70
