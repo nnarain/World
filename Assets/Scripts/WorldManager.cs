@@ -9,7 +9,8 @@ public class WorldManager : MonoBehaviour
     {
         Island,
         SimplexTerrain,
-        CombinedSimplexTerrain
+        CombinedSimplexTerrain,
+        WorleyTerrain
     }
 
     public int seed;

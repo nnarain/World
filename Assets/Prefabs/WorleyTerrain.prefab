@@ -9,65 +9,48 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1415174778059184}
+  m_RootGameObject: {fileID: 1909110264212610}
   m_IsPrefabParent: 1
---- !u!1 &1415174778059184
+--- !u!1 &1909110264212610
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4461950481172056}
-  - component: {fileID: 114174795048307780}
+  - component: {fileID: 4482866425284560}
+  - component: {fileID: 114825485060144672}
   m_Layer: 0
-  m_Name: SimplexTerrain
+  m_Name: WorleyTerrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4461950481172056
+--- !u!4 &4482866425284560
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1415174778059184}
+  m_GameObject: {fileID: 1909110264212610}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5741363, y: -3.5573146, z: 6.9396753}
+  m_LocalPosition: {x: 954.8136, y: -513.5836, z: -136.5445}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114174795048307780
+--- !u!114 &114825485060144672
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1415174778059184}
+  m_GameObject: {fileID: 1909110264212610}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f5700ca16efdfb46b7a886240e874c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c1b61b3e7fa8104a9b136cf17c088a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heightNoise:
-    seed: 64
-    scaleH: 175
-    scaleV: 175
-    persistance: 0.623
-    lacunarity: 1.814
-    scale: 1
-  densityNoise:
-    seed: 42
-    scaleH: 300
-    scaleV: 300
-    persistance: 0.653
-    lacunarity: 1.749
-    scale: 25
   worley:
-    seed: 20
-    cellSize: 100
-  maxHeight: 70
-  midLevel: 30
-  seaLevel: 0
+    cellSize: 200
+  maxHeight: 100
