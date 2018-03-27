@@ -98,7 +98,7 @@ MonoBehaviour:
   chunkSizeX: 16
   chunkSizeY: 128
   chunkSizeZ: 16
-  fieldGenerator: {fileID: 114174795048307780, guid: db0e81da894109a48be3d10020c1cdbe,
+  fieldGenerator: {fileID: 114430075173221864, guid: ce7423eeee5a75647a63497684c21e43,
     type: 2}
   blockAtlas: {fileID: 114577762429812144, guid: 98ff5379faee3f045bf3b7714cfcbda2,
     type: 2}

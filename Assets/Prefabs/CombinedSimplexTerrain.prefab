@@ -51,22 +51,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6b6aa13957bff041bb4206182e68fbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noise:
-    sampleNoise:
-      seed: 31
-      scaleH: 211.05
-      scaleV: 204.6
-      persistance: 0.484
-      lacunarity: 1.488
+  selector: 0
+  heightMap:
+    continent:
+      seed: 181
+      scaleH: 800
+      scaleV: 800
+      persistance: 0.679
+      lacunarity: 1.765
+      scale: 0.3
+      e: 1
+    mountain:
+      seed: -32
+      scaleH: 400
+      scaleV: 400
+      persistance: 0.508
+      lacunarity: 1.516
       scale: 1
-    offsetNoise:
-      seed: 3
-      scaleH: 277.7
-      scaleV: 348.7
-      persistance: 0.246
-      lacunarity: 1.497
-      scale: 1
-  hardFloorY: 0
-  hardFloorScale: 0
-  maxHeight: 64
-  seaLevel: 0
+      e: 1
+    variation:
+      seed: 76
+      cellSize: 300
+  maxHeight: 100

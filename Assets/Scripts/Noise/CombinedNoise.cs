@@ -5,26 +5,29 @@ using UnityEngine;
 [System.Serializable]
 public class CombinedNoise : INoiseSampler
 {
-    public Simplex sampleNoise;
-    public Simplex offsetNoise;
+    public INoiseSampler n1;
+    public INoiseSampler n2;
+    public INoiseSampler interpolation;
 
-    public double Sample(double x, double y)
+    public CombinedNoise(INoiseSampler n1, INoiseSampler n2, INoiseSampler i)
     {
-        return sampleNoise.Sample(x + offsetNoise.Sample(x, y, 1, 1, 2), y, 1, 1, 3);
+        this.n1 = n1;
+        this.n2 = n2;
+        this.interpolation = i;
     }
 
     public double Sample(double x, double y, double z)
     {
-        return sampleNoise.Sample(x + offsetNoise.Sample(x, z, 1, 1, 2), y, z, 1, 1, 3);
+        var s1 = (float)n1.Sample(x, z);
+        var s2 = (float)n2.Sample(x, z);
+
+        var c = Mathf.Lerp(s1, s2, (float)interpolation.Sample(x, z).Remap(-1, 1, 0, 1));
+
+        return c;
     }
 
-    public double Sample(Vector3 ws)
+    public double Sample(double x, double z)
     {
-        return Sample(ws.x, ws.y, ws.z);
-    }
-
-    public double Sample2D(Vector3 ws)
-    {
-        return Sample(ws.x, ws.z);
+        return Sample(x, 0, z);
     }
 }
