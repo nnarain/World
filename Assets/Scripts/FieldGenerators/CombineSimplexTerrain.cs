@@ -4,49 +4,56 @@ using UnityEngine;
 
 public class CombineSimplexTerrain : FieldGenerator
 {
-    public CombinedNoise noise;
+    [System.Serializable]
+    public class HeightMap
+    {
+        public Simplex continent;
+        public Simplex hill;
 
-    public double hardFloorY;
-    public double hardFloorScale;
+        public Worley variation;
+    }
+
+    public enum HeightSelector
+    {
+        Continent,
+        Hill,
+        Variation,
+        Combined
+    }
+
+    public HeightSelector selector;
+
+
+    public HeightMap heightMap;
+
     public double maxHeight;
-    public double seaLevel;
 
     public override void Generate(VoxelField field, Vector3 position)
     {
+        CombinedNoise terrainHeight = new CombinedNoise(heightMap.continent, heightMap.hill, heightMap.variation);
+
+        INoiseSampler selection = null;
+        if (selector == HeightSelector.Continent)
+            selection = heightMap.continent;
+        else if (selector == HeightSelector.Hill)
+            selection = heightMap.hill;
+        else if (selector == HeightSelector.Variation)
+            selection = heightMap.variation;
+        else
+            selection = terrainHeight;
+
         field.ForEachXZ((x, z) =>
         {
             Vector3 ws = position + new Vector3(x, 0, z);
 
-            var height = (noise.Sample(ws.x, ws.z)).Remap(-1, 1, 0, 1) * maxHeight;
+            var height = (selection.Sample(ws.x, ws.z)).Remap(-1, 1, 0, 1) * maxHeight;
 
-            int y = (int)Mathf.Clamp((float)height, 0, field.Y - 1);
+            int maxY = (int)Mathf.Clamp((float)height, 0, field.Y - 1);
 
-            for (int j = 0; j < y; ++j)
+            for (int y = 0; y < maxY; ++y)
             {
-                field.Set(x, j, z, Blocks.Type.Stone.ToByte());
+                field.Set(x, y, z, Blocks.Type.Stone.ToByte());
             }
-
-            /*
-            for (int y = 0; y < field.Y - 1; ++y)
-            {
-                if (y <= seaLevel)
-                {
-                    field.Set(x, y, z, Blocks.Type.Water.ToByte());
-                }
-                else if (y <= maxY)
-                {
-                    if (y < seaLevel + 4)
-                    {
-                        field.Set(x, y, z, Blocks.Type.Sand.ToByte());
-                    }
-                    else
-                    {
-                        field.Set(x, y, z, Blocks.Type.Land.ToByte());
-                    }
-                }
-            }
-            */
-
         });
     }
 

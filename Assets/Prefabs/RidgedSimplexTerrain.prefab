@@ -52,10 +52,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ridgedSimplex:
-    seed: 0
-    scaleH: 0
-    scaleV: 0
-    persistance: 0
-    lacunarity: 0
-    scale: 0
+    seed: 69
+    scaleH: 207.96
+    scaleV: 207.82
+    persistance: 0.533
+    lacunarity: 1.532
+    scale: 1
   maxHeight: 64

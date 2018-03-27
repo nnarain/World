@@ -13,7 +13,12 @@ public class Simplex : INoiseSampler
     [Range(1, 2)]
     public float lacunarity;
 
-    public double scale;
+    public int octaves = 1;
+
+    public double scale = 1;
+
+    [Range(0,2)]
+    public double e = 1;
 
     private OpenSimplexNoise n;
 
@@ -24,12 +29,12 @@ public class Simplex : INoiseSampler
 
     public double Sample(double x, double y)
     {
-        return Sample(x, y, 1, 1, 3);
+        return Math.Pow(Sample(x, y, 1, 1, octaves), e);
     }
 
     public double Sample(double x, double y, double z)
     {
-        return Sample(x, y, z, 1, 1, 3);
+        return Math.Pow(Sample(x, y, z, 1, 1, octaves), e);
     }
 
     public double Sample(Vector3 p, double f, double a, int o = 0)
@@ -37,8 +42,9 @@ public class Simplex : INoiseSampler
         return Sample(p.x, p.y, p.z, f, a, o);
     }
 
-    public double Sample(double x, double y, double z, double f, double a, int o = 0)
+    public double Sample(double x, double y, double z, double f, double a, int octaves = 0)
     {
+        /*
         if (o > 0)
         {
             f *= lacunarity * o;
@@ -49,19 +55,46 @@ public class Simplex : INoiseSampler
         var fv = f / scaleV;
 
         return n.Evaluate(x * fh, y * fv, z * fh) * a * scale;
-    }
+        */
 
-    public double Sample(double x, double z, double f, double a, int o = 0)
-    {
-        if (o > 0)
+        var maxValue = 0.0;
+        var sample = 0.0;
+
+        for (int o = 0; o < octaves; ++o)
         {
-            f *= lacunarity * o;
-            a *= persistance * o;
+            var sampleX = x / scaleH * f;
+            var sampleY = y / scaleV * f;
+            var sampleZ = z / scaleH * f;
+
+            sample += n.Evaluate(sampleX, sampleY, sampleZ) * a;
+
+            maxValue += a;
+
+            f *= lacunarity;
+            a *= persistance;
         }
 
-        var fh = f / scaleH;
-        var fv = f / scaleV;
+        return (sample / maxValue) * scale;
+    }
 
-        return n.Evaluate(x * fh, z * fh) * scale;
+    public double Sample(double x, double z, double f, double a, int octacves = 0)
+    {
+        var maxValue = 0.0;
+        var sample = 0.0;
+
+        for (int o = 0; o < octaves; ++o)
+        {
+            var sampleX = x / scaleH * f;
+            var sampleZ = z / scaleH * f;
+
+            sample += n.Evaluate(sampleX, sampleZ) * a;
+
+            maxValue += a;
+
+            f *= lacunarity;
+            a *= persistance;
+        }
+
+        return (sample / maxValue) * scale;
     }
 }
