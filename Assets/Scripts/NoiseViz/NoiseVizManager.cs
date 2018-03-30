@@ -32,20 +32,6 @@ public class NoiseVizManager : MonoBehaviour
 
     }
 
-    private void Awake()
-    {
-        /*
-        var renderer = GetComponent<MeshRenderer>();
-
-        texture = new Texture2D(width, height);
-        texture.name = "Noise Viz";
-        texture.filterMode = FilterMode.Bilinear;
-
-        renderer.sharedMaterial.mainTexture = texture;
-        */
-
-        Debug.Log("Awake");
-    }
 
     public void UpdateTexture()
     {

@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
-public class SimplexViz : NoiseViz
+public class WorleySimplex : NoiseViz
 {
-    public Simplex noise;
+    public Worley noise;
+    public SimplexVector2 distort;
 
     public override Field CreateNoiseMap(int width, int height)
     {
-        base.CreateNoiseMap(width, height);
-
         var field = new Field(width, 1, height);
 
         field.ForEachXYZ((x, y, z) =>
         {
-            var sample = noise.Sample(x, z).Remap(-1, 1, 0, 1);
+            var offset = distort.Sample(x, z);
+            var sample = noise.Sample(x + offset.x, z + offset.y);
+
             field.Set(x, y, z, sample);
         });
 
