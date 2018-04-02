@@ -55,11 +55,11 @@ MonoBehaviour:
   heightMap:
     continent:
       seed: 181
-      scaleH: 800
-      scaleV: 800
-      persistance: 0.679
-      lacunarity: 1.765
-      octaves: 1
+      scaleH: 400
+      scaleV: 400
+      persistance: 0.854
+      lacunarity: 1.609
+      octaves: 2
       scale: 0.3
       e: 1
     hill:

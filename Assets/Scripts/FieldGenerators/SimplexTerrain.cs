@@ -4,69 +4,139 @@ using UnityEngine;
 
 public class SimplexTerrain : FieldGenerator
 {
-    public Simplex heightNoise;
-    public Simplex densityNoise;
-    public Worley worley;
+    [System.Serializable]
+    public class HeightMap
+    {
+        public Simplex continent;
+        public Simplex hill;
+
+        public Worley variation;
+    }
+
+    public enum HeightSelector
+    {
+        Continent,
+        Hill,
+        Variation,
+        Combined
+    }
+
+    public HeightSelector selector;
+
+
+    public HeightMap heightMap;
+    public Simplex moisture;
+    public Simplex blockDistort;
 
     public double maxHeight;
-    public double midLevel;
-
-    public double[] maxHeights;
+    public double islandRadius;
+    public double seaLevel;
+    public double sandLevel;
+    public double landLevel;
+    public double stoneLevel;
+    [Range(0,1)]
+    public double grassMoisture;
+    [Range(0, 1)]
+    public double rainforestMoisture;
 
 
     public override void Generate(VoxelField field, Vector3 position)
     {
-        DensitySampler sampler = new DensitySampler(densityNoise, position, field.X, field.Y, field.Z, 4);
+        CombinedNoise terrainHeight = new CombinedNoise(heightMap.continent, heightMap.hill, heightMap.variation);
+
+        INoiseSampler selection = null;
+        if (selector == HeightSelector.Continent)
+            selection = heightMap.continent;
+        else if (selector == HeightSelector.Hill)
+            selection = heightMap.hill;
+        else if (selector == HeightSelector.Variation)
+            selection = heightMap.variation;
+        else
+            selection = terrainHeight;
 
         field.ForEachXZ((x, z) =>
         {
-            var ws = position + new Vector3(x, 0, z);
+            Vector3 ws = position + new Vector3(x, 0, z);
 
-            var mh = GetMaxHeight(worley.GetClosestPoint(ws));
-            var height = (AddOctaves(heightNoise, ws.x, ws.z, 1, 1, 2) * mh) + midLevel;
+            var islandMask = IslandMask(ws);
+            var height = (selection.Sample(ws.x, ws.z)).Remap(-1, 1, 0, 1) * maxHeight * islandMask;
 
             int maxY = Mathf.RoundToInt(Mathf.Clamp((float)height, 0, field.Y - 1));
 
-            for (int y = 0; y < maxY; ++y)
+            var blockOffset = blockDistort.Sample(ws.x, ws.z);
+
+            
+
+            for (int y = 0; y < field.Y; ++y)
             {
                 ws.y = position.y + y;
 
                 var density = (double)(-y + maxY);
-                density += sampler.Sample(x, y, z);
-                density += Saturate((midLevel - ws.y) * 3) * 40;
+                //density += sampler.Sample(x, y, z);
+                //density += Saturate((midLevel - ws.y) * 3) * 40;
 
                 if (density > 0)
                 {
-                    field.Set(x, y, z, Blocks.Type.Stone.ToByte());
+                    var blockY = ws.y + blockOffset;
+
+                    if (ws.y <= seaLevel + sandLevel)
+                    {
+                        field.Set(x, y, z, Blocks.Type.Sand.ToByte());
+                    }
+                    else if (blockY <= seaLevel + landLevel)
+                    {
+                        var wetness = GetMoisture(ws);
+
+                        
+
+                        if (wetness <= grassMoisture)
+                        {
+                            field.Set(x, y, z, Blocks.Type.Land.ToByte());
+                        }
+                        else if (wetness >= grassMoisture && wetness < rainforestMoisture)
+                        {
+                            field.Set(x, y, z, Blocks.Type.GrassLand.ToByte());
+                        }
+                        else
+                        {
+                            field.Set(x, y, z, Blocks.Type.RainForest.ToByte());
+                        }
+                    }
+                    else
+                    {
+                        field.Set(x, y, z, Blocks.Type.Stone.ToByte());
+                    }
+                }
+                else
+                {
+                    if (ws.y <= seaLevel)
+                    {
+                        field.Set(x, y, z, Blocks.Type.Water.ToByte());
+                    }
                 }
             }
         });
     }
 
-
-    double AddOctaves(Simplex n, double x, double z, double f, double a, int octaves)
+    private double GetMoisture(Vector3 ws)
     {
-        double maxValue = 0;
-        double amp = a;
-
-        double total = 0;
-        for (int i = 0; i < octaves; ++i)
-        {
-            total += n.Sample(x, z, f, a, i).Remap(-1, 1, 0, 1);
-
-            maxValue += amp;
-            amp *= n.persistance;
-        }
-
-        return total / maxValue;
+        return moisture.Sample(ws.x, ws.z).Remap(-1, 1, 0, 1) * PercentOfIslandCenter(ws);
     }
 
-    private double GetMaxHeight(Vector3 seed)
+    private double IslandMask(Vector3 ws)
     {
-        var s = seed.GetHashCode();
-        s = Mathf.Abs(s) % maxHeights.Length;
+        return InverseIslandCenter(ws);
+    }
 
-        return maxHeights[s];
+    private double InverseIslandCenter(Vector3 ws)
+    {
+        return 1.0 - PercentOfIslandCenter(ws);
+    }
+
+    private double PercentOfIslandCenter(Vector3 ws)
+    {
+        double d = ws.magnitude;
+        return d / islandRadius;
     }
 
     private static double Saturate(double a)
