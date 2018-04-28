@@ -53,15 +53,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noise:
     seed: 1
-    cellSize: 10.5
+    cellSize: 86.9
   distort:
-    noise:
-      seed: -3
-      scaleH: 50.2
-      scaleV: 10
-      persistance: 0.43
-      lacunarity: 2
-      octaves: 6
+    noise1:
+      seed: 0
+      scaleH: 14.22
+      scaleV: 100
+      persistance: 0.492
+      lacunarity: 1.405
+      octaves: 3
+      scale: 1
+      e: 1
+    noise2:
+      seed: -65
+      scaleH: 219.7
+      scaleV: 100
+      persistance: 0.492
+      lacunarity: 1.331
+      octaves: 3
       scale: 1
       e: 1
     scale: 261.9

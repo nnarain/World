@@ -53,4 +53,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noise:
     seed: 1
-    cellSize: 17.1
+    cellSize: 16.92

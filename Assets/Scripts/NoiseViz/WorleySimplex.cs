@@ -14,7 +14,7 @@ public class WorleySimplex : NoiseViz
         field.ForEachXYZ((x, y, z) =>
         {
             var offset = distort.Sample(x, z);
-            var sample = noise.Sample(x + offset.x, z + offset.y);
+            var sample = 1.0 - noise.Sample(x + offset.x, z + offset.y);
 
             field.Set(x, y, z, sample);
         });

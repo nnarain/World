@@ -6,8 +6,8 @@ using UnityEngine;
 public class Simplex : INoiseSampler
 {
     public int seed;
-    public double scaleH;
-    public double scaleV;
+    public double scaleH = 1;
+    public double scaleV = 1;
     [Range(0, 1)]
     public float persistance;
     [Range(1, 2)]

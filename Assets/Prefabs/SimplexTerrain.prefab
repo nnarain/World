@@ -78,8 +78,8 @@ MonoBehaviour:
     seed: -41
     scaleH: 100
     scaleV: 100
-    persistance: 0.482
-    lacunarity: 1.35
+    persistance: 0.284
+    lacunarity: 1.902
     octaves: 4
     scale: 1
     e: 1
