@@ -12,6 +12,8 @@ public class MeshData
     public readonly List<Color> colors;
     public readonly List<Vector2> uvs;
 
+    private static readonly Vector2 emptyUV = new Vector2();
+
     public MeshData() : this(new List<Vector3>(), new List<int>(), new List<Color>(), new List<Vector2>())
     {
         
@@ -54,6 +56,11 @@ public class MeshData
         elements.Add(i + 2);
         elements.Add(i + 3);
         elements.Add(i + 0);
+    }
+
+    public void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, Color c)
+    {
+        AddQuad(v1, v2, v3, v4, emptyUV, c);
     }
 
     public void AddVertex(Vector3 p)

@@ -21,7 +21,7 @@ public static class Blocks
     public static int[] BlockMeshProperty = new int[]
     {
         0,
-        1,
+        0,
         0,
         0, 
         0, 
