@@ -51,22 +51,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6b6aa13957bff041bb4206182e68fbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selector: 0
+  selector: 3
   heightMap:
     continent:
       seed: 181
-      scaleH: 800
-      scaleV: 800
-      persistance: 0.679
-      lacunarity: 1.765
-      scale: 0.3
-      e: 1
-    mountain:
-      seed: -32
       scaleH: 400
       scaleV: 400
-      persistance: 0.508
-      lacunarity: 1.516
+      persistance: 0.854
+      lacunarity: 1.609
+      octaves: 2
+      scale: 0.3
+      e: 1
+    hill:
+      seed: 0
+      scaleH: 250
+      scaleV: 250
+      persistance: 0.537
+      lacunarity: 1.772
+      octaves: 4
       scale: 1
       e: 1
     variation:

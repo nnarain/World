@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: 0
-  generator: 2
+  generator: 1
   generators:
   - {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a, type: 2}
   - {fileID: 114174795048307780, guid: db0e81da894109a48be3d10020c1cdbe, type: 2}
@@ -290,7 +290,7 @@ MonoBehaviour:
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
   forwardRenderDistance: 100
-  generalRenderDistance: 750
+  generalRenderDistance: 644.4
   moveThreshold: 10
   rotationThreshold: 360
   distanceToInactive: 1000
