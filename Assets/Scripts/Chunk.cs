@@ -127,6 +127,7 @@ public class Chunk : MonoBehaviour
     {
         List<Vector3> meshVertices = new List<Vector3>();
         List<Vector2> meshUVs = new List<Vector2>();
+        List<Color> meshColors = new List<Color>();
         List<int> subMeshOffsets = new List<int>();
 
         foreach (var d in data)
@@ -134,11 +135,13 @@ public class Chunk : MonoBehaviour
             subMeshOffsets.Add(meshVertices.Count);
             meshVertices.AddRange(d.vertices);
             meshUVs.AddRange(d.uvs);
+            meshColors.AddRange(d.colors);
         }
 
         // add vertex data
         mesh.vertices = meshVertices.ToArray();
         mesh.uv = meshUVs.ToArray();
+        mesh.colors = meshColors.ToArray();
 
         for (int i = 0; i < data.Length; ++i)
         {

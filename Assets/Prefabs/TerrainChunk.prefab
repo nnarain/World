@@ -56,7 +56,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: d46e0729abcfbda409f34340374f7c6b, type: 2}
+  - {fileID: 2100000, guid: 9012aa5704b1f8245add81a3e72a43f4, type: 2}
   - {fileID: 2100000, guid: 74f139dd2cc307343ad7a51ad3456227, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -96,9 +96,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkSizeX: 16
-  chunkSizeY: 64
+  chunkSizeY: 128
   chunkSizeZ: 16
-  fieldGenerator: {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a,
+  fieldGenerator: {fileID: 114174795048307780, guid: db0e81da894109a48be3d10020c1cdbe,
     type: 2}
   blockAtlas: {fileID: 114577762429812144, guid: 98ff5379faee3f045bf3b7714cfcbda2,
     type: 2}

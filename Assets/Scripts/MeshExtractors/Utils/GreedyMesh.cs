@@ -47,7 +47,8 @@ public class GreedyMesh
 
             int[] x = { 0, 0, 0 };
             int[] q = { 0, 0, 0 };
-            int[] mask = new int[(dims[u] + 1) * (dims[v] + 1)];
+            int size = (dims[u] + 1) * (dims[v] + 1);
+            int[] mask = new int[size];
 
 
             q[d] = 1;
@@ -60,11 +61,14 @@ public class GreedyMesh
                 {
                     for (x[u] = 0; x[u] < dims[u]; ++x[u], ++n)
                     {
-                        int vox1 = (int)chunk.GetField(x[0], x[1], x[2]).Type;
-                        int vox2 = (int)chunk.GetField(x[0] + q[0], x[1] + q[1], x[2] + q[2]).Type;
+                        var v1 = chunk.GetField(x[0], x[1], x[2]);
+                        var v2 = chunk.GetField(x[0] + q[0], x[1] + q[1], x[2] + q[2]);
 
-                        int a = (0 <= x[d] ? vox1 : 0);
-                        int b = (x[d] < dims[d] - 1 ? vox2 : 0);
+                        int t1 = (int)v1.Type;
+                        int t2 = (int)v2.Type;
+
+                        int a = (0 <= x[d] ? t1 : 0);
+                        int b = (x[d] < dims[d] - 1 ? t2 : 0);
 
                         if ((a != 0) == (b != 0))
                         {
@@ -73,6 +77,7 @@ public class GreedyMesh
                         else if ((a !=0))
                         {
                             mask[n] = a;
+                            
                         }
                         else
                         {
@@ -122,8 +127,6 @@ public class GreedyMesh
                             int[] du = { 0, 0, 0 };
                             int[] dv = { 0, 0, 0 };
 
-                            bool bitset = c > 0;
-
                             if (c > 0)
                             {
                                 dv[v] = h;
@@ -142,14 +145,15 @@ public class GreedyMesh
                             Vector3 v4 = new Vector3(x[0] + dv[0], x[1] + dv[1], x[2] + dv[2]);
                             
 
-                            Direction direction = GetDirection(d, bitset);
+                            //Direction direction = GetDirection(d, bitset);
                             // TODO: this should be replaced with block properties. 
-                            TextureAtlas.BlockFaces faces = chunk.GetFaces((byte)c);
+                            //TextureAtlas.BlockFaces faces = chunk.GetFaces((byte)c);
                             int meshIndex = Blocks.BlockMeshProperty[c];
 
-                            var faceUVs = faces.GetUVs(direction);
+                            //var faceUVs = faces.GetUVs(direction);
 
-                            meshAllocator.Get(meshIndex).AddQuad(v1, v2, v3, v4, faceUVs[3]);
+                            //meshAllocator.Get(meshIndex).AddQuad(v1, v2, v3, v4, faceUVs[3]);
+                            meshAllocator.Get(meshIndex).AddQuad(v1, v2, v3, v4, chunk.GetVoxelColor((byte)c));
 
                             for (l = 0; l < h; ++l)
                             {

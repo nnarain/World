@@ -15,7 +15,7 @@ public class Field
     public int Y { get { return y; } }
     public int Z { get { return z; } }
 
-    private float[] field = null;
+    private double[] field = null;
 
     public Field(int x, int y, int z)
     {
@@ -23,25 +23,27 @@ public class Field
         this.y = y;
         this.z = z;
 
-        field = new float[x * y * z];
+        field = new double[x * y * z];
     }
 
-    public void Set(int x, int y, int z, float v)
+    public void Set(int x, int y, int z, double v)
     {
         field[GetIndex(x, y, z)] = v;
     }
 
-    public float Get(int x, int y, int z)
+    public double Get(int x, int y, int z)
     {
-        if (x >= this.x || x < 0 || y >= this.y || y < 0 || z >= this.z || z < 0)
-        {
-            return -1.0f;
-        }
+        if (x >= this.x) x = this.x - 1;
+        if (x < 0) x = 0;
+        if (y >= this.y) y = this.y - 1;
+        if (y < 0) y = 0;
+        if (z >= this.z) z = this.z - 1;
+        if (z < 0) z = 0;
 
         return field[GetIndex(x, y, z)];
     }
 
-    public void ForEach(Action<int, int, int, float> action)
+    public void ForEach(Action<int, int, int, double> action)
     {
         for (int x = 0; x < this.x; ++x)
         {
@@ -49,7 +51,7 @@ public class Field
             {
                 for (int z = 0; z < this.z; ++z)
                 {
-                    float v = Get(x, y, z);
+                    double v = Get(x, y, z);
                     action(x, y, z, v);
                 }
             }
@@ -63,6 +65,20 @@ public class Field
             for (int z = 0; z < this.z; ++z)
             {
                 action(x, z);
+            }
+        }
+    }
+
+    public void ForEachXYZ(Action<int, int, int> action)
+    {
+        for (int x = 0; x < this.x; ++x)
+        {
+            for (int y = 0; y < this.y; ++y)
+            {
+                for (int z = 0; z < this.z; ++z)
+                {
+                    action(x, y, z);
+                }
             }
         }
     }

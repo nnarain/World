@@ -9,18 +9,19 @@ public static class Blocks
     {
         Air,
         Water,
-        Sand,
-        Grass1,
-        Grass2,
-        Dirt,
+        Land,
         Stone,
-        Snow
+        Snow,
+        Sand,
+        GrassLand,
+        RainForest,
+        Scorched
     }
 
     public static int[] BlockMeshProperty = new int[]
     {
         0,
-        1,
+        0,
         0,
         0, 
         0, 

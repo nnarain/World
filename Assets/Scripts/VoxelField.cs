@@ -68,11 +68,11 @@ public class VoxelField
 
     public void ForEachXYZ(Action<int,int,int> action)
     {
-        for (int x = 0; x <= this.x; ++x)
+        for (int x = 0; x < this.x; ++x)
         {
-            for (int y = 0; y <= this.y; ++y)
+            for (int y = 0; y < this.y; ++y)
             {
-                for (int z = 0; z <= this.z; ++z)
+                for (int z = 0; z < this.z; ++z)
                 {
                     action(x, y, z);
                 }
