@@ -7,11 +7,7 @@ public class WorldManager : MonoBehaviour
 {
     public enum GeneratorType
     {
-        Island,
-        SimplexTerrain,
-        CombinedSimplexTerrain,
-        WorleyTerrain,
-        RidgedTerrain
+        SimplexTerrain
     }
 
     public int seed;
