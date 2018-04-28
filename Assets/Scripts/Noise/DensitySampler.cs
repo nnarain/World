@@ -9,18 +9,12 @@ public class DensitySampler
 {
     private Field densityField;
 
-    private int sizeX;
-    private int sizeY;
-    private int sizeZ;
     private int reduce;
 
     public DensitySampler(INoiseSampler sampler, Vector3 offset, int x, int y, int z, int reduce)
     {
         densityField = new Field(x / reduce + 1, y / reduce + 1, z / reduce + 1);
 
-        sizeX = x;
-        sizeY = y;
-        sizeZ = z;
         this.reduce = reduce;
 
         Init(sampler, offset);

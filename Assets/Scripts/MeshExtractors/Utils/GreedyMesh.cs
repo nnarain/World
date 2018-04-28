@@ -127,8 +127,6 @@ public class GreedyMesh
                             int[] du = { 0, 0, 0 };
                             int[] dv = { 0, 0, 0 };
 
-                            bool bitset = c > 0;
-
                             if (c > 0)
                             {
                                 dv[v] = h;

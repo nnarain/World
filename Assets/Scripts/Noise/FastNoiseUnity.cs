@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class FastNoiseUnity
+public class FastNoiseUnity : INoiseSampler
 {
     public FastNoise.NoiseType noiseType;
     public FastNoise.FractalType fractalType;

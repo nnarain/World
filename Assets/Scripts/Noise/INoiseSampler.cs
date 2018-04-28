@@ -6,6 +6,6 @@ using System.Collections.Generic;
 /// </summary>
 public interface INoiseSampler
 {
-    double Sample(double x, double y);
-    double Sample(double x, double y, double z);
+    float Sample(float x, float y);
+    float Sample(float x, float y, float z);
 }

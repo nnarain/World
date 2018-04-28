@@ -7,7 +7,7 @@ using UnityEngine;
 public class Worley : INoiseSampler
 {
     public int seed;
-    public double cellSize;
+    public float cellSize;
 
     private Dictionary<Vector2Int, Vector3[]> pointsCache;
 
@@ -57,13 +57,13 @@ public class Worley : INoiseSampler
                     System.Random rnd = new System.Random(hash + seed);
 
                     // calculate the grid center
-                    var cx = (double)i * cellSize;
-                    var cz = (double)j * cellSize;
+                    var cx = i * cellSize;
+                    var cz = j * cellSize;
 
-                    var px = cx + (rnd.NextDouble() * cellSize);
-                    var pz = cz + (rnd.NextDouble() * cellSize);
+                    var px = cx + ((float)rnd.NextDouble() * cellSize);
+                    var pz = cz + ((float)rnd.NextDouble() * cellSize);
 
-                    points[c++] = new Vector3((float)px, 0, (float)pz);
+                    points[c++] = new Vector3(px, 0, pz);
                 }
             }
 
@@ -101,18 +101,18 @@ public class Worley : INoiseSampler
         return closest;
     }
 
-    public double Sample(double x, double y, double z)
+    public float Sample(float x, float y, float z)
     {
         var maxDistance = cellSize;
 
-        Vector3 ws = new Vector3((float)x, (float)y, (float)z);
+        Vector3 ws = new Vector3(x, y, z);
 
         var closestPoint = GetClosestPoint(ws);
         
         return (ws - closestPoint).magnitude / maxDistance;
     }
 
-    public double Sample(double x, double z)
+    public float Sample(float x, float z)
     {
         return Sample(x, 0, z);
     }

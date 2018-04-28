@@ -256,7 +256,7 @@ public class ChunkManager : MonoBehaviour
     private Chunk CreateChunk(int x, int z)
     {
         int chunkSizeX = chunkPrefab.chunkSizeX;
-        int chunkSizeY = chunkPrefab.chunkSizeY;
+        //int chunkSizeY = chunkPrefab.chunkSizeY;
         int chunkSizeZ = chunkPrefab.chunkSizeZ;
 
         // if the chunk does not exist yet, create it.

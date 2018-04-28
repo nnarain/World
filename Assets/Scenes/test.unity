@@ -252,13 +252,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: 0
-  generator: 1
+  generator: 0
   generators:
-  - {fileID: 114154279860188056, guid: a3c61dbe2bd92204ba8da1c09e9d0d4a, type: 2}
   - {fileID: 114174795048307780, guid: db0e81da894109a48be3d10020c1cdbe, type: 2}
-  - {fileID: 114430075173221864, guid: ce7423eeee5a75647a63497684c21e43, type: 2}
-  - {fileID: 114825485060144672, guid: 2fc7ddb804c010e43aa9db9583cc8f20, type: 2}
-  - {fileID: 114716961148865028, guid: 667d871e0b65d2942aadf3a4cf65c1fa, type: 2}
   atlas: {fileID: 114577762429812144, guid: 98ff5379faee3f045bf3b7714cfcbda2, type: 2}
   rotationSpeed: 5
   enableRotation: 0

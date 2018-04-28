@@ -64,3 +64,7 @@ MonoBehaviour:
     lacunarity: 1.92
     cellularJitter: 0.45
   maxHeight: 80
+  colors:
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.375, g: 0.4568962, b: 1, a: 0}
+  - {r: 0.5735294, g: 0.5735294, b: 0.5735294, a: 0}
