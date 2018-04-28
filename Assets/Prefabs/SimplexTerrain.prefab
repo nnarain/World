@@ -51,52 +51,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f5700ca16efdfb46b7a886240e874c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selector: 3
-  heightMap:
-    continent:
-      seed: 436
-      scaleH: 500
-      scaleV: 500
-      persistance: 0.482
-      lacunarity: 1.501
-      octaves: 1
-      scale: 0.4
-      e: 1
-    hill:
-      seed: -214
-      scaleH: 250
-      scaleV: 250
-      persistance: 0.818
-      lacunarity: 1.697
-      octaves: 4
-      scale: 1
-      e: 1
-    variation:
-      seed: 0
-      cellSize: 100
-  moisture:
-    seed: -41
-    scaleH: 100
-    scaleV: 100
-    persistance: 0.284
-    lacunarity: 1.902
-    octaves: 4
-    scale: 1
-    e: 1
-  blockDistort:
-    seed: -169
-    scaleH: 100
-    scaleV: 100
-    persistance: 0.852
-    lacunarity: 1.802
-    octaves: 4
-    scale: 25
-    e: 1
-  maxHeight: 70
-  islandRadius: 500
-  seaLevel: 0
-  sandLevel: 4
-  landLevel: 20
-  stoneLevel: 40
-  grassMoisture: 0.06700000166893005
-  rainforestMoisture: 0.4230000078678131
+  noise:
+    noiseType: 5
+    fractalType: 0
+    interp: 2
+    cellularDistanceFunction: 0
+    cellularReturnType: 0
+    seed: 1337
+    octaves: 3
+    frequency: 0.01
+    gain: 0.523
+    lacunarity: 1.92
+    cellularJitter: 0.45
+  maxHeight: 80
