@@ -8,6 +8,15 @@ public class SimplexTerrain : FieldGenerator
 
     public float maxHeight;
 
+    public enum BlockType
+    {
+        Air,
+        Water,
+        Stone
+    }
+
+    public Color[] colors;
+
     public override void Generate(VoxelField field, Vector3 position)
     {
         field.ForEachXZ((x, z) =>
@@ -20,10 +29,29 @@ public class SimplexTerrain : FieldGenerator
 
             for (int y = 0; y < maxY; ++y)
             {
-                field.Set(x, y, z, 2);
+                if (y <= 20)
+                {
+                    field.Set(x, y, z, 1);
+                }
+                else
+                {
+                    field.Set(x, y, z, 2);
+                }
             }
 
         });
+    }
+
+    public override Color GetVoxelColor(byte type)
+    {
+        if (type >= colors.Length)
+        {
+            return Color.black;
+        }
+        else
+        {
+            return colors[type];
+        }
     }
 
     private void OnValidate()
