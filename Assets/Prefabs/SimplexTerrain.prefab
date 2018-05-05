@@ -51,20 +51,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f5700ca16efdfb46b7a886240e874c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noise:
-    noiseType: 5
+  baseTerrain:
+    noiseType: 9
     fractalType: 0
     interp: 2
     cellularDistanceFunction: 0
     cellularReturnType: 0
     seed: 1337
+    octaves: 4
+    frequency: 0.01
+    gain: 0.5
+    lacunarity: 2
+    cellularJitter: 0.45
+    scale: 1
+  baseMaxHeight: 80
+  baseE: 1
+  mountainTerrain:
+    noiseType: 9
+    fractalType: 0
+    interp: 2
+    cellularDistanceFunction: 0
+    cellularReturnType: 0
+    seed: 726
+    octaves: 5
+    frequency: 0.01
+    gain: 0.527
+    lacunarity: 2
+    cellularJitter: 0.45
+    scale: 0.97
+  mountainMaxHeight: 195.13
+  mountainLevel: 57.02
+  mountainE: 2.24
+  interp:
+    noiseType: 5
+    fractalType: 0
+    interp: 2
+    cellularDistanceFunction: 0
+    cellularReturnType: 0
+    seed: 1243
     octaves: 3
     frequency: 0.01
-    gain: 0.523
-    lacunarity: 1.92
+    gain: 0.5
+    lacunarity: 2
     cellularJitter: 0.45
-  maxHeight: 80
+    scale: 1
+  seaLevel: 21
+  baseThreshold: 0.5
+  mountainThreshold: 0.75
   colors:
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0.375, g: 0.4568962, b: 1, a: 0}
-  - {r: 0.5735294, g: 0.5735294, b: 0.5735294, a: 0}
+  - {r: 0.015466513, g: 0.44852942, b: 0, a: 0}
+  - {r: 0.28689894, g: 0.30882353, b: 0.2861159, a: 0}
