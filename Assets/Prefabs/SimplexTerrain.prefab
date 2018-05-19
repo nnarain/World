@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1415174778059184}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5741363, y: -3.5573146, z: 6.9396753}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -57,13 +57,14 @@ MonoBehaviour:
     interp: 2
     cellularDistanceFunction: 0
     cellularReturnType: 0
-    seed: 1337
+    seed: 944
     octaves: 4
     frequency: 0.01
     gain: 0.5
     lacunarity: 2
     cellularJitter: 0.45
-    scale: 1
+    scale: 2.05
+    e: 1
   baseMaxHeight: 80
   baseE: 1
   mountainTerrain:
@@ -72,32 +73,20 @@ MonoBehaviour:
     interp: 2
     cellularDistanceFunction: 0
     cellularReturnType: 0
-    seed: 726
+    seed: 502
     octaves: 5
-    frequency: 0.01
+    frequency: 0.015
     gain: 0.527
     lacunarity: 2
     cellularJitter: 0.45
     scale: 0.97
+    e: 1
   mountainMaxHeight: 195.13
   mountainLevel: 57.02
   mountainE: 2.24
-  interp:
-    noiseType: 5
-    fractalType: 0
-    interp: 2
-    cellularDistanceFunction: 0
-    cellularReturnType: 0
-    seed: 1243
-    octaves: 3
-    frequency: 0.01
-    gain: 0.5
-    lacunarity: 2
-    cellularJitter: 0.45
-    scale: 1
   seaLevel: 21
-  baseThreshold: 0.5
-  mountainThreshold: 0.75
+  baseThreshold: 0.514
+  mountainThreshold: 0.684
   colors:
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0.375, g: 0.4568962, b: 1, a: 0}

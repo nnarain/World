@@ -13,8 +13,6 @@ public class SimplexTerrain : FieldGenerator
     public float mountainLevel;
     public float mountainE;
 
-    public FastNoiseUnity interp;
-
     public int seaLevel;
 
     [Range(0, 1)]
