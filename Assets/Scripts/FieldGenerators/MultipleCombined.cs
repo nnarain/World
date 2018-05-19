@@ -74,6 +74,124 @@ public class MultipleCombined : FieldGenerator
         public float t2;
     }
 
+    public enum Biome
+    {
+        Tundra,
+        BorealForest,
+        BarrenSubarctic,
+        TemperateForest,
+        Savanna,
+        Grassland,
+        Desert,
+        Rainforest
+    }
+
+    [System.Serializable]
+    public class BiomeSelector
+    {
+        public FastNoiseUnity moistureMap;
+        public FastNoiseUnity temperatureMap;
+
+        [Range(0, 1)]
+        public float m1;
+        [Range(0, 1)]
+        public float m2;
+        [Range(0, 1)]
+        public float m3;
+
+        [Range(0, 1)]
+        public float t1;
+        [Range(0, 1)]
+        public float t2;
+        [Range(0, 1)]
+        public float t3;
+
+        public Biome Sample(float x, float y)
+        {
+            var moisture = moistureMap.Sample(x, y).Remap(-1, 1, 0, 1);
+            var temperature = temperatureMap.Sample(x, y).Remap(-1, 1, 0, 1);
+
+            if (temperature >= t1)
+            {
+                if (moisture >= m1)
+                {
+                    return Biome.Rainforest;
+                }
+                else if (moisture >= m2)
+                {
+                    return Biome.TemperateForest;
+                }
+                else if (moisture >= m3)
+                {
+                    return Biome.Grassland;
+                }
+                else
+                {
+                    return Biome.Desert;
+                }
+            }
+            else if (temperature >= t2)
+            {
+                if (moisture >= m1)
+                {
+                    return Biome.TemperateForest;
+                }
+                else if (moisture >= m2)
+                {
+                    return Biome.Grassland;
+                }
+                else if (moisture >= m3)
+                {
+                    return Biome.Grassland;
+                }
+                else
+                {
+                    return Biome.Desert;
+                }
+            }
+            else if (temperature >= t3)
+            {
+                if (moisture >= m2)
+                {
+                    return Biome.BorealForest;
+                }
+                else
+                {
+                    return Biome.BarrenSubarctic;
+                }
+            }
+            else
+            {
+                return Biome.Tundra;
+            }
+        }
+
+        public void Update()
+        {
+            moistureMap.Update();
+            temperatureMap.Update();
+        }
+    }
+
+    [System.Serializable]
+    public class ThreasholdNoise
+    {
+        public float threshold;
+        public FastNoiseUnity n;
+        public float min;
+        public float max;
+
+        public float GetThreshold(float x, float y)
+        {
+            return threshold + n.Sample(x, y).Remap(-1, 1, min, max);
+        }
+
+        public void Update()
+        {
+            n.Update();
+        }
+    }
+
     [System.Serializable]
     public enum HeightSelection
     {
@@ -95,35 +213,31 @@ public class MultipleCombined : FieldGenerator
     public float minHeight;
     public float maxHeight;
 
+    public BiomeSelector biomeSelector;
+
     [Range(0, 1)]
     public float baseThreshold;
     [Range(0, 1)]
     public float mountainThreshold;
 
-    public float mountainLevel;
-
+    //public float snowLevel;
+    public ThreasholdNoise snowLevel;
+    public ThreasholdNoise mountainLevel;
     public int seaLevel;
-
-
 
     public enum BlockType
     {
         Air,
         Water,
-        Grass,
-        Stone
-    }
-
-    public enum Biome
-    {
-        Tundra,
-        BorealForest,
-        BarrenSubarctic,
-        TemperateForest,
-        Savanna,
-        Grassland,
-        Desert,
-        Rainforest
+        TemperateGrass,
+        RainforestGrass,
+        BorealGrass,
+        BarrenGrass,
+        DryGrass,
+        Sand,
+        Dirt,
+        Stone,
+        Snow
     }
 
     public Color[] colors;
@@ -155,20 +269,25 @@ public class MultipleCombined : FieldGenerator
 
 
             int maxY = (int)height;
-
             if (maxY >= (field.Y - 1)) maxY = field.Y - 1;
+
+            var biome = biomeSelector.Sample(ws.x, ws.z);
 
             if (maxY >= seaLevel)
             {
                 for (int y = 0; y < maxY; ++y)
                 {
-                    if (height >= mountainLevel)
+                    if (height >= snowLevel.GetThreshold(ws.x, ws.y))
+                    {
+                        field.Set(x, y, z, (byte)BlockType.Snow);
+                    }
+                    else if (height >= mountainLevel.GetThreshold(ws.x, ws.z))
                     {
                         field.Set(x, y, z, (byte)BlockType.Stone);
                     }
                     else
                     {
-                        field.Set(x, y, z, (byte)BlockType.Grass);
+                        field.Set(x, y, z, (byte)GetBlockFromBiome(biome));
                     }
                 }
             }
@@ -182,34 +301,7 @@ public class MultipleCombined : FieldGenerator
         });
     }
 
-    /*
-    private float GetHeight(float x, float y)
-    {
-        var baseHeight = baseHeightMap.Sample(x, y);
 
-        if (baseHeight < (baseThreshold * maxHeight))
-        {
-            return baseHeight;
-        }
-        else
-        {
-            var mountainHeight = mountainHeightMap.Sample(x, y);
-
-            if (baseHeight < (mountainThreshold * maxHeight))
-            {
-                // normalize base height
-                var s1 = baseHeight / maxHeight;
-                var t = s1.Remap(baseThreshold, mountainThreshold, 0, 1);
-
-                return Mathf.Lerp(baseHeight, mountainHeight, Mathf.Pow(t, blendE));
-            }
-            else
-            {
-                return mountainHeight;
-            }
-        }
-    }
-    */
     private float GetHeight(float x, float y)
     {
         var interpValue = interp.Sample(x, y).Remap(-1, 1, 0, 1);
@@ -234,8 +326,31 @@ public class MultipleCombined : FieldGenerator
                 return h2;
             }
         }
+    }
 
-        return 0;
+    BlockType GetBlockFromBiome(Biome biome)
+    {
+        switch(biome)
+        {
+            case Biome.Rainforest:
+                return BlockType.RainforestGrass;
+            case Biome.TemperateForest:
+                return BlockType.TemperateGrass;
+            case Biome.Grassland:
+                return BlockType.DryGrass;
+            case Biome.Savanna:
+                return BlockType.DryGrass;
+            case Biome.BorealForest:
+                return BlockType.BorealGrass;
+            case Biome.BarrenSubarctic:
+                return BlockType.BarrenGrass;
+            case Biome.Desert:
+                return BlockType.Sand;
+            case Biome.Tundra:
+                return BlockType.Snow;
+            default:
+                return BlockType.TemperateGrass;
+        }
     }
 
     public override Color GetVoxelColor(byte type)
@@ -255,5 +370,8 @@ public class MultipleCombined : FieldGenerator
         baseHeightMap.Update();
         mountainHeightMap.Update();
         interp.Update();
+        biomeSelector.Update();
+        snowLevel.Update();
+        mountainLevel.Update();
     }
 }

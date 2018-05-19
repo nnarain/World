@@ -114,7 +114,7 @@ MonoBehaviour:
       lacunarity: 2
       cellularJitter: 0.45
       scale: 1
-    height1Min: 93.8
+    height1Min: 77.79
     height1Max: 194.1
     height2Min: 163.2
     height2Max: 237.3
@@ -138,12 +138,85 @@ MonoBehaviour:
   interpE: 1.5
   minHeight: 1
   maxHeight: 100
+  biomeSelector:
+    moistureMap:
+      noiseType: 9
+      fractalType: 0
+      interp: 0
+      cellularDistanceFunction: 0
+      cellularReturnType: 0
+      seed: 1253
+      octaves: 4
+      frequency: 0.01
+      gain: 0.5
+      lacunarity: 2
+      cellularJitter: 0.45
+      scale: 1
+    temperatureMap:
+      noiseType: 9
+      fractalType: 0
+      interp: 0
+      cellularDistanceFunction: 0
+      cellularReturnType: 0
+      seed: 670
+      octaves: 4
+      frequency: 0.01
+      gain: 0.5
+      lacunarity: 2
+      cellularJitter: 0.45
+      scale: 1
+    m1: 0.369
+    m2: 0.254
+    m3: 0.131
+    t1: 0.656
+    t2: 0.397
+    t3: 0.153
   baseThreshold: 0.369
   mountainThreshold: 0.527
-  mountainLevel: 30.07
-  seaLevel: 15
+  snowLevel:
+    threshold: 65.3
+    n:
+      noiseType: 5
+      fractalType: 0
+      interp: 0
+      cellularDistanceFunction: 0
+      cellularReturnType: 0
+      seed: 967
+      octaves: 3
+      frequency: 0.035
+      gain: 0.5
+      lacunarity: 2
+      cellularJitter: 0.45
+      scale: 1
+    min: -10
+    max: 10
+  mountainLevel:
+    threshold: 30
+    n:
+      noiseType: 5
+      fractalType: 0
+      interp: 0
+      cellularDistanceFunction: 0
+      cellularReturnType: 0
+      seed: 848
+      octaves: 3
+      frequency: 0.035
+      gain: 0.5
+      lacunarity: 2
+      cellularJitter: 0.45
+      scale: 1
+    min: -5
+    max: 5
+  seaLevel: 16
   colors:
   - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0.19999981, g: 0, b: 1, a: 0}
-  - {r: 0, g: 0.66176474, b: 0.114097394, a: 0}
-  - {r: 0.41911763, g: 0.41911763, b: 0.41911763, a: 0}
+  - {r: 0, g: 0.5952837, b: 0.9485294, a: 0}
+  - {r: 0, g: 0.53676474, b: 0.2702334, a: 0}
+  - {r: 0, g: 0.45588237, b: 0.22951318, a: 0}
+  - {r: 0.44117647, g: 0.39705884, b: 0.25302768, a: 0}
+  - {r: 0.33823532, g: 0.30904278, b: 0.24621542, a: 0}
+  - {r: 0.38235295, g: 0.34016225, b: 0, a: 0}
+  - {r: 0.86764705, g: 0.843448, b: 0.51676035, a: 0}
+  - {r: 0.36764705, g: 0.32707912, b: 0, a: 0}
+  - {r: 0.44852942, g: 0.44852942, b: 0.44852942, a: 0}
+  - {r: 0.66176474, g: 0.9720081, b: 1, a: 0}

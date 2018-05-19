@@ -28,6 +28,10 @@ public static class Blocks
         0,
         0,
         0,
+        0,
+        0,
+        0,
+        0,
         0
     };
 
