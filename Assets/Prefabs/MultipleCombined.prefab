@@ -96,9 +96,9 @@ MonoBehaviour:
       cellularReturnType: 0
       seed: 1670
       octaves: 4
-      frequency: 0.025
+      frequency: 0.03
       gain: 0.58
-      lacunarity: 1.987
+      lacunarity: 2
       cellularJitter: 0.45
       scale: 1
     height2:
@@ -121,7 +121,7 @@ MonoBehaviour:
     e1: 3.71
     e2: 1.76
     t1: 0.356
-    t2: 0.66
+    t2: 0.518
   interp:
     noiseType: 9
     fractalType: 0
@@ -138,9 +138,9 @@ MonoBehaviour:
   interpE: 1.5
   minHeight: 1
   maxHeight: 100
-  baseThreshold: 0.341
+  baseThreshold: 0.369
   mountainThreshold: 0.527
-  mountainLevel: 51.65
+  mountainLevel: 30.07
   seaLevel: 15
   colors:
   - {r: 0, g: 0, b: 0, a: 0}
