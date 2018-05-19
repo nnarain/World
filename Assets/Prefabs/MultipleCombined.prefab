@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1705832536154696}
+  m_IsPrefabParent: 1
+--- !u!1 &1705832536154696
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4344262760875230}
+  - component: {fileID: 114340501278494884}
+  m_Layer: 0
+  m_Name: MultipleCombined
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4344262760875230
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1705832536154696}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1105.5226, y: -1192.165, z: -1732.72}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114340501278494884
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1705832536154696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf1bfc0bb82318468b0aec0f1d2aad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selection: 3
+  baseHeightMap:
+    height1:
+      noiseType: 9
+      fractalType: 0
+      interp: 2
+      cellularDistanceFunction: 0
+      cellularReturnType: 0
+      seed: 1269
+      octaves: 4
+      frequency: 0.01
+      gain: 0.538
+      lacunarity: 1.879
+      cellularJitter: 0.45
+      scale: 1
+    height2:
+      noiseType: 9
+      fractalType: 0
+      interp: 1
+      cellularDistanceFunction: 0
+      cellularReturnType: 0
+      seed: 1522
+      octaves: 4
+      frequency: 0.01
+      gain: 0.504
+      lacunarity: 1.944
+      cellularJitter: 0.45
+      scale: 1
+    height1Min: 15
+    height1Max: 25
+    height2Min: 25
+    height2Max: 35
+    e1: 1
+    e2: 1
+    t1: 0.45
+    t2: 0.75
+  mountainHeightMap:
+    height1:
+      noiseType: 9
+      fractalType: 0
+      interp: 2
+      cellularDistanceFunction: 0
+      cellularReturnType: 0
+      seed: 1670
+      octaves: 4
+      frequency: 0.03
+      gain: 0.58
+      lacunarity: 2
+      cellularJitter: 0.45
+      scale: 1
+    height2:
+      noiseType: 9
+      fractalType: 0
+      interp: 2
+      cellularDistanceFunction: 0
+      cellularReturnType: 0
+      seed: 708
+      octaves: 4
+      frequency: 0.026
+      gain: 0.58
+      lacunarity: 2
+      cellularJitter: 0.45
+      scale: 1
+    height1Min: 93.8
+    height1Max: 194.1
+    height2Min: 163.2
+    height2Max: 237.3
+    e1: 3.71
+    e2: 1.76
+    t1: 0.356
+    t2: 0.518
+  interp:
+    noiseType: 9
+    fractalType: 0
+    interp: 2
+    cellularDistanceFunction: 0
+    cellularReturnType: 0
+    seed: 213
+    octaves: 4
+    frequency: 0.01
+    gain: 0.5
+    lacunarity: 2
+    cellularJitter: 0.45
+    scale: 2.77
+  interpE: 1.5
+  minHeight: 1
+  maxHeight: 100
+  baseThreshold: 0.369
+  mountainThreshold: 0.527
+  mountainLevel: 30.07
+  seaLevel: 15
+  colors:
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.19999981, g: 0, b: 1, a: 0}
+  - {r: 0, g: 0.66176474, b: 0.114097394, a: 0}
+  - {r: 0.41911763, g: 0.41911763, b: 0.41911763, a: 0}

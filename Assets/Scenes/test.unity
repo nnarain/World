@@ -251,10 +251,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9505a4cd0fd28184ba06a5c73e0b5d51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 0
-  generator: 0
+  seed: -397
+  generator: 1
   generators:
   - {fileID: 114174795048307780, guid: db0e81da894109a48be3d10020c1cdbe, type: 2}
+  - {fileID: 114340501278494884, guid: 472223c2d4c60df4d9432e1fdfa501c7, type: 2}
   atlas: {fileID: 114577762429812144, guid: 98ff5379faee3f045bf3b7714cfcbda2, type: 2}
   rotationSpeed: 5
   enableRotation: 0

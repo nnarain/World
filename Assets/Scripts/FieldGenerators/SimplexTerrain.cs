@@ -4,15 +4,40 @@ using UnityEngine;
 
 public class SimplexTerrain : FieldGenerator
 {
-    public FastNoiseUnity noise;
+    public FastNoiseUnity baseTerrain;
+    public float baseMaxHeight;
+    public float baseE;
 
-    public float maxHeight;
+    public FastNoiseUnity mountainTerrain;
+    public float mountainMaxHeight;
+    public float mountainLevel;
+    public float mountainE;
+
+    public int seaLevel;
+
+    [Range(0, 1)]
+    public float baseThreshold;
+    [Range(0, 1)]
+    public float mountainThreshold;
 
     public enum BlockType
     {
         Air,
         Water,
+        Grass,
         Stone
+    }
+
+    public enum Biome
+    {
+        Tundra,
+        BorealForest,
+        BarrenSubarctic,
+        TemperateForest,
+        Savanna,
+        Grassland,
+        Desert,
+        Rainforest
     }
 
     public Color[] colors;
@@ -23,23 +48,68 @@ public class SimplexTerrain : FieldGenerator
         {
             var ws = position + new Vector3(x, 0, z);
 
-            var sample = noise.Sample(ws.x, ws.z).Remap(-1.0f, 1.0f, 0.0f, maxHeight);
+            var height = GetHeight(ws.x, ws.z);
 
-            int maxY = (int)sample;
+            int maxY = (int)height;
 
-            for (int y = 0; y < maxY; ++y)
+            if (maxY >= (field.Y - 1)) maxY = field.Y - 1;
+
+            if (maxY >= seaLevel)
             {
-                if (y <= 20)
+                for (int y = 0; y < maxY; ++y)
                 {
-                    field.Set(x, y, z, 1);
-                }
-                else
-                {
-                    field.Set(x, y, z, 2);
+                    if (height >= mountainLevel)
+                    {
+                        field.Set(x, y, z, (byte)BlockType.Stone);
+                    }
+                    else
+                    {
+                        field.Set(x, y, z, (byte)BlockType.Grass);
+                    }
                 }
             }
-
+            else
+            {
+                for (int y = 0; y < seaLevel; ++y)
+                {
+                    field.Set(x, y, z, (byte)BlockType.Water);
+                }
+            }
         });
+    }
+
+    private float GetHeight(float x, float y)
+    {
+        var baseTerrainSample = Mathf.Pow(baseTerrain.Sample(x, y).Remap(-1, 1, 0, 1), baseE);
+
+        if (baseTerrainSample < baseThreshold)
+        {
+            return baseTerrainSample * baseMaxHeight;
+        }
+        else
+        {
+            var mountainTerrainSample = Mathf.Pow(mountainTerrain.Sample(x, y).Remap(-1, 1, 0, 1), mountainE);
+
+            if (baseTerrainSample < mountainThreshold)
+            {
+                return BlendSamples(baseTerrainSample, baseMaxHeight, baseThreshold, mountainThreshold, mountainTerrainSample * mountainMaxHeight);
+            }
+            else
+            {
+                return mountainTerrainSample * mountainMaxHeight;
+            }
+        }
+    }
+
+    public float BlendSamples(float baseSample, float maxBaseHeight, float t1, float t2, float mountainHeight)
+    {
+        // The base sample is in the range [t1, t2]
+        // So remap the sample to range [0,1]
+        var t = baseSample.Remap(t1, t2, 0, 1);
+
+        var height = Mathf.Lerp(baseSample * maxBaseHeight, mountainHeight, t);
+
+        return height;
     }
 
     public override Color GetVoxelColor(byte type)
@@ -56,6 +126,8 @@ public class SimplexTerrain : FieldGenerator
 
     private void OnValidate()
     {
-        noise.Update();
+        baseTerrain.Update();
+
+        mountainTerrain.Update();
     }
 }

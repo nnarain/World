@@ -22,7 +22,10 @@ public class FastNoiseUnity : INoiseSampler
     public float lacunarity = 2.0f;
     public float cellularJitter = 0.45f;
 
+    public float scale = 1;
+
     private FastNoise noise = new FastNoise();
+    FastNoise Noise { get { return noise; } }
 
     public FastNoiseUnity()
     {
@@ -44,13 +47,18 @@ public class FastNoiseUnity : INoiseSampler
         noise.SetCellularJitter(cellularJitter);
     }
 
+    public void SetCellularNoiseLookup(FastNoiseUnity noise)
+    {
+        this.noise.SetCellularNoiseLookup(noise.Noise);
+    }
+
     public float Sample(float x, float y)
     {
-        return noise.GetNoise(x, y);
+        return noise.GetNoise(x / scale, y / scale);
     }
 
     public float Sample(float x, float y, float z)
     {
-        return noise.GetNoise(x, y, z);
+        return noise.GetNoise(x / scale, y / scale, z / scale);
     }
 }
