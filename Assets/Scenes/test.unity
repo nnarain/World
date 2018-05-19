@@ -287,10 +287,10 @@ MonoBehaviour:
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
   forwardRenderDistance: 100
-  generalRenderDistance: 644.4
+  generalRenderDistance: 523.29
   moveThreshold: 10
   rotationThreshold: 360
-  distanceToInactive: 1000
+  distanceToInactive: 664.1
   distanceToDestroy: 1000
   viewportMargin: 0.331
   drawDebug: 0
