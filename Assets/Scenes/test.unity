@@ -286,12 +286,12 @@ MonoBehaviour:
   player: {fileID: 2030482056}
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
-  generalRenderDistance: 750
+  generalRenderDistance: 1000
   moveThreshold: 50
   distanceToInactive: 650
   distanceToDestroy: 1000
-  framesBeforeLoad: 5
-  maxChunksToCreatePerFrame: 50
+  framesBeforeLoad: 1
+  maxChunksToCreatePerFrame: 100
   viewportMargin: 0.331
 --- !u!114 &788152807
 MonoBehaviour:
@@ -305,9 +305,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxWorkersPerFrame: 4
-  loadAll: 0
-  buildAll: 0
+  loadAll: 1
+  buildAll: 1
   debugMode: 0
+  frameBeforeDequeue: 1
 --- !u!1 &1045471018
 GameObject:
   m_ObjectHideFlags: 0

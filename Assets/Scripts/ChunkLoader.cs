@@ -13,8 +13,12 @@ public class ChunkLoader : MonoBehaviour
     public bool buildAll = false;
     public bool debugMode = false;
 
+    public int frameBeforeDequeue = 0;
+
     private PriorityQueue<Chunk> loadQueue;
     private PriorityQueue<Chunk> buildQueue;
+
+    private int frameCounter = 0;
 
     // Use this for initialization
     void Start()
@@ -25,6 +29,19 @@ public class ChunkLoader : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        if (frameCounter >= frameBeforeDequeue)
+        {
+            frameCounter = 0;
+
+            DequeueLoadChunks();
+            DequeueBuildChunks();
+        }
+
+        frameCounter++;
+    }
+
+    private void DequeueLoadChunks()
     {
         int workItemCount = maxWorkersPerFrame;
 
@@ -42,15 +59,19 @@ public class ChunkLoader : MonoBehaviour
             {
                 ThreadPool.QueueUserWorkItem(new WaitCallback(LoadChunkWorker), chunk);
             }
+
             workItemCount--;
         }
+    }
 
-        workItemCount = maxWorkersPerFrame;
+    private void DequeueBuildChunks()
+    {
+        int workItemCount = maxWorkersPerFrame;
 
         while (buildQueue.Count > 0 && (workItemCount > 0 || buildAll))
         {
             Chunk chunk = buildQueue.Dequeue();
-         
+
             if (debugMode)
             {
                 chunk.Build();

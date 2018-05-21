@@ -32,7 +32,7 @@ public class WorldManager : MonoBehaviour
             chunkManager.chunkPrefab.fieldGenerator = generators[(int)generator];
         }
 
-        atlas.Init();
+        //atlas.Init();
     }
 
     // Use this for initialization
