@@ -8,23 +8,25 @@ using UnityEngine;
 /// </summary>
 public class ChunkLoader : MonoBehaviour
 {
-    public int maxWorkersPerFrame = System.Environment.ProcessorCount;
-    public bool loadAll = false;
-    public bool buildAll = false;
-    public bool debugMode = false;
-
+    public int maxThreads = 1;
     public int frameBeforeDequeue = 0;
+
+    public bool debugMode = false;
 
     private PriorityQueue<Chunk> loadQueue;
     private PriorityQueue<Chunk> buildQueue;
 
-    private int frameCounter = 0;
+    private int frameCounter;
+    private int activeThreads;
 
     // Use this for initialization
     void Start()
     {
         loadQueue = new PriorityQueue<Chunk>();
         buildQueue = new PriorityQueue<Chunk>();
+
+        frameCounter = 0;
+        activeThreads = 0;
     }
 
     // Update is called once per frame
@@ -35,7 +37,6 @@ public class ChunkLoader : MonoBehaviour
             frameCounter = 0;
 
             DequeueLoadChunks();
-            DequeueBuildChunks();
         }
 
         frameCounter++;
@@ -43,10 +44,8 @@ public class ChunkLoader : MonoBehaviour
 
     private void DequeueLoadChunks()
     {
-        int workItemCount = maxWorkersPerFrame;
-
         // check if there are items in the queue
-        while (loadQueue.Count > 0 && (workItemCount > 0 || loadAll))
+        while (AvailableThreads() > 0 && !loadQueue.Empty)
         {
             // dequeue and start loading the chunk
             Chunk chunk = loadQueue.Dequeue();
@@ -57,46 +56,61 @@ public class ChunkLoader : MonoBehaviour
             }
             else
             {
+                Interlocked.Increment(ref activeThreads);
                 ThreadPool.QueueUserWorkItem(new WaitCallback(LoadChunkWorker), chunk);
             }
-
-            workItemCount--;
         }
     }
 
     private void DequeueBuildChunks()
     {
-        int workItemCount = maxWorkersPerFrame;
-
-        while (buildQueue.Count > 0 && (workItemCount > 0 || buildAll))
+        if (AvailableThreads() > 0)
         {
-            Chunk chunk = buildQueue.Dequeue();
-
-            if (debugMode)
+            // check if there are items in the queue
+            while (!buildQueue.Empty)
             {
-                chunk.Build();
-            }
-            else
-            {
-                ThreadPool.QueueUserWorkItem(new WaitCallback(BuildChunkWorker), chunk);
-            }
+                // dequeue and start loading the chunk
+                Chunk chunk = buildQueue.Dequeue();
 
-            workItemCount--;
+                if (debugMode)
+                {
+                    chunk.Build();
+                }
+                else
+                {
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(BuildChunkWorker), chunk);
+                }
+            }
         }
     }
 
-    static void LoadChunkWorker(object data)
+    public int AvailableThreads()
     {
-        // Load the chunk
-        Chunk chunk = (Chunk)data;
-        chunk.Load();
+        return maxThreads - activeThreads;
     }
 
-    static void BuildChunkWorker(object data)
+    /// <summary>
+    /// Load a chunk of the worker thread
+    /// </summary>
+    /// <param name="data"></param>
+    void LoadChunkWorker(object data)
     {
-        // build the chunk
+        //Interlocked.Increment(ref activeThreads);
+
+        Chunk chunk = (Chunk)data;
+        chunk.Load();
+
+        Interlocked.Decrement(ref activeThreads);
+    }
+
+    void BuildChunkWorker(object data)
+    {
+        Interlocked.Increment(ref activeThreads);
+
         Chunk chunk = (Chunk)data;
         chunk.Build();
+
+        Interlocked.Decrement(ref activeThreads);
     }
 
     public void Load(Chunk chunk, float priority = 0f)
@@ -114,6 +128,6 @@ public class ChunkLoader : MonoBehaviour
 
     private void OnValidate()
     {
-        if (maxWorkersPerFrame <= 0) maxWorkersPerFrame = 1;
+
     }
 }

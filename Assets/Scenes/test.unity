@@ -233,6 +233,7 @@ GameObject:
   - component: {fileID: 788152804}
   - component: {fileID: 788152806}
   - component: {fileID: 788152807}
+  - component: {fileID: 788152808}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -259,6 +260,12 @@ MonoBehaviour:
   atlas: {fileID: 114577762429812144, guid: 98ff5379faee3f045bf3b7714cfcbda2, type: 2}
   rotationSpeed: 5
   enableRotation: 0
+  fpsOverlay:
+    serializedVersion: 2
+    x: 5
+    y: 5
+    width: 100
+    height: 100
 --- !u!4 &788152805
 Transform:
   m_ObjectHideFlags: 0
@@ -287,10 +294,9 @@ MonoBehaviour:
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
   generalRenderDistance: 1000
-  moveThreshold: 50
-  distanceToInactive: 650
-  distanceToDestroy: 1000
-  framesBeforeLoad: 1
+  moveThreshold: 250
+  distanceToDestroy: 2000
+  framesBeforeLoad: 30
   maxChunksToCreatePerFrame: 100
   viewportMargin: 0.331
 --- !u!114 &788152807
@@ -304,11 +310,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d6ef63f70cac940ae34603d48ae098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxWorkersPerFrame: 4
-  loadAll: 1
-  buildAll: 1
+  maxThreads: 5
+  frameBeforeDequeue: 10
   debugMode: 0
-  frameBeforeDequeue: 1
+--- !u!114 &788152808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 788152803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24f77e4d028b4b447bae821733e154ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  refreshTime: 2.5
 --- !u!1 &1045471018
 GameObject:
   m_ObjectHideFlags: 0

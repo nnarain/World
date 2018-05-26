@@ -27,7 +27,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4225350253594898
 Transform:
@@ -95,9 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b79e66ee4b33dd4458055da743b8569b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkSizeX: 16
+  chunkSizeX: 32
   chunkSizeY: 128
-  chunkSizeZ: 16
+  chunkSizeZ: 32
   fieldGenerator: {fileID: 114340501278494884, guid: 472223c2d4c60df4d9432e1fdfa501c7,
     type: 2}
   blockAtlas: {fileID: 114577762429812144, guid: 98ff5379faee3f045bf3b7714cfcbda2,

@@ -25,7 +25,6 @@ public class FrameRate : MonoBehaviour
         {
             // calculate frames in the refresh period
             currentFrameRate = (float)frameCounter / timeElapsed;
-            Debug.Log(string.Format("{0}", currentFrameRate));
 
             // reset counters
             frameCounter = 0;

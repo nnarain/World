@@ -12,7 +12,6 @@ public class ChunkManager : MonoBehaviour
 
     public float generalRenderDistance;
     public float moveThreshold;
-    public float distanceToInactive;
     public float distanceToDestroy;
 
     public int framesBeforeLoad;
@@ -45,6 +44,8 @@ public class ChunkManager : MonoBehaviour
         playerCamera = player.GetComponentInChildren<Camera>();
 
         premptiveLoadQueue = new PriorityQueue<Vector3Int>();
+
+        UpdateSurroundingChunks(player.transform.position);
     }
 
     // Update is called once per frame
@@ -160,10 +161,7 @@ public class ChunkManager : MonoBehaviour
 
     private void OnChunkLoad(Chunk chunk)
     {
-        lock(loadLock)
-        {
-            chunkLoader.Build(chunk);
-        }
+        chunk.Build();
     }
 
     private void OnChunkBuild(Chunk chunk)
@@ -321,8 +319,7 @@ public class ChunkManager : MonoBehaviour
     private void OnValidate()
     {
         if (generalRenderDistance < 0) generalRenderDistance = 0;
-        if (moveThreshold <= 0) moveThreshold = 1f;
-        if (distanceToInactive <= 0) distanceToInactive = 100f;
+        if (moveThreshold <= 0) moveThreshold = 50f;
         if (distanceToDestroy <= 0) distanceToDestroy = 1f;
     }
 }

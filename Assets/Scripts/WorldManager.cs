@@ -21,18 +21,26 @@ public class WorldManager : MonoBehaviour
     public float rotationSpeed;
     public bool enableRotation = false;
 
+    public Rect fpsOverlay;
+
     private ChunkManager chunkManager;
+    private FrameRate frameRate;
 
     private void Awake()
     {
         chunkManager = GetComponent<ChunkManager>();
+        frameRate = GetComponent<FrameRate>();
         
         if (generators.Length > 0)
         {
             chunkManager.chunkPrefab.fieldGenerator = generators[(int)generator];
+            chunkManager.chunkPrefab.fieldGenerator.Initialize();
         }
+    }
 
-        //atlas.Init();
+    private void OnGUI()
+    {
+        GUI.Label(fpsOverlay, string.Format("FPS: {0}", (int)frameRate.CurrentFrameRate));
     }
 
     // Use this for initialization
