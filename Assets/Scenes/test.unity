@@ -298,6 +298,7 @@ MonoBehaviour:
   distanceToDestroy: 2000
   framesBeforeLoad: 30
   maxChunksToCreatePerFrame: 100
+  fullLoadDuration: 45
   viewportMargin: 0.331
 --- !u!114 &788152807
 MonoBehaviour:
@@ -310,8 +311,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d6ef63f70cac940ae34603d48ae098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxThreads: 5
-  frameBeforeDequeue: 10
+  loadParams:
+  - maxThreads: 10
+    framesBeforeDequeue: 5
+  - maxThreads: 5
+    framesBeforeDequeue: 15
   debugMode: 0
 --- !u!114 &788152808
 MonoBehaviour:
@@ -403,7 +407,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1045471018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 79.76, z: 0}
+  m_LocalPosition: {x: 2121, y: 504, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -592,7 +596,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2030482056}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000016292068}
-  m_LocalPosition: {x: 0, y: 81.88, z: 0}
+  m_LocalPosition: {x: 0, y: 37, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 335730500}

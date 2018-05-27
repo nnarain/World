@@ -120,8 +120,6 @@ public class ChunkLoader : MonoBehaviour
     /// <param name="data"></param>
     void LoadChunkWorker(object data)
     {
-        //Interlocked.Increment(ref activeThreads);
-
         Chunk chunk = (Chunk)data;
         chunk.Load();
 

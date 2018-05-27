@@ -92,11 +92,15 @@ public class ChunkManager : MonoBehaviour
     private void UpdatePlayerPosition(Vector3 playerPosition)
     {
         // check if the player has moved the threshold distance.
-        if ((playerPosition - lastPlayerPosition).magnitude > moveThreshold)
+        var displacement = playerPosition - lastPlayerPosition;
+
+        if (displacement.magnitude > moveThreshold)
         {
             lastPlayerPosition = playerPosition;
 
-            UpdateSurroundingChunks(playerPosition);
+            var searchDistance = (generalRenderDistance - displacement.magnitude);
+
+            UpdateSurroundingChunks(playerPosition + (displacement.normalized * searchDistance));
         }
     }
 
