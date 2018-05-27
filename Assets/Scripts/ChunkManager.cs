@@ -17,6 +17,10 @@ public class ChunkManager : MonoBehaviour
     public int framesBeforeLoad;
     public int maxChunksToCreatePerFrame;
 
+    public float fullLoadDuration = 0;
+    private float fullLoadTimer = 0;
+    private bool doneLoading = false;
+
     [Range(0, 1f)]
     public float viewportMargin;
 
@@ -45,6 +49,7 @@ public class ChunkManager : MonoBehaviour
 
         premptiveLoadQueue = new PriorityQueue<Vector3Int>();
 
+        chunkLoader.SetLoadMode(ChunkLoader.LoadMode.Full);
         UpdateSurroundingChunks(player.transform.position);
     }
 
@@ -53,6 +58,13 @@ public class ChunkManager : MonoBehaviour
     {
         UpdatePlayerPosition(player.transform.position);
         HandleLoadingChunks();
+
+        fullLoadTimer += Time.deltaTime;
+        if (fullLoadTimer >= fullLoadDuration && !doneLoading)
+        {
+            chunkLoader.SetLoadMode(ChunkLoader.LoadMode.Reserved);
+            doneLoading = true;
+        }
     }
 
     private void HandleLoadingChunks()

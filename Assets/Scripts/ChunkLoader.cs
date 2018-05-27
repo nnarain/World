@@ -8,10 +8,27 @@ using UnityEngine;
 /// </summary>
 public class ChunkLoader : MonoBehaviour
 {
-    public int maxThreads = 1;
-    public int frameBeforeDequeue = 0;
+    public enum LoadMode
+    {
+        Full,
+        Reserved
+    }
+
+    [System.Serializable]
+    public struct LoadParams
+    {
+        public int maxThreads;
+        public int framesBeforeDequeue;
+    }
+
+    public LoadParams[] loadParams = new LoadParams[2];
 
     public bool debugMode = false;
+
+    private LoadMode loadMode;
+
+    private int maxThreads = 1;
+    private int frameBeforeDequeue = 0;
 
     private PriorityQueue<Chunk> loadQueue;
     private PriorityQueue<Chunk> buildQueue;
@@ -25,6 +42,7 @@ public class ChunkLoader : MonoBehaviour
         loadQueue = new PriorityQueue<Chunk>();
         buildQueue = new PriorityQueue<Chunk>();
 
+        loadMode = LoadMode.Full;
         frameCounter = 0;
         activeThreads = 0;
     }
@@ -40,6 +58,13 @@ public class ChunkLoader : MonoBehaviour
         }
 
         frameCounter++;
+    }
+
+    public void SetLoadMode(LoadMode mode)
+    {
+        loadMode = mode;
+        maxThreads = loadParams[(int)mode].maxThreads;
+        frameBeforeDequeue = loadParams[(int)mode].framesBeforeDequeue;
     }
 
     private void DequeueLoadChunks()
