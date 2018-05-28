@@ -26,6 +26,12 @@ class PriorityQueue<T>
         data = new LinkedList<Node<T>>();
     }
 
+    public void Clear()
+    {
+        
+        data.Clear();
+    }
+
     /// <summary>
     /// Add an item to the queue. Smallest distance to largest distance
     /// </summary>

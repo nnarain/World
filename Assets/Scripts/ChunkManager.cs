@@ -49,6 +49,8 @@ public class ChunkManager : MonoBehaviour
 
         premptiveLoadQueue = new PriorityQueue<Vector3Int>();
 
+        lastPlayerPosition = player.transform.position;
+
         chunkLoader.SetLoadMode(ChunkLoader.LoadMode.Full);
         UpdateSurroundingChunks(player.transform.position);
     }
@@ -96,10 +98,15 @@ public class ChunkManager : MonoBehaviour
 
         if (displacement.magnitude > moveThreshold)
         {
+            Debug.Log("Updating surrounding chunks");
             lastPlayerPosition = playerPosition;
 
-            var searchDistance = (generalRenderDistance - displacement.magnitude);
+            // re-queue chunks
+            // TODO: What if the player is walking backwards???
+            chunkLoader.Requeue(player.transform);
 
+            // start loading chunks from a point in the direction the player is heading
+            var searchDistance = (generalRenderDistance - displacement.magnitude);
             UpdateSurroundingChunks(playerPosition + (displacement.normalized * searchDistance));
         }
     }
@@ -112,6 +119,7 @@ public class ChunkManager : MonoBehaviour
     {
         if (!loadVisibleChunks)
         {
+            Debug.Log("Loading visible chunks");
             loadVisibleChunks = true;
             ThreadPool.QueueUserWorkItem(c => UpdateVisibleChunks(playerPosition));
         }

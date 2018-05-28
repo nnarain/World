@@ -59,6 +59,39 @@ public class ChunkLoader : MonoBehaviour
 
         frameCounter++;
     }
+    
+    public void Requeue(Transform playerTransfrom)
+    {
+        loadQueue = Requeue(loadQueue, playerTransfrom);
+        buildQueue = Requeue(buildQueue, playerTransfrom);
+    }
+
+    private PriorityQueue<Chunk> Requeue(PriorityQueue<Chunk> queue, Transform playerTransform)
+    {
+        PriorityQueue<Chunk> newQueue = new PriorityQueue<Chunk>();
+
+        var forward = playerTransform.forward;
+        var position = playerTransform.position;
+
+        while (!queue.Empty)
+        {
+            // get a chunk
+            var chunk = queue.Dequeue();
+            // check displacement from the player
+            var chunkDisplacementFromPlayer = chunk.transform.position - position;
+
+            // postive - in front of player, negative - behind the player
+            var dot = Vector3.Dot(forward, chunkDisplacementFromPlayer.normalized);
+
+            // do not bother loading chunks that are behind the player
+            if (dot > 0)
+            {
+                newQueue.Enqueue(chunk, chunkDisplacementFromPlayer.magnitude);
+            }
+        }
+
+        return newQueue;
+    }
 
     public void SetLoadMode(LoadMode mode)
     {
