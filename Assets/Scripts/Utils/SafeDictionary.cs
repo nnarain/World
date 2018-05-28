@@ -30,8 +30,13 @@ public class SafeDictionary<TKey, TValue>
         {
             value = dict[key];
         }
-
+        
         return value;
+    }
+
+    public Dictionary<TKey, TValue>.Enumerator GetEnumerator()
+    {
+        return dict.GetEnumerator();
     }
 
     public bool ContainsKey(TKey key)

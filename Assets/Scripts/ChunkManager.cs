@@ -20,6 +20,7 @@ public class ChunkManager : MonoBehaviour
     public float fullLoadDuration = 0;
     private float fullLoadTimer = 0;
     private bool doneLoading = false;
+    private bool searchForDistantChunks = false;
 
     [Range(0, 1f)]
     public float viewportMargin;
@@ -31,6 +32,7 @@ public class ChunkManager : MonoBehaviour
     private ChunkLoader chunkLoader;
 
     private PriorityQueue<Vector3Int> premptiveLoadQueue;
+    private Queue<Chunk> removeChunksQueue;
 
     private readonly object buildLock = new object();
     private readonly object loadLock = new object();
@@ -48,6 +50,7 @@ public class ChunkManager : MonoBehaviour
         playerCamera = player.GetComponentInChildren<Camera>();
 
         premptiveLoadQueue = new PriorityQueue<Vector3Int>();
+        removeChunksQueue = new Queue<Chunk>();
 
         lastPlayerPosition = player.transform.position;
 
@@ -91,6 +94,15 @@ public class ChunkManager : MonoBehaviour
         frameCounter++;
     }
 
+    private void HandleRemovingChunks()
+    {
+        while (removeChunksQueue.Count > 0)
+        {
+            var chunk = removeChunksQueue.Dequeue();
+            Destroy(chunk);
+        }
+    }
+
     private void UpdatePlayerPosition(Vector3 playerPosition)
     {
         // check if the player has moved the threshold distance.
@@ -98,7 +110,6 @@ public class ChunkManager : MonoBehaviour
 
         if (displacement.magnitude > moveThreshold)
         {
-            Debug.Log("Updating surrounding chunks");
             lastPlayerPosition = playerPosition;
 
             // re-queue chunks
@@ -108,6 +119,13 @@ public class ChunkManager : MonoBehaviour
             // start loading chunks from a point in the direction the player is heading
             var searchDistance = (generalRenderDistance - displacement.magnitude);
             UpdateSurroundingChunks(playerPosition + (displacement.normalized * searchDistance));
+
+            // start removing chunks
+            if (!searchForDistantChunks)
+            {
+                searchForDistantChunks = true;
+                ThreadPool.QueueUserWorkItem(c => QueueChunksForRemoval());
+            }
         }
     }
 
@@ -119,7 +137,6 @@ public class ChunkManager : MonoBehaviour
     {
         if (!loadVisibleChunks)
         {
-            Debug.Log("Loading visible chunks");
             loadVisibleChunks = true;
             ThreadPool.QueueUserWorkItem(c => UpdateVisibleChunks(playerPosition));
         }
@@ -181,6 +198,28 @@ public class ChunkManager : MonoBehaviour
         }
 
         loadVisibleChunks = false;
+    }
+
+    private void QueueChunksForRemoval()
+    {
+        var cx = chunkPrefab.chunkSizeX;
+        var cz = chunkPrefab.chunkSizeZ;
+
+        foreach (var item in chunkList)
+        {
+            // chunk position
+            var cp = item.Key;
+            var position = new Vector3(cp.x * cx + cx / 2, 0, cp.z * cz + cz / 2);
+
+            if ((lastPlayerPosition - position).magnitude > distanceToDestroy)
+            {
+                removeChunksQueue.Enqueue(item.Value);
+            }
+
+            Thread.Sleep(50);
+        }
+
+        searchForDistantChunks = false;
     }
 
     private void OnChunkLoad(Chunk chunk)
