@@ -47,6 +47,8 @@ public class ChunkSearch
     {
         running = false;
         searchThread.Join();
+
+        loadQueue.Clear();
     }
 
     private void Search(Vector3 position, Vector3Int startPosition)
