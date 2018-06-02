@@ -43,6 +43,18 @@ public class Chunk : MonoBehaviour
 
     public bool IsLoaded { get { return state == ChunkState.Loaded; } }
 
+    public Vector3Int Key
+    {
+        get
+        {
+            int kx = ((int)transform.position.x / chunkSizeX);
+            int ky = ((int)transform.position.y / chunkSizeY);
+            int kz = ((int)transform.position.z / chunkSizeZ);
+
+            return new Vector3Int(kx, ky, kz);
+        }
+    }
+
     private Mesh mesh;
     public Mesh Mesh { get { return mesh; } }
 
@@ -295,6 +307,12 @@ public class Chunk : MonoBehaviour
         {
             // throw exception?
         }
+    }
+
+    [ContextMenu("Grid Value")]
+    public void DisplayGridPOsition()
+    {
+        Debug.Log(string.Format("{0} -> {1}", transform.position, Key));
     }
 
     private void OnValidate()

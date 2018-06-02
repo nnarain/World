@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -30,6 +31,7 @@ public class ChunkLoader : MonoBehaviour
     private int maxThreads = 1;
     private int frameBeforeDequeue = 0;
 
+
     private PriorityQueue<Chunk> loadQueue;
     private PriorityQueue<Chunk> buildQueue;
 
@@ -60,33 +62,27 @@ public class ChunkLoader : MonoBehaviour
         frameCounter++;
     }
     
-    public void Requeue(Transform playerTransfrom)
+    public void Requeue(Func<Chunk, float> eval)
     {
-        loadQueue = Requeue(loadQueue, playerTransfrom);
-        buildQueue = Requeue(buildQueue, playerTransfrom);
+        loadQueue = Requeue(loadQueue, eval);
+    //    buildQueue = Requeue(buildQueue, eval);
     }
-
-    private PriorityQueue<Chunk> Requeue(PriorityQueue<Chunk> queue, Transform playerTransform)
+    
+    private PriorityQueue<Chunk> Requeue(PriorityQueue<Chunk> queue, Func<Chunk, float> eval)
     {
         PriorityQueue<Chunk> newQueue = new PriorityQueue<Chunk>();
-
-        var forward = playerTransform.forward;
-        var position = playerTransform.position;
 
         while (!queue.Empty)
         {
             // get a chunk
             var chunk = queue.Dequeue();
-            // check displacement from the player
-            var chunkDisplacementFromPlayer = chunk.transform.position - position;
+            // evaluate its priority
+            var priority = eval(chunk);
 
-            // postive - in front of player, negative - behind the player
-            var dot = Vector3.Dot(forward, chunkDisplacementFromPlayer.normalized);
-
-            // do not bother loading chunks that are behind the player
-            if (dot > 0)
+            // A priority of less than 0 is not valid and indicates that the chunk should not be requeued
+            if (priority >= 0.0f)
             {
-                newQueue.Enqueue(chunk, chunkDisplacementFromPlayer.magnitude);
+                newQueue.Enqueue(chunk, priority);
             }
         }
 

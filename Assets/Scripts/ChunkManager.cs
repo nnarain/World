@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -17,6 +18,9 @@ public class ChunkManager : MonoBehaviour
     public int framesBeforeLoad;
     public int maxChunksToCreatePerFrame;
 
+    [Range(0, 1)]
+    public float requeueViewThreshold;
+
     public float fullLoadDuration = 0;
     private float fullLoadTimer = 0;
     private bool doneLoading = false;
@@ -34,10 +38,8 @@ public class ChunkManager : MonoBehaviour
     private PriorityQueue<Vector3Int> premptiveLoadQueue;
     private Queue<Chunk> removeChunksQueue;
 
-    private readonly object buildLock = new object();
-    private readonly object loadLock = new object();
-
     private bool loadVisibleChunks = false;
+    private bool loadLocalVisibleChunks = false;
 
     private int frameCounter = 0;
 
@@ -112,12 +114,11 @@ public class ChunkManager : MonoBehaviour
         {
             lastPlayerPosition = playerPosition;
 
-            // re-queue chunks
-            // TODO: What if the player is walking backwards???
-            chunkLoader.Requeue(player.transform);
+            // re-evalutate chunk priority loading
+            //chunkLoader.Requeue(EvaluateChunksForLoading);
 
             // start loading chunks from a point in the direction the player is heading
-            var searchDistance = (generalRenderDistance - displacement.magnitude);
+            var searchDistance = (generalRenderDistance - displacement.magnitude) * .75f;
             UpdateSurroundingChunks(playerPosition + (displacement.normalized * searchDistance));
 
             // start removing chunks
@@ -126,30 +127,61 @@ public class ChunkManager : MonoBehaviour
                 searchForDistantChunks = true;
                 ThreadPool.QueueUserWorkItem(c => QueueChunksForRemoval());
             }
+
+            if (!loadLocalVisibleChunks)
+            {
+                loadLocalVisibleChunks = true;
+                ThreadPool.QueueUserWorkItem(c => UpdateVisibleChunks(playerPosition, generalRenderDistance, () => loadLocalVisibleChunks = false));
+            }
+        }
+    }
+
+    private float EvaluateChunksForLoading(Chunk chunk)
+    {
+        var position = player.transform.position;
+        var forward = player.transform.forward;
+
+        // check displacement from the player
+        var chunkDisplacementFromPlayer = chunk.transform.position - position;
+
+        // postive - in front of player, negative - behind the player
+        var dot = Vector3.Dot(forward, chunkDisplacementFromPlayer.normalized);
+
+        // do not bother loading chunks that are behind the player
+        if (dot > 0 || (Mathf.Abs(dot) > requeueViewThreshold))
+        {
+            return chunkDisplacementFromPlayer.magnitude;
+        }
+        else
+        {
+            // this chunk will be removed from loading, remove it from the chunk list
+            chunkList.Remove(GetChunkPosition(chunk.transform.position));
+
+            return -1.0f;
         }
     }
 
     /// <summary>
     /// Update chunks around the player
     /// </summary>
-    /// <param name="playerPosition"></param>
-    private void UpdateSurroundingChunks(Vector3 playerPosition)
+    /// <param name="position"></param>
+    private void UpdateSurroundingChunks(Vector3 position)
     {
         if (!loadVisibleChunks)
         {
             loadVisibleChunks = true;
-            ThreadPool.QueueUserWorkItem(c => UpdateVisibleChunks(playerPosition));
+            ThreadPool.QueueUserWorkItem(c => UpdateVisibleChunks(position, generalRenderDistance, () => loadVisibleChunks = false));
         }
     }
 
     /// <summary>
     /// Use a breath-first search to queue surrounding chunks for loading
     /// </summary>
-    /// <param name="playerPosition"></param>
-    private void UpdateVisibleChunks(Vector3 playerPosition)
+    /// <param name="position"></param>
+    private void UpdateVisibleChunks(Vector3 position, float maxRadius, Action fn)
     {
         // the player's chunk position
-        Vector3Int playerChunkPosition = GetChunkPosition(playerPosition);
+        Vector3Int playerChunkPosition = GetChunkPosition(position);
 
         // explored chunks
         HashSet<Vector3Int> explored = new HashSet<Vector3Int>();
@@ -181,9 +213,9 @@ public class ChunkManager : MonoBehaviour
                 Vector3 chunkPosition = GetChunkWorldCenter(neighbor);
 
                 // check the chunk is in the render distance of the player
-                var distanceFromPlayer = (playerPosition - chunkPosition).magnitude;
+                var distanceFromPlayer = (position - chunkPosition).magnitude;
 
-                if (distanceFromPlayer <= generalRenderDistance)
+                if (distanceFromPlayer <= maxRadius)
                 {
                     queue.Enqueue(neighbor);
                 }
@@ -197,7 +229,7 @@ public class ChunkManager : MonoBehaviour
             }
         }
 
-        loadVisibleChunks = false;
+        fn();
     }
 
     private void QueueChunksForRemoval()
@@ -377,6 +409,16 @@ public class ChunkManager : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
 
+    }
+
+    public Vector3Int GetPlayerChunk()
+    {
+        return GetChunkPosition(player.transform.position);
+    }
+
+    public bool IsPlayerChunkCached()
+    {
+        return chunkList.ContainsKey(GetPlayerChunk());
     }
 
     private void OnValidate()

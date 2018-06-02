@@ -266,6 +266,18 @@ MonoBehaviour:
     y: 5
     width: 100
     height: 100
+  playerChunk:
+    serializedVersion: 2
+    x: 5
+    y: 20
+    width: 150
+    height: 100
+  playerChunkCached:
+    serializedVersion: 2
+    x: 5
+    y: 35
+    width: 150
+    height: 100
 --- !u!4 &788152805
 Transform:
   m_ObjectHideFlags: 0
@@ -293,11 +305,12 @@ MonoBehaviour:
   player: {fileID: 2030482056}
   chunkPrefab: {fileID: 114428542671886206, guid: b10ab06541f42c447a6f1a4e64d20817,
     type: 2}
-  generalRenderDistance: 1000
-  moveThreshold: 250
+  generalRenderDistance: 500
+  moveThreshold: 50
   distanceToDestroy: 2000
   framesBeforeLoad: 30
   maxChunksToCreatePerFrame: 100
+  requeueViewThreshold: 0.35
   fullLoadDuration: 45
   viewportMargin: 0.331
 --- !u!114 &788152807

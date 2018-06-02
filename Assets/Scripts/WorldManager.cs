@@ -22,6 +22,8 @@ public class WorldManager : MonoBehaviour
     public bool enableRotation = false;
 
     public Rect fpsOverlay;
+    public Rect playerChunk;
+    public Rect playerChunkCached;
 
     private ChunkManager chunkManager;
     private FrameRate frameRate;
@@ -41,6 +43,8 @@ public class WorldManager : MonoBehaviour
     private void OnGUI()
     {
         GUI.Label(fpsOverlay, string.Format("FPS: {0}", (int)frameRate.CurrentFrameRate));
+        GUI.Label(playerChunk, string.Format("Player Chunks: {0}", chunkManager.GetPlayerChunk()));
+        GUI.Label(playerChunkCached, string.Format("Chunk Cached: {0}", chunkManager.IsPlayerChunkCached()));
     }
 
     // Use this for initialization
