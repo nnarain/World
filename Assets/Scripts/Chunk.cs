@@ -43,13 +43,26 @@ public class Chunk : MonoBehaviour
 
     public bool IsLoaded { get { return state == ChunkState.Loaded; } }
 
+    public Vector3Int Key
+    {
+        get
+        {
+            int kx = ((int)transform.position.x / chunkSizeX);
+            int ky = ((int)transform.position.y / chunkSizeY);
+            int kz = ((int)transform.position.z / chunkSizeZ);
+
+            return new Vector3Int(kx, ky, kz);
+        }
+    }
+
     private Mesh mesh;
     public Mesh Mesh { get { return mesh; } }
 
+    private MeshFilter meshFilter;
     private MeshCollider meshCollider;
     public bool ColliderEnabled { get { return meshCollider.enabled; } set { meshCollider.enabled = value; } }
 
-    private Chunk[] neighbors = new Chunk[6];
+    public Chunk[] neighbors = new Chunk[6];
 
     // mesh data recieves from a builder thread
     private MeshData[] meshData;
@@ -65,8 +78,9 @@ public class Chunk : MonoBehaviour
     {
         mesh = new Mesh();
         mesh.subMeshCount = 2;
-        GetComponent<MeshFilter>().mesh = mesh;
 
+        meshFilter = GetComponent<MeshFilter>();
+        meshFilter.mesh = mesh;
 
         meshCollider = gameObject.AddComponent<MeshCollider>();
         meshCollider.enabled = true;
@@ -86,11 +100,14 @@ public class Chunk : MonoBehaviour
         {
             UpdateMesh(meshData);
         }
+
+        chunkPosition = transform.position;
     }
 
     /// <summary>
     /// Load field data for this chunk
     /// </summary>
+    [ContextMenu("Reload")]
     public void Load()
     {
         state = ChunkState.Loading;
@@ -125,10 +142,13 @@ public class Chunk : MonoBehaviour
     /// <param name="data"></param>
     private void UpdateMesh(MeshData[] data)
     {
+        //Debug.Log(string.Format("{0} updating mesh", GetHashCode()));
         List<Vector3> meshVertices = new List<Vector3>();
         List<Vector2> meshUVs = new List<Vector2>();
         List<Color> meshColors = new List<Color>();
         List<int> subMeshOffsets = new List<int>();
+
+        ClearStaleData();
 
         foreach (var d in data)
         {
@@ -161,6 +181,16 @@ public class Chunk : MonoBehaviour
         hasMeshData = false;
     }
 
+    private void ClearStaleData()
+    {
+        mesh.Clear();
+        mesh = new Mesh();
+        mesh.subMeshCount = 2;
+        meshFilter.mesh = mesh;
+
+        field.Clear();
+    }
+
     public void SetOnLoadCallback(Action<Chunk> callback)
     {
         onLoadCallback = callback;
@@ -169,6 +199,12 @@ public class Chunk : MonoBehaviour
     public void SetOnBuildCallback(Action<Chunk> callback)
     {
         onBuildCallback = callback;
+    }
+
+    public void Translate(Vector3 t)
+    {
+        chunkPosition += t;
+        transform.position += t;
     }
 
     public void SetPosition(Vector3 position)
@@ -185,7 +221,19 @@ public class Chunk : MonoBehaviour
     public void SetNeighbor(Chunk chunk, Direction direction)
     {
         neighbors[direction.ToInt()] = chunk;
-        // TODO set opposite neighbor
+        
+        if (chunk != null)
+        {
+            chunk.neighbors[direction.Opposite().ToInt()] = this;
+        }
+    }
+
+    public void ClearNeighbors()
+    {
+        for (int i = 0; i < neighbors.Length; ++i)
+        {
+            neighbors[i] = null;
+        }
     }
 
     /// <summary>
@@ -208,11 +256,11 @@ public class Chunk : MonoBehaviour
 
         if (y < 0)
         {
-            return GetNeighborField(Direction.Bottom, x, y + chunkSizeY, z);
+        //    return GetNeighborField(Direction.Bottom, x, y + chunkSizeY, z);
         }
         else if (y >= chunkSizeY)
         {
-            return GetNeighborField(Direction.Top, x, y - chunkSizeY, z);
+        //    return GetNeighborField(Direction.Top, x, y - chunkSizeY, z);
         }
 
         if (z < 0)
@@ -297,10 +345,21 @@ public class Chunk : MonoBehaviour
         }
     }
 
+    [ContextMenu("Grid Value")]
+    public void DisplayGridPosition()
+    {
+        Debug.Log(string.Format("{0} -> {1}", transform.position, Key));
+    }
+
     private void OnValidate()
     {
         if (chunkSizeX == 0) chunkSizeX = 1;
         if (chunkSizeY == 0) chunkSizeY = 1;
         if (chunkSizeZ == 0) chunkSizeZ = 1;
+    }
+
+    public override string ToString()
+    {
+        return base.ToString();
     }
 }

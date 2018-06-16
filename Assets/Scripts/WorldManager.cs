@@ -16,23 +16,37 @@ public class WorldManager : MonoBehaviour
     public GeneratorType generator;
     public FieldGenerator[] generators = new FieldGenerator[Enum.GetNames(typeof(GeneratorType)).Length];
 
+    public Transform player;
+
     public TextureAtlas atlas;
 
     public float rotationSpeed;
     public bool enableRotation = false;
 
+    public Rect fpsOverlay;
+    public Rect playerChunk;
+    public Rect playerChunkCached;
+
     private ChunkManager chunkManager;
+    private FrameRate frameRate;
 
     private void Awake()
     {
         chunkManager = GetComponent<ChunkManager>();
+        frameRate = GetComponent<FrameRate>();
         
         if (generators.Length > 0)
         {
             chunkManager.chunkPrefab.fieldGenerator = generators[(int)generator];
+            chunkManager.chunkPrefab.fieldGenerator.Initialize();
         }
+    }
 
-        atlas.Init();
+    private void OnGUI()
+    {
+        GUI.Label(fpsOverlay, string.Format("FPS: {0}", (int)frameRate.CurrentFrameRate));
+        GUI.Label(playerChunk, string.Format("Player Chunk: {0} -> {1}", player.position, chunkManager.GetPlayerChunk()));
+        GUI.Label(playerChunkCached, string.Format("Chunk Cached: {0}", chunkManager.IsPlayerChunkCached()));
     }
 
     // Use this for initialization

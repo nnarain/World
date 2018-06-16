@@ -30,12 +30,36 @@ public class SafeDictionary<TKey, TValue>
         {
             value = dict[key];
         }
-
+        
         return value;
+    }
+
+    public Dictionary<TKey, TValue>.Enumerator GetEnumerator()
+    {
+        return dict.GetEnumerator();
+    }
+
+    public bool Remove(TKey key)
+    {
+        bool ret = false;
+
+        lock(dictLock)
+        {
+            ret = dict.Remove(key);
+        }
+
+        return ret;
     }
 
     public bool ContainsKey(TKey key)
     {
-        return dict.ContainsKey(key);
+        var ret = false;
+
+        lock(dictLock)
+        {
+            ret = dict.ContainsKey(key);
+        }
+
+        return ret;
     }
 }

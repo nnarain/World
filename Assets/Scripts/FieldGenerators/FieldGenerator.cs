@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class FieldGenerator : MonoBehaviour
 {
+    public virtual void Initialize()
+    {
+        // ...
+    }
+
     public virtual void Generate(VoxelField field, Vector3 position)
     {
         // TODO: Throw exception
