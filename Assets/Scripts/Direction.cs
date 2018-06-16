@@ -17,4 +17,21 @@ public static class DirectionExtension
     {
         return (int)direction;
     }
+
+    public static Direction Opposite(this Direction direction)
+    {
+        switch(direction)
+        {
+            case Direction.Left:
+                return Direction.Right;
+            case Direction.Right:
+                return Direction.Left;
+            case Direction.Near:
+                return Direction.Far;
+            case Direction.Far:
+                return Direction.Near;
+            default:
+                return default(Direction);
+        }
+    }
 }

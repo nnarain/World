@@ -365,7 +365,12 @@ public class MultipleCombined : FieldGenerator
         }
     }
 
-    private void OnValidate()
+    private void Start()
+    {
+        OnValidate();
+    }
+
+    public override void Initialize()
     {
         baseHeightMap.Update();
         mountainHeightMap.Update();
@@ -373,5 +378,10 @@ public class MultipleCombined : FieldGenerator
         biomeSelector.Update();
         snowLevel.Update();
         mountainLevel.Update();
+    }
+
+    private void OnValidate()
+    {
+        Initialize();
     }
 }

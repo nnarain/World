@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 [RequireComponent(typeof(ChunkLoader))]
@@ -9,248 +11,274 @@ public class ChunkManager : MonoBehaviour
 
     public Chunk chunkPrefab;
 
-    public float forwardRenderDistance;
-    public float generalRenderDistance;
-    public float moveThreshold;
-    [Range(0, 360)]
-    public float rotationThreshold;
-    public float distanceToInactive;
-    public float distanceToDestroy;
-    [Range(0, 1f)]
-    public float viewportMargin;
-
-    [Tooltip("Draw chunk debug info")]
-    public bool drawDebug;
-
-    private Vector3 lastPlayerPosition;
-    private float lastPlayerRotation;
-
-    private Dictionary<Vector3Int, Chunk> chunkList;
     private Camera playerCamera;
     private ChunkLoader chunkLoader;
 
-    // chunks that are currently building
-    private int batchCount = 0;
-    // chunks that have loaded from the current batch
-    private int loadedInBatch = 0;
-    // chunks that have built from the current batch
-    private int builtInBatch = 0;
-    private Queue<Chunk> buildQueue;
-    private readonly object buildLock = new object();
-    private readonly object loadLock = new object();
+    private Vector3Int lastPlayerPosition;
 
+    private Chunk[,] graph;
+    public float viewDisance;
+
+    private Chunk head, tail;
+
+    private SafeQueue<Chunk> activateQueue;
+    private Queue<Chunk> reserveChunksQueue;
 
     // Use this for initialization
     private void Start()
     {
         chunkLoader = GetComponent<ChunkLoader>();
-        chunkList = new Dictionary<Vector3Int, Chunk>();
         playerCamera = player.GetComponentInChildren<Camera>();
-        buildQueue = new Queue<Chunk>();
+
+        chunkLoader.SetLoadMode(ChunkLoader.LoadMode.Reserved);
+
+        lastPlayerPosition = GetChunkPosition(player.transform.position);
+
+        activateQueue = new SafeQueue<Chunk>();
+        reserveChunksQueue = new Queue<Chunk>();
+
+        LoadInitialChunks();
     }
 
     // Update is called once per frame
     private void Update()
     {
-        UpdatePlayerPosition(player.transform.position);
-        UpdatePlayerRotation();
+        HandlePlayerMovement();
+        HandleChunkActivation();
+    }
 
-        if (loadedInBatch == batchCount && loadedInBatch > 0)
+    private void HandleChunkActivation()
+    {
+        while (!activateQueue.Empty)
         {
-            while (buildQueue.Count > 0)
+            var chunk = activateQueue.Dequeue();
+            chunk.gameObject.SetActive(true);
+        }
+    }
+
+    private void HandlePlayerMovement()
+    {
+        // check if the player has moved to a new chunk
+        var currentPosition = GetChunkPosition(player.transform.position);
+
+        if (currentPosition.x != lastPlayerPosition.x || currentPosition.z != lastPlayerPosition.z)
+        {
+            // get the difference in the chunk movement
+            var dc = currentPosition - lastPlayerPosition;
+            HandleLoadNewChunks(dc);
+
+            // set the last chunk position to the current chunk position
+            lastPlayerPosition = currentPosition;
+        }
+    }
+
+    private void HandleLoadNewChunks(Vector3Int dc)
+    {
+        var dx = dc.x;
+        var dz = dc.z;
+
+        if (dx == 1)
+        {
+            MoveChunks(Direction.Right);
+        }
+        else if (dx == -1)
+        {
+            MoveChunks(Direction.Left);
+        }
+
+        if (dz == 1)
+        {
+            MoveChunks(Direction.Far);
+        }
+        else if (dz == -1)
+        {
+            MoveChunks(Direction.Near);
+        }
+    }
+
+    private void MoveChunks(Direction d)
+    {
+        if (d == Direction.Right)
+        {
+            MoveChunksSub(d, head, Direction.Near, tail, Direction.Far);
+        }
+        else if (d == Direction.Left)
+        {
+            MoveChunksSub(d, tail, Direction.Far, head, Direction.Near);
+        }
+        else if (d == Direction.Far)
+        {
+            MoveChunksSub(d, tail, Direction.Left, head, Direction.Right);
+        }
+        else if (d == Direction.Near)
+        {
+            MoveChunksSub(d, head, Direction.Right, tail, Direction.Left);
+        }
+    }
+
+    private void MoveChunksSub(Direction d, Chunk removeNode, Direction removeDirection, Chunk linkNode, Direction linkDirection)
+    {
+        Chunk newHead = null;
+        Chunk newTail = null;
+
+        if (d == Direction.Right || d == Direction.Near)
+        {
+            newHead = removeNode.GetNeighbor(d);
+        }
+
+        if (d == Direction.Far || d == Direction.Left)
+        {
+            newTail = removeNode.GetNeighbor(d);
+        }
+
+        var removeSet = GetLinkedChunks(removeNode, removeDirection);
+        EnqueueReserveChunks(removeSet);
+
+        var linkSet = GetLinkedChunks(linkNode, linkDirection);
+        var newChunks = new Chunk[linkSet.Length];
+
+        for (int i = 0; i < linkSet.Length; ++i)
+        {
+            var adjacentNode = linkSet[i];
+            //Debug.Log(string.Format("dequeue reserved chunks: {0}", reserveChunksQueue.Count));
+            var chunk = reserveChunksQueue.Dequeue();
+
+            // position the chunk in the grid
+            //if (adjacentNode == null) Debug.Log("adjacent node is null");
+            var linkNodePosition = adjacentNode.transform.position;
+            var moveVector = GetMoveDirection(d) * chunkPrefab.chunkSizeX;
+
+            chunk.SetPosition(linkNodePosition + moveVector);
+
+            // link chunk neighbors
+            chunk.SetNeighbor(adjacentNode, d.Opposite());
+
+            if (i > 0)
             {
-                Chunk chunk = buildQueue.Dequeue();
-                chunkLoader.Build(chunk, CalculateChunkPriority(chunk));
+                chunk.SetNeighbor(newChunks[i - 1], linkDirection.Opposite());
             }
+
+            // THE TAIL IS WRONG... AHHHHH
+
+            newChunks[i] = chunk;
+            chunkLoader.Load(chunk);
+        }
+
+        if (d == Direction.Far || d == Direction.Left)
+        {
+            newHead = newChunks[0];
+        }
+
+        if (d == Direction.Right || d == Direction.Near)
+        {
+            newTail = newChunks[0];
+        }
+
+        head = newHead;
+        tail = newTail;
+    }
+
+    private void EnqueueReserveChunks(Chunk[] nodes)
+    {
+        foreach (var chunk in nodes)
+        {
+            if (chunk == null) continue;
+
+            chunk.ClearNeighbors();
+            chunk.gameObject.SetActive(false);
+
+            reserveChunksQueue.Enqueue(chunk);
         }
     }
 
-    private void UpdatePlayerPosition(Vector3 playerPosition)
+    private Vector3 GetMoveDirection(Direction d)
     {
-        // check if the player has moved the threshold distance.
-        if ((playerPosition - lastPlayerPosition).magnitude > moveThreshold)
+        switch (d)
         {
-            lastPlayerPosition = playerPosition;
-
-            UpdateSurroundingChunks(playerPosition);
+            case Direction.Left:
+                return new Vector3(-1, 0, 0);
+            case Direction.Right:
+                return new Vector3(1, 0, 0);
+            case Direction.Near:
+                return new Vector3(0, 0, -1);
+            case Direction.Far:
+                return new Vector3(0, 0, 1);
+            default:
+                return new Vector3(0, 0, 0);
         }
     }
 
-    public void UpdatePlayerRotation()
+    private Chunk[] GetLinkedChunks(Chunk node, Direction d)
     {
-        float playerRotation = player.transform.localRotation.eulerAngles.y;
+        Chunk[] linkedChunks = new Chunk[graph.GetLength(0)];
 
-        float rotateDiff = Mathf.Abs(playerRotation - lastPlayerRotation);
-
-        if (rotateDiff >= rotationThreshold)
+        var addedCount = 0;
+        for (int i = 0; i < graph.GetLength(0) && node != null; ++i)
         {
-            lastPlayerRotation = playerRotation;
-            UpdateSurroundingChunks(player.transform.position);
+            linkedChunks[i] = node;
+            node = node.GetNeighbor(d);
+            addedCount += 1;
         }
+
+        return linkedChunks;
     }
 
-    /// <summary>
-    /// Update chunks around the player
-    /// </summary>
-    /// <param name="playerPosition"></param>
-    private void UpdateSurroundingChunks(Vector3 playerPosition)
+    private void LoadInitialChunks()
     {
+        int d = ((int)viewDisance * 2) / chunkPrefab.chunkSizeX;
 
-        // only update visible chunks if all chunks that were queued for loading are done
-        if (builtInBatch == batchCount)
+        // allocate space for all visible chunks surrounding the player
+        graph = new Chunk[d, d];
+
+        // get the player chunk position
+        var chunkPosition = GetChunkPosition(lastPlayerPosition);
+
+        var offsetX = chunkPosition.x - (d / 2);
+        var offsetZ = chunkPosition.z - (d / 2);
+
+        // create chunks
+        for (int x = 0; x < d; ++x)
         {
-            UpdateVisibleChunks(playerPosition);
-        }
-
-        ProcessLoadedChunks(playerPosition);
-    }
-
-    /// <summary>
-    /// Use a breath-first search to queue surrounding chunks for loading
-    /// </summary>
-    /// <param name="playerPosition"></param>
-    private void UpdateVisibleChunks(Vector3 playerPosition)
-    {
-        batchCount = 0;
-        loadedInBatch = 0;
-        builtInBatch = 0;
-
-        // the player's chunk position
-        Vector3Int playerChunkPosition = GetChunkPosition(playerPosition);
-
-        // explored chunks
-        HashSet<Vector3Int> explored = new HashSet<Vector3Int>();
-
-        // queue of chunk positions
-        Queue<Vector3Int> queue = new Queue<Vector3Int>();
-
-        // load initial chunk positions to check
-        queue.Enqueue(playerChunkPosition);
-        foreach (var key in GetChunkNeighbors(playerChunkPosition))
-        {
-            queue.Enqueue(key);
-        }
-
-        // loop while items are in the queue
-        while (queue.Count > 0)
-        {
-            // grab first position
-            Vector3Int p = queue.Dequeue();
-
-            if (explored.Contains(p)) continue;
-
-            // explore neighbors
-            Vector3Int[] neighbors = GetChunkNeighbors(p);
-
-            foreach (var neighbor in neighbors)
+            for (int z = 0; z < d; ++z)
             {
-                // get the world position of the chunk
-                Vector3 chunkPosition = GetChunkWorldCenter(neighbor);
+                var chunk = CreateChunk(x + offsetX, z + offsetZ);
+                graph[x, z] = chunk;
 
-                // check the chunk is in the render distance of the player
-                var distanceFromPlayer = (playerPosition - chunkPosition).magnitude;
-
-                if (distanceFromPlayer <= generalRenderDistance)
+                // set chunk neighbors
+                if (x > 0)
                 {
-                    queue.Enqueue(neighbor);
+                    chunk.SetNeighbor(graph[x - 1, z], Direction.Left);
                 }
-                else if (IsChunkInFrustum(chunkPosition))
+                if (z > 0)
                 {
-                    // check if the chunk is in the camera's view frustum
-
-                    // check if the chunk is in the forward render distance
-                    if (distanceFromPlayer <= forwardRenderDistance)
-                    {
-                        queue.Enqueue(neighbor);
-                    }
+                    chunk.SetNeighbor(graph[x, z - 1], Direction.Near);
                 }
-            }
-
-            explored.Add(p);
-
-            // check if the current chunk is in the chunk list
-            if (chunkList.ContainsKey(p))
-            {
-                // the chunk already exists, ensure it is enabled
-                var chunk = chunkList[p];
-                chunk.gameObject.SetActive(true);
-            }
-            else
-            {
-                // the chunk does not exist yet, create it
-                var chunk = CreateChunk(p.x, p.z);
-                chunkList.Add(p, chunk);
-
-                var distanceFromPlayer = CalculateChunkPriority(chunk);
 
                 // queue the chunk for loading
-                chunkLoader.Load(chunk, distanceFromPlayer);
-                batchCount++;
-            }
-        }
-    }
-
-    private void ProcessLoadedChunks(Vector3 playerPosition)
-    {
-        List<Vector3Int> toRemove = new List<Vector3Int>();
-
-        // iterate over chunks in the dictionary
-        foreach (var pair in chunkList)
-        {
-            var chunk = pair.Value;
-            var chunkPosition = GetWorldPositionFromChunkPosition(pair.Key);
-
-            // calculate distance between player and chunk
-            var distanceToChunk = (playerPosition - chunkPosition).magnitude;
-
-            // check if the chunk is not in the view frustum
-            if (!IsChunkInFrustum(chunkPosition))
-            {
-                // if the distance is greater than the distance to which the chunk should be inactive, but not removed
-                if (distanceToChunk >= distanceToInactive)
-                {
-                    // set the chunk to inactive
-                    chunk.gameObject.SetActive(false);
-                }
-
-                // if the distance is grater tan the distance to which the chunk shoould be destroyed
-                if (distanceToChunk >= distanceToDestroy)
-                {
-                    // set the chunk for removal from the list
-                    toRemove.Add(pair.Key);
-                    // and destroy the gamebobject
-                    Destroy(chunk);
-                }
+                chunkLoader.Load(chunk);
             }
         }
 
-        // remove destroyed chunks from the list
-        foreach (var key in toRemove)
+        head = graph[0, d - 1];
+        tail = graph[d - 1, 0];
+
+        // Load reserve chunks
+        var numReserveChunks = d * 4;
+        for (int i = 0; i < numReserveChunks; ++i)
         {
-            chunkList.Remove(key);
+            var chunk = CreateChunk(0, 0);
+            reserveChunksQueue.Enqueue(chunk);
         }
     }
 
     private void OnChunkLoad(Chunk chunk)
     {
-        lock(loadLock)
-        {
-            loadedInBatch++;
-            buildQueue.Enqueue(chunk);
-        }
+        chunk.Build();
     }
 
     private void OnChunkBuild(Chunk chunk)
     {
-        lock(buildLock)
-        {
-            builtInBatch++;
-        }
-    }
-
-    private float CalculateChunkPriority(Chunk chunk)
-    {
-        return (chunk.transform.position - player.transform.position).magnitude;
+        activateQueue.Enqueue(chunk);
     }
 
     private Chunk CreateChunk(int x, int z)
@@ -261,50 +289,13 @@ public class ChunkManager : MonoBehaviour
 
         // if the chunk does not exist yet, create it.
         var chunk = Instantiate(chunkPrefab);
-        chunk.SetPosition(new Vector3(x * chunkSizeX, 0, z * chunkSizeZ + chunkSizeZ/2));
+        chunk.SetPosition(new Vector3(x * chunkSizeX, 0, z * chunkSizeZ));
         chunk.transform.SetParent(transform, false);
         chunk.SetOnLoadCallback(OnChunkLoad);
         chunk.SetOnBuildCallback(OnChunkBuild);
-
-        // Set chunk neighbors
-
-        Vector3Int[] neighbors = GetChunkNeighbors(new Vector3Int(x, 0, z));
-        Direction[] directions = { Direction.Left, Direction.Right, Direction.Far, Direction.Near };
-
-        for (int i = 0; i < neighbors.Length; ++i)
-        {
-            if (chunkList.ContainsKey(neighbors[i]))
-            {
-                chunk.SetNeighbor(chunkList[neighbors[i]], directions[i]);
-            }
-        }
+        chunk.gameObject.SetActive(false);
 
         return chunk;
-    }
-
-    private bool IsChunkInFrustum(Vector3 chunkCenter)
-    {
-        float offsetX = (float)chunkPrefab.chunkSizeX / 2.0f;
-        float offsetY = (float)chunkPrefab.chunkSizeY / 2.0f;
-        float offsetZ = (float)chunkPrefab.chunkSizeZ / 2.0f;
-
-        Vector3[] corners =
-        {
-            new Vector3(chunkCenter.x - offsetX, chunkCenter.y + offsetY, chunkCenter.z + offsetZ),
-            new Vector3(chunkCenter.x + offsetX, chunkCenter.y + offsetY, chunkCenter.z + offsetZ),
-            new Vector3(chunkCenter.x - offsetX, chunkCenter.y + offsetY, chunkCenter.z - offsetZ),
-            new Vector3(chunkCenter.x + offsetX, chunkCenter.y + offsetY, chunkCenter.z - offsetZ)
-        };
-
-        foreach (var corner in corners)
-        {
-            if (playerCamera.IsPointInFrustum(corner, viewportMargin))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /// <summary>
@@ -362,38 +353,26 @@ public class ChunkManager : MonoBehaviour
 
     public Chunk GetChunkFromWorldPosition(Vector3 worldPosition)
     {
-        Vector3Int chunkPosition = GetChunkPosition(worldPosition);
-
-        if (chunkList.ContainsKey(chunkPosition))
-        {
-            return chunkList[chunkPosition];
-        }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     public void UpdateChunk(Chunk chunk)
     {
-        float priority = CalculateChunkPriority(chunk);
-        chunkLoader.Build(chunk, priority);
+        chunkLoader.Build(chunk, 0);
     }
 
-    private void OnDrawGizmosSelected()
+    public Vector3Int GetPlayerChunk()
     {
-        if (drawDebug)
-        {
+        return GetChunkPosition(player.transform.position);
+    }
 
-        }
+    public bool IsPlayerChunkCached()
+    {
+        return false;
     }
 
     private void OnValidate()
     {
-        if (forwardRenderDistance < 0) forwardRenderDistance = 0;
-        if (generalRenderDistance < 0) generalRenderDistance = 0;
-        if (moveThreshold <= 0) moveThreshold = 1f;
-        if (distanceToInactive <= 0) distanceToInactive = 100f;
-        if (distanceToDestroy <= 0) distanceToDestroy = 1f;
+
     }
 }

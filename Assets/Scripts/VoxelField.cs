@@ -25,6 +25,17 @@ public class VoxelField
         field = new Voxel[x * y * z];        
     }
 
+    private void Init(int x, int y, int z)
+    {
+        field = new Voxel[x * y * z];
+    }
+
+    public void Clear()
+    {
+        // re-initialize the array
+        Init(this.x, this.y, this.z);
+    }
+
     public void Set(int x, int y, int z, byte t)
     {
         field[GetIndex(x, y, z)].Type = t;

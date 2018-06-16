@@ -21,9 +21,19 @@ class PriorityQueue<T>
     public int Count { get { return data.Count; } }
     public bool Empty { get { return data.Count == 0; } }
 
+    private readonly object lockObj = new object();
+
     public PriorityQueue()
     {
         data = new LinkedList<Node<T>>();
+    }
+
+    public void Clear()
+    {
+        lock(lockObj)
+        {
+            data.Clear();
+        }
     }
 
     /// <summary>
@@ -40,7 +50,10 @@ class PriorityQueue<T>
         // if the list is empty add the initial node
         if (data.Count == 0)
         {
-            data.AddFirst(node);
+            lock(lockObj)
+            {
+                data.AddFirst(node);
+            }
         }
         else
         {
@@ -54,14 +67,22 @@ class PriorityQueue<T>
                 // insert the node before a node with a greater distance
                 if (node.priority < currentNode.priority)
                 {
-                    data.AddBefore(iter, node);
+                    lock(lockObj)
+                    {
+                        data.AddBefore(iter, node);
+                    }
                     added = true;
                     break;
                 }
             }
 
             if (!added)
-                data.AddLast(node);
+            {
+                lock(lockObj)
+                {
+                    data.AddLast(node);
+                }
+            }
         }
     }
 
@@ -74,7 +95,10 @@ class PriorityQueue<T>
         // get the first node
         var node = data.First.Value;
         // remove the first node
-        data.RemoveFirst();
+        lock(lockObj)
+        {
+            data.RemoveFirst();
+        }
 
         // return the first item in the queue
         return node.item;
