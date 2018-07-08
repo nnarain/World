@@ -11,18 +11,24 @@ public class ChunkManager : MonoBehaviour
 
     public Chunk chunkPrefab;
 
+    public float viewDisance;
+    public float removeChunkTime;
+    public float removeDistanceThreshold;
+
     private Camera playerCamera;
     private ChunkLoader chunkLoader;
 
     private Vector3Int lastPlayerPosition;
 
-    private Chunk[,] graph;
-    public float viewDisance;
+    private Dictionary<Vector3Int, Chunk> chunkMap;
+    
 
-    private Chunk head, tail;
+    private Vector3Int head, tail;
+    private int viewChunkLength;
+
+    private float removeChunksTimer = 0;
 
     private SafeQueue<Chunk> activateQueue;
-    private Queue<Chunk> reserveChunksQueue;
 
     // Use this for initialization
     private void Start()
@@ -35,8 +41,8 @@ public class ChunkManager : MonoBehaviour
         lastPlayerPosition = GetChunkPosition(player.transform.position);
 
         activateQueue = new SafeQueue<Chunk>();
-        reserveChunksQueue = new Queue<Chunk>();
 
+        chunkMap = new Dictionary<Vector3Int, Chunk>();
         LoadInitialChunks();
     }
 
@@ -45,6 +51,7 @@ public class ChunkManager : MonoBehaviour
     {
         HandlePlayerMovement();
         HandleChunkActivation();
+        HandleChunkRemoval();
     }
 
     private void HandleChunkActivation()
@@ -72,6 +79,41 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
+    private void HandleChunkRemoval()
+    {
+        removeChunksTimer += Time.deltaTime;
+        if (removeChunksTimer >= removeChunkTime)
+        {
+            RemoveChunks();
+        }
+    }
+
+    private void RemoveChunks()
+    {
+        List<Vector3Int> toRemove = new List<Vector3Int>();
+
+        foreach(var pair in chunkMap)
+        {
+            var chunk = pair.Value;
+            var chunkPosition = chunk.transform.position;
+
+            var playerPosition = player.transform.position;
+
+            var distance = Mathf.Abs((playerPosition - chunkPosition).magnitude);
+
+            if (distance > removeDistanceThreshold)
+            {
+                toRemove.Add(pair.Key);
+                Destroy(chunk);
+            }
+        }
+
+        foreach (var key in toRemove)
+        {
+            chunkMap.Remove(key);
+        }
+    }
+
     private void HandleLoadNewChunks(Vector3Int dc)
     {
         var dx = dc.x;
@@ -79,156 +121,52 @@ public class ChunkManager : MonoBehaviour
 
         if (dx == 1)
         {
-            MoveChunks(Direction.Right);
+            AllocateNewChunks(new Vector3Int(tail.x + dx, 0, tail.z), new Vector3Int(0, 0, 1));
         }
         else if (dx == -1)
         {
-            MoveChunks(Direction.Left);
+            AllocateNewChunks(new Vector3Int(head.x + dx, 0, head.z), new Vector3Int(0, 0, -1));
         }
 
         if (dz == 1)
         {
-            MoveChunks(Direction.Far);
+            AllocateNewChunks(new Vector3Int(head.x, 0, head.z + dz), new Vector3Int(1, 0, 0));
         }
         else if (dz == -1)
         {
-            MoveChunks(Direction.Near);
+            AllocateNewChunks(new Vector3Int(tail.x, 0, tail.z + dz), new Vector3Int(-1, 0, 0));
         }
+
+        head += dc;
+        tail += dc;
     }
 
-    private void MoveChunks(Direction d)
+    private void AllocateNewChunks(Vector3Int start, Vector3Int d)
     {
-        if (d == Direction.Right)
+        Vector3Int position = start;
+
+        for (int i = 0; i < viewChunkLength; ++i)
         {
-            MoveChunksSub(d, head, Direction.Near, tail, Direction.Far);
-        }
-        else if (d == Direction.Left)
-        {
-            MoveChunksSub(d, tail, Direction.Far, head, Direction.Near);
-        }
-        else if (d == Direction.Far)
-        {
-            MoveChunksSub(d, tail, Direction.Left, head, Direction.Right);
-        }
-        else if (d == Direction.Near)
-        {
-            MoveChunksSub(d, head, Direction.Right, tail, Direction.Left);
-        }
-    }
+            position += d;
+            Vector3Int key = new Vector3Int(position.x, 0, position.z);
 
-    private void MoveChunksSub(Direction d, Chunk removeNode, Direction removeDirection, Chunk linkNode, Direction linkDirection)
-    {
-        Chunk newHead = null;
-        Chunk newTail = null;
-
-        if (d == Direction.Right || d == Direction.Near)
-        {
-            newHead = removeNode.GetNeighbor(d);
-        }
-
-        if (d == Direction.Far || d == Direction.Left)
-        {
-            newTail = removeNode.GetNeighbor(d);
-        }
-
-        var removeSet = GetLinkedChunks(removeNode, removeDirection);
-        EnqueueReserveChunks(removeSet);
-
-        var linkSet = GetLinkedChunks(linkNode, linkDirection);
-        var newChunks = new Chunk[linkSet.Length];
-
-        for (int i = 0; i < linkSet.Length; ++i)
-        {
-            var adjacentNode = linkSet[i];
-            //Debug.Log(string.Format("dequeue reserved chunks: {0}", reserveChunksQueue.Count));
-            var chunk = reserveChunksQueue.Dequeue();
-
-            // position the chunk in the grid
-            //if (adjacentNode == null) Debug.Log("adjacent node is null");
-            var linkNodePosition = adjacentNode.transform.position;
-            var moveVector = GetMoveDirection(d) * chunkPrefab.chunkSizeX;
-
-            chunk.SetPosition(linkNodePosition + moveVector);
-
-            // link chunk neighbors
-            chunk.SetNeighbor(adjacentNode, d.Opposite());
-
-            if (i > 0)
+            // only create a new chunk if it does not exist in the map
+            if (!chunkMap.ContainsKey(key))
             {
-                chunk.SetNeighbor(newChunks[i - 1], linkDirection.Opposite());
+                var chunk = CreateChunk(key.x, key.z);
+                chunkMap[key] = chunk;
+
+                chunkLoader.Load(chunk);
             }
 
-            // THE TAIL IS WRONG... AHHHHH
-
-            newChunks[i] = chunk;
-            chunkLoader.Load(chunk);
+            
         }
-
-        if (d == Direction.Far || d == Direction.Left)
-        {
-            newHead = newChunks[0];
-        }
-
-        if (d == Direction.Right || d == Direction.Near)
-        {
-            newTail = newChunks[0];
-        }
-
-        head = newHead;
-        tail = newTail;
-    }
-
-    private void EnqueueReserveChunks(Chunk[] nodes)
-    {
-        foreach (var chunk in nodes)
-        {
-            if (chunk == null) continue;
-
-            chunk.ClearNeighbors();
-            chunk.gameObject.SetActive(false);
-
-            reserveChunksQueue.Enqueue(chunk);
-        }
-    }
-
-    private Vector3 GetMoveDirection(Direction d)
-    {
-        switch (d)
-        {
-            case Direction.Left:
-                return new Vector3(-1, 0, 0);
-            case Direction.Right:
-                return new Vector3(1, 0, 0);
-            case Direction.Near:
-                return new Vector3(0, 0, -1);
-            case Direction.Far:
-                return new Vector3(0, 0, 1);
-            default:
-                return new Vector3(0, 0, 0);
-        }
-    }
-
-    private Chunk[] GetLinkedChunks(Chunk node, Direction d)
-    {
-        Chunk[] linkedChunks = new Chunk[graph.GetLength(0)];
-
-        var addedCount = 0;
-        for (int i = 0; i < graph.GetLength(0) && node != null; ++i)
-        {
-            linkedChunks[i] = node;
-            node = node.GetNeighbor(d);
-            addedCount += 1;
-        }
-
-        return linkedChunks;
     }
 
     private void LoadInitialChunks()
     {
         int d = ((int)viewDisance * 2) / chunkPrefab.chunkSizeX;
-
-        // allocate space for all visible chunks surrounding the player
-        graph = new Chunk[d, d];
+        viewChunkLength = d;
 
         // get the player chunk position
         var chunkPosition = GetChunkPosition(lastPlayerPosition);
@@ -236,38 +174,50 @@ public class ChunkManager : MonoBehaviour
         var offsetX = chunkPosition.x - (d / 2);
         var offsetZ = chunkPosition.z - (d / 2);
 
+        head = new Vector3Int(offsetX, 0, offsetZ + (d - 1));
+        tail = new Vector3Int(offsetX + (d - 1), 0, offsetZ);
+
         // create chunks
         for (int x = 0; x < d; ++x)
         {
             for (int z = 0; z < d; ++z)
             {
-                var chunk = CreateChunk(x + offsetX, z + offsetZ);
-                graph[x, z] = chunk;
+                Vector3Int key = new Vector3Int(x + offsetX, 0, z + offsetZ);
+                var chunk = CreateChunk(key.x, key.z);
 
+                chunkMap.Add(key, chunk);
+                
                 // set chunk neighbors
                 if (x > 0)
                 {
-                    chunk.SetNeighbor(graph[x - 1, z], Direction.Left);
+                    key.x -= 1;
+                    var n = chunkMap[key];
+                    chunk.SetNeighbor(n, Direction.Left);
                 }
                 if (z > 0)
                 {
-                    chunk.SetNeighbor(graph[x, z - 1], Direction.Near);
+                    key.z -= 1;
+                    var n = chunkMap[key];
+                    chunk.SetNeighbor(n, Direction.Near);
                 }
 
                 // queue the chunk for loading
                 chunkLoader.Load(chunk);
             }
         }
+    }
 
-        head = graph[0, d - 1];
-        tail = graph[d - 1, 0];
+    private Chunk GetNeighbor(int x, int z)
+    {
+        Vector3Int key = new Vector3Int(x, 0, z);
 
-        // Load reserve chunks
-        var numReserveChunks = d * 4;
-        for (int i = 0; i < numReserveChunks; ++i)
+        if (chunkMap.ContainsKey(key))
         {
-            var chunk = CreateChunk(0, 0);
-            reserveChunksQueue.Enqueue(chunk);
+            return chunkMap[key];
+        }
+        else
+        {
+            return null;
         }
     }
 
