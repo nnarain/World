@@ -11,16 +11,22 @@ public class ChunkManager : MonoBehaviour
 
     public Chunk chunkPrefab;
 
+    public float viewDisance;
+    public float removeChunkTime;
+    public float removeDistanceThreshold;
+
     private Camera playerCamera;
     private ChunkLoader chunkLoader;
 
     private Vector3Int lastPlayerPosition;
 
     private Dictionary<Vector3Int, Chunk> chunkMap;
-    public float viewDisance;
+    
 
-    Vector3Int head, tail;
+    private Vector3Int head, tail;
     private int viewChunkLength;
+
+    private float removeChunksTimer = 0;
 
     private SafeQueue<Chunk> activateQueue;
 
@@ -45,6 +51,7 @@ public class ChunkManager : MonoBehaviour
     {
         HandlePlayerMovement();
         HandleChunkActivation();
+        HandleChunkRemoval();
     }
 
     private void HandleChunkActivation()
@@ -69,6 +76,41 @@ public class ChunkManager : MonoBehaviour
 
             // set the last chunk position to the current chunk position
             lastPlayerPosition = currentPosition;
+        }
+    }
+
+    private void HandleChunkRemoval()
+    {
+        removeChunksTimer += Time.deltaTime;
+        if (removeChunksTimer >= removeChunkTime)
+        {
+            RemoveChunks();
+        }
+    }
+
+    private void RemoveChunks()
+    {
+        List<Vector3Int> toRemove = new List<Vector3Int>();
+
+        foreach(var pair in chunkMap)
+        {
+            var chunk = pair.Value;
+            var chunkPosition = chunk.transform.position;
+
+            var playerPosition = player.transform.position;
+
+            var distance = Mathf.Abs((playerPosition - chunkPosition).magnitude);
+
+            if (distance > removeDistanceThreshold)
+            {
+                toRemove.Add(pair.Key);
+                Destroy(chunk);
+            }
+        }
+
+        foreach (var key in toRemove)
+        {
+            chunkMap.Remove(key);
         }
     }
 
